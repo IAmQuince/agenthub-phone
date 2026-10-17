@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Q+pJ6AzfFvuclprBRhtRbFPAMR+UQNg7cfXIhN8WCUw=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-oFxT1GlOHSRlXaB8Zeae5R1ZpoU4Cd79kAaVX2PKoBc=' 'sha256-hD+wnHn6s78mxb92sUQC8EzRlPBpCI+3F68T6UeDYp8='; style-src 'sha256-hQeXpQEe6/6PLChCowT+XOSGwgecZoQr4LumoisfHJE='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qTfgvKbQz8F/hYc2nSeCnJvBavKQM2EHGJ0viQh59W8=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-A7cSdJcqOUqPaywtU/l3MfOaZi6IIKfq4uiQEBnwFw0=' 'sha256-TCbKx7vZ020hVhIp5lqyr50xpTeEu/Z0bpeDPgS47Dc='; style-src 'sha256-OA/YzVP8EGJpJtQALzse4pilnjUYSJ8ySRGYSL4qRPY='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -969,13 +969,87 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
   .phone-card { padding: 13px; }
 }
 @media (prefers-reduced-motion: reduce) { .phone-page *, .phone-page *::before { animation: none !important; scroll-behavior: auto !important; } }
+
+/* Polish pass: content first, with persistent thumb navigation. */
+body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; flex-direction: column; overflow: hidden; }
+.phone-header { flex: 0 0 auto; padding: max(6px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right)) 6px max(12px, env(safe-area-inset-left)); }
+.phone-page h1 { font-size: 16px; }
+.phone-age { font-size: 11px; }
+.phone-header .btn { padding: 7px 10px; font-size: 12px; }
+.phone-menu-content { top: 48px; }
+.phone-main { width: 100%; flex: 1 1 auto; min-height: 0; margin: 0 auto; overflow: auto; padding: 10px 12px 24px; overscroll-behavior-y: contain; scroll-padding-top: 12px; }
+.phone-connected .phone-main { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
+.phone-overview { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 28px; margin: 0 0 10px; color: var(--muted); font-size: 12px; }
+.phone-overview button { padding: 0 4px; border: 0; background: none; color: var(--accent); min-height: 32px; font-size: inherit; }
+.phone-tabs { position: fixed; z-index: 15; bottom: 0; inset-inline: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 0; padding: 4px max(4px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)); border: 0; border-top: 1px solid var(--border); border-radius: 0; background: var(--panel); }
+.phone-tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; min-height: 52px; padding: 3px 1px; font-size: 10px; font-weight: 500; border-radius: 8px; }
+.phone-tabs button > span { font-size: 20px; line-height: 22px; }
+.phone-tabs button[aria-selected="true"] { background: var(--accent-bg); border-color: transparent; box-shadow: none; font-weight: 650; }
+.phone-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+.phone-quick-filters { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
+.phone-chip, .phone-agent-filter select { border: 1px solid var(--border-strong); border-radius: 22px; background: var(--panel); padding: 8px 12px; font-size: 13px; white-space: nowrap; }
+.phone-chip[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); background: var(--accent-bg); font-weight: 600; }
+.phone-agent-filter { flex: 1; min-width: 0; }
+.phone-agent-filter select { margin: 0 !important; width: 100%; text-overflow: ellipsis; padding-left: 10px; }
+.phone-search { margin-bottom: 3px; }
+.phone-search input { margin: 0 !important; }
+.phone-more-filters { margin: 0 0 2px; }
+.phone-more-filters > summary { display: flex; align-items: center; gap: 6px; min-height: 40px; font-size: 12px; color: var(--muted); cursor: pointer; width: fit-content; }
+.phone-more-filters > summary::before { content: "+"; font-size: 16px; }
+.phone-more-filters[open] > summary::before { content: "−"; }
+.phone-more-filters > summary::-webkit-details-marker { display: none; }
+.phone-message-count { color: var(--muted); font-size: 11px; margin: 0 0 8px !important; }
+.phone-text-action { border: 0; background: transparent; color: var(--accent); font-size: 12px; padding: 7px 4px; min-height: 44px; cursor: pointer; }
+.phone-message { border-radius: 10px; padding: 11px 12px; margin-bottom: 8px; }
+.phone-message > * + * { margin-top: 5px; }
+.phone-message.to-owner { border-left-color: var(--owner-border); background: linear-gradient(90deg, var(--owner-bg), var(--panel) 60%); }
+.phone-route { display: block; font-size: 11px; line-height: 1.65; color: var(--muted); }
+.phone-route b { color: var(--text); font-weight: 600; }
+.phone-message time { font-size: inherit; white-space: nowrap; }
+.phone-message h3 { font-size: 14px; }
+.phone-message .md { font-size: 13px; }
+.phone-message .md p { margin-top: 4px; margin-bottom: 4px; }
+.phone-body.is-collapsed { max-height: 7.1em; overflow: hidden; mask-image: linear-gradient(to bottom, black 60%, transparent 100%); }
+.phone-body-toggle { display: block; padding: 0 4px; margin-top: 0 !important; text-align: left; }
+.phone-message-actions { display: flex; align-items: center; justify-content: space-between; gap: 8px; flex-wrap: wrap; min-height: 36px; }
+.phone-message-actions > span { display: flex; align-items: center; gap: 12px; }
+.phone-message-actions .phone-text-action { min-height: 36px; padding: 3px 0; }
+.phone-message-actions .phone-thread-link { margin-top: 0; }
+.phone-receipt { font-size: 10px; color: var(--muted); }
+.phone-receipt.is-acked { color: var(--ok); }
+.phone-agent { position: relative; border-left: 4px solid var(--faint); }
+.phone-agent.st-waiting { border-left-color: var(--accent); }
+.phone-agent.st-working { border-left-color: var(--ok); }
+.phone-agent.st-idle { border-left-color: var(--warn); }
+.phone-agent-open { font: inherit; font-weight: inherit; text-align: left; padding: 0; border: 0; background: transparent; cursor: pointer; }
+.phone-agent-open::after { content: ""; position: absolute; inset: 0; border-radius: var(--phone-radius); }
+.phone-agent-open:focus-visible::after { outline: 2px solid var(--accent); outline-offset: 2px; }
+.phone-agent-message { position: relative; z-index: 1; }
+.phone-agent .phone-card-head h3 { flex-basis: 145px; }
+.phone-agent .phone-card-head { gap: 0 8px; }
+.phone-agent > * + * { margin-top: 7px; }
+.phone-reply-context { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: var(--accent-bg); border: 1px solid var(--border); border-radius: 9px; padding: 6px 10px; margin-bottom: 12px; font-size: 12px; overflow-wrap: anywhere; }
+.phone-usage-window + .phone-usage-window { margin-top: 14px; }
+.phone-usage-window .phone-hint { margin-top: 4px; }
+.phone-mapmode .phone-main { display: flex; flex-direction: column; overflow: hidden; padding-top: 0; padding-bottom: calc(64px + env(safe-area-inset-bottom)); }
+.phone-mapmode #phoneApp { display: flex; flex: 1 1 auto; min-height: 0; flex-direction: column; }
+.phone-mapmode .phone-overview, .phone-mapmode .phone-footer { display: none; }
+.phone-mapmode #view-map { display: flex; flex-direction: column; flex: 1 1 auto; min-height: 0; }
+.phone-mapmode #view-map > .phone-hint { display: none; }
+.phone-mapmode #view-map > .phone-section-head { flex: 0 0 auto; margin: 0; padding: 6px 0; gap: 8px; }
+.phone-mapmode #view-map h2 { font-size: 16px; }
+.phone-mapmode #view-map label { display: flex; align-items: center; gap: 8px; font-size: 11px; }
+.phone-mapmode #phoneMapWindow { width: auto; max-width: 155px; margin: 0; font-size: 13px; padding: 6px 8px; }
+.phone-mapmode .phone-map { flex: 1 1 auto; height: auto; min-height: 0; margin: 0; border-radius: 10px; }
+.phone-mapmode #view-map > #phoneMapInfo { display: block; flex: 0 0 auto; margin: 0; padding: 4px 0; font-size: 10px; }
+.phone-page .toasts { bottom: calc(78px + env(safe-area-inset-bottom)); }
+@media (min-width: 650px) { .phone-tabs { padding-inline: max(8px, calc((100vw - 936px) / 2)); } }
 </style>
 </head>
 <body class="phone-page">
   <a class="phone-skip" href="#phoneMain">Skip to content</a>
   <header class="phone-header">
     <div class="phone-heading">
-      <span class="phone-mark" aria-hidden="true">AH</span>
       <div><h1 id="phoneTitle">Agent Hub</h1><p id="phoneAge" class="phone-age">Connect to your hub</p></div>
     </div>
     <div class="phone-actions">
@@ -1013,23 +1087,20 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     </section>
     <div id="phoneApp" hidden>
       <div id="phoneOverview" class="phone-overview" aria-label="Hub overview"></div>
-      <nav id="phoneTabs" class="phone-tabs" role="tablist" aria-label="Hub views">
-        <button id="tab-timeline" type="button" role="tab" data-view="timeline" aria-controls="view-timeline" aria-selected="true">Timeline</button>
-        <button id="tab-agents" type="button" role="tab" data-view="agents" aria-controls="view-agents" aria-selected="false" tabindex="-1">Agents</button>
-        <button id="tab-map" type="button" role="tab" data-view="map" aria-controls="view-map" aria-selected="false" tabindex="-1">Live map</button>
-        <button id="tab-repos" type="button" role="tab" data-view="repos" aria-controls="view-repos" aria-selected="false" tabindex="-1">Repos</button>
-        <button id="tab-usage" type="button" role="tab" data-view="usage" aria-controls="view-usage" aria-selected="false" tabindex="-1">Usage</button>
-        <button id="tab-compose" type="button" role="tab" data-view="compose" aria-controls="view-compose" aria-selected="false" tabindex="-1">Compose</button>
-      </nav>
       <section id="view-timeline" class="phone-panel" role="tabpanel" aria-labelledby="tab-timeline">
-        <div class="phone-section-head"><h2>Message timeline</h2><span class="phone-pill">Last 7 days</span></div>
-        <div class="phone-filters">
-          <label>Agent<select id="filterAgent"><option value="">All agents</option></select></label>
-          <label>Thread<select id="filterThread"><option value="">All threads</option></select></label>
-          <label>Kind<select id="filterKind"><option value="">All kinds</option></select></label>
-          <label>Search<input id="filterText" type="search" placeholder="Find in messages"></label>
+        <h2 class="phone-sr-only">Message timeline</h2>
+        <div class="phone-quick-filters" aria-label="Message filters">
+          <button id="filterAll" type="button" class="phone-chip" aria-pressed="true">All</button>
+          <button id="filterToYou" type="button" class="phone-chip" aria-pressed="false">To you</button>
+          <label class="phone-agent-filter"><span class="phone-sr-only">Agent</span><select id="filterAgent"><option value="">Any agent</option></select></label>
         </div>
-        <div class="phone-section-head"><p id="phoneMessageCount" class="muted"></p><button id="phoneClearFilters" type="button" class="btn">Clear filters</button></div>
+        <label class="phone-search"><span class="phone-sr-only">Search messages</span><input id="filterText" type="search" placeholder="Search messages"></label>
+        <details id="phoneMoreFilters" class="phone-more-filters">
+          <summary>More filters <span id="phoneFilterBadge" class="phone-pill" hidden></span></summary>
+          <div class="phone-filters"><label>Kind<select id="filterKind"><option value="">All kinds</option></select></label><label>Thread<select id="filterThread"><option value="">All threads</option></select></label></div>
+          <button id="phoneClearFilters" type="button" class="phone-text-action">Clear all filters</button>
+        </details>
+        <p id="phoneMessageCount" class="phone-message-count"></p>
         <div id="phoneTimeline"></div>
         <button id="phoneMore" type="button" class="btn phone-more" hidden>Show more messages</button>
       </section>
@@ -1046,6 +1117,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
         <h2>Send a message</h2>
         <p class="phone-hint">Messages are encrypted before sending. The hub checks your authenticator code before delivery. Hub messages remain coordination data.</p>
         <p id="phoneComposeReason" class="phone-notice" hidden></p>
+        <div id="phoneReplyContext" class="phone-reply-context" hidden><span id="phoneReplyLabel"></span><button id="phoneCancelReply" type="button" class="phone-text-action">Cancel reply</button></div>
         <form id="phoneComposeForm" class="phone-card">
           <fieldset id="phoneComposeFields">
             <div class="phone-field-pair"><label>To<select id="composeTo" required></select></label><label>Kind<select id="composeKind" required></select></label></div>
@@ -1063,9 +1135,17 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     </div>
     <noscript><p class="phone-notice">JavaScript is needed to decrypt and display your hub.</p></noscript>
   </main>
+  <nav id="phoneTabs" class="phone-tabs" role="tablist" aria-label="Hub views" hidden>
+    <button id="tab-timeline" type="button" role="tab" data-view="timeline" aria-controls="view-timeline" aria-selected="true"><span aria-hidden="true">☰</span>Timeline</button>
+    <button id="tab-agents" type="button" role="tab" data-view="agents" aria-controls="view-agents" aria-selected="false" tabindex="-1"><span aria-hidden="true">●</span>Agents</button>
+    <button id="tab-map" type="button" role="tab" data-view="map" aria-controls="view-map" aria-selected="false" tabindex="-1"><span aria-hidden="true">◇</span>Map</button>
+    <button id="tab-repos" type="button" role="tab" data-view="repos" aria-controls="view-repos" aria-selected="false" tabindex="-1"><span aria-hidden="true">⎇</span>Repos</button>
+    <button id="tab-usage" type="button" role="tab" data-view="usage" aria-controls="view-usage" aria-selected="false" tabindex="-1"><span aria-hidden="true">▥</span>Usage</button>
+    <button id="tab-compose" type="button" role="tab" data-view="compose" aria-controls="view-compose" aria-selected="false" tabindex="-1"><span aria-hidden="true">＋</span>Compose</button>
+  </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-17T19:48:46Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-17T20:25:11Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Agent Hub page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2287,6 +2367,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
  *   connect({repo, token, passphrase})            -> {snapshot, etag, kid, keys}
  *   poll({repo, token, etag, keys})               -> {changed, snapshot?, etag, kid}
  *   send({repo, token, issue, keys, message})     -> {comment_id, url}
+ *        message: {to, kind, subject, body, code, reply_to?}   (reply_to: a message id; threads the answer)
  *   remember({repo, token, keys}) · load() -> {repo, token, keys} | null · forget()
  *
  * Errors are AgentHubPhone.PhoneError with .code: AUTH, NOT_FOUND, RATE, NETWORK,
@@ -2489,8 +2570,12 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     if (!m.to || typeof m.to !== "string") throw new PhoneError("INPUT", "choose who the message is for");
     if (!String(m.body || "").trim()) throw new PhoneError("INPUT", "the message is empty");
     if (!/^\d{6}$/.test(code)) throw new PhoneError("INPUT", "enter the 6-digit code from your authenticator app");
+    if (m.reply_to !== undefined && m.reply_to !== null && !(Number.isInteger(m.reply_to) && m.reply_to > 0)) {
+      throw new PhoneError("INPUT", "reply_to must be a message id");
+    }
     const inner = { v: 1, to: m.to, kind: m.kind || "note", subject: m.subject || "", body: String(m.body), code,
-      sent_at: new Date().toISOString(), cid: hex(crypto.getRandomValues(new Uint8Array(8))) };
+      sent_at: new Date().toISOString(), cid: hex(crypto.getRandomValues(new Uint8Array(8))),
+      reply_to: Number.isInteger(m.reply_to) ? m.reply_to : null };
     const env = await seal(inner, keys, "inbox");
     const r = await gh(token, "POST", "/repos/" + repo + "/issues/" + issue + "/comments", { body: { body: commentText(env) } });
     const c = await r.res.json();
@@ -2532,7 +2617,8 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
   const { el } = window.UI;
   const $ = (id) => document.getElementById(id);
   const state = { snapshot: null, session: null, view: "timeline", epoch: 0, polling: false,
-    connecting: false, sending: false, limit: 50, expanded: new Set(), deliveries: [], fixture: false };
+    connecting: false, sending: false, limit: 50, expanded: new Set(), deliveries: [], fixture: false,
+    toYou: false, replyTo: null, threadCounts: new Map(), scrolls: new Map() };
   let pollTimer = null;
   const errorWords = {
     INPUT: "Check the repository, token and message details, then try again.",
@@ -2589,7 +2675,10 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     if (options.some((v) => v.value === previous)) select.value = previous;
   }
   function showView(view, focus) {
+    const changed = state.view !== view;
+    if (changed) state.scrolls.set(state.view, $("phoneMain").scrollTop);
     state.view = view;
+    document.body.classList.toggle("phone-mapmode", view === "map" && !!state.snapshot);
     for (const tab of $("phoneTabs").querySelectorAll("[data-view]")) {
       const selected = tab.dataset.view === view;
       tab.setAttribute("aria-selected", String(selected));
@@ -2597,25 +2686,64 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
       if (selected && focus) tab.focus();
       $("view-" + tab.dataset.view).hidden = !selected;
     }
+    if (changed) $("phoneMain").scrollTop = state.scrolls.get(view) || 0;
     if (view === "map") requestAnimationFrame(renderMap);
   }
   function filterAgent(name) {
+    state.toYou = false;
     $("filterAgent").value = name;
     state.limit = 50;
     renderTimeline();
     showView("timeline", true);
+    $("phoneMain").scrollTop = 0;
+  }
+  function scopeToYou(on) {
+    state.toYou = on; $("filterAgent").value = ""; state.limit = 50;
+    renderTimeline(); showView("timeline");
+    $("phoneMain").scrollTop = 0;
+  }
+  function openThread(id) {
+    state.toYou = false;
+    for (const field of ["filterAgent", "filterKind", "filterText"]) $(field).value = "";
+    $("filterThread").value = String(id); $("phoneMoreFilters").open = true;
+    state.limit = 50; renderTimeline(); showView("timeline"); $("filterThread").focus(); $("phoneMain").scrollTop = 0;
+  }
+  async function openCompose({ to, kind, subject, replyTo }) {
+    if (state.sending) { UI.toast("Wait for the current message to finish sending."); return; }
+    if (!state.snapshot || ![...$("composeTo").options].some((option) => option.value === to)) return;
+    const epoch = state.epoch;
+    if ($("composeBody").value.trim() || $("composeSubject").value.trim() || state.replyTo) {
+      const replace = await UI.dialog({ title: "Keep your current draft?", body: "Starting this message will replace the unsent draft in Compose.", buttons: [{ label: "Keep draft", value: false, primary: true }, { label: "Replace draft", value: true }] });
+      if (!replace || epoch !== state.epoch) return;
+    }
+    $("composeTo").value = to;
+    const allowed = [...$("composeKind").options].map((option) => option.value);
+    $("composeKind").value = allowed.includes(kind) ? kind : allowed.includes("note") ? "note" : allowed[0] || "";
+    $("composeSubject").value = (subject || "").slice(0, 200);
+    $("composeBody").value = ""; $("composeCode").value = "";
+    state.replyTo = replyTo || null; notice("phoneSendError", ""); renderCompose(); showView("compose");
+    $("composeBody").focus();
+  }
+  function replyToMessage(message) {
+    return openCompose({ to: message.from, kind: message.kind === "question" ? "answer" : "note",
+      subject: /^re:/i.test(message.subject || "") ? message.subject : message.subject ? "Re: " + message.subject : "Re: message #" + message.id,
+      replyTo: { id: message.id, to: message.from } });
   }
   function acceptSnapshot(snapshot) {
     if (!snapshot || snapshot.format !== "agenthub.phone.v1" || !Array.isArray(snapshot.agents) || !Array.isArray(snapshot.messages)) throw { code: "FORMAT" };
     state.snapshot = snapshot;
     $("phoneSetup").hidden = true;
     $("phoneApp").hidden = false;
+    $("phoneTabs").hidden = false;
+    document.body.classList.add("phone-connected");
     $("phoneTitle").textContent = (snapshot.hub && snapshot.hub.title) || "Agent Hub";
     const unread = snapshot.owner && snapshot.owner.unread || 0;
-    $("phoneOverview").replaceChildren(...[[snapshot.agents.length, "agents"], [snapshot.messages.length, "messages in snapshot"], [unread, "unread to you"]].map(([number, label]) => el("div", { class: "phone-stat" }, el("strong", {}, number), el("span", {}, label))));
-    choose("filterAgent", [...new Set([...snapshot.agents.map((a) => a.name), ...snapshot.messages.flatMap((m) => [m.from, m.to]).filter((name) => name && !name.startsWith("#"))])].sort(), "All agents");
+    $("phoneOverview").replaceChildren(el("span", {}, snapshot.agents.length + " agents"), "·", el("span", {}, snapshot.messages.length + " msgs"), "·", el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you"));
+    choose("filterAgent", [...new Set([...snapshot.agents.map((a) => a.name), ...snapshot.messages.flatMap((m) => [m.from, m.to]).filter((name) => name && !name.startsWith("#"))])].sort(), "Any agent");
     const threads = new Map();
+    state.threadCounts = new Map();
     for (const m of snapshot.messages) if (m.thread_id) {
+      state.threadCounts.set(m.thread_id, (state.threadCounts.get(m.thread_id) || 0) + 1);
       if (!threads.has(String(m.thread_id)) || m.id === m.thread_id) threads.set(String(m.thread_id), "#" + m.thread_id + (m.subject ? " · " + m.subject.slice(0, 45) : ""));
     }
     choose("filterThread", [...threads].sort((a, b) => Number(b[0]) - Number(a[0])).map(([value, label]) => ({ value, label })), "All threads");
@@ -2626,52 +2754,67 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
   }
   function renderAgents() {
     const snapshot = state.snapshot, usage = snapshot.usage || {};
-    const agents = [...snapshot.agents].sort((a, b) => a.name.localeCompare(b.name));
+    const rank = { waiting: 0, working: 1, idle: 2, away: 3 };
+    const agentState = (a) => AgentMap.agentState(a, (usage.agents || {})[a.name]);
+    const agents = [...snapshot.agents].sort((a, b) => rank[agentState(a).key] - rank[agentState(b).key] || a.name.localeCompare(b.name));
     $("phoneAgents").replaceChildren(...agents.map((a) => {
       const u = (usage.agents || {})[a.name] || {}, context = u.context || {};
       const status = AgentMap.agentState(a, u);
-      return el("article", { class: "phone-card" },
-        el("div", { class: "phone-card-head" }, el("h3", {}, a.name), pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
+      return el("article", { class: "phone-card phone-agent st-" + status.key },
+        el("div", { class: "phone-card-head" }, el("h3", {}, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
         el("p", { class: "phone-agent-status" }, a.status || "No status set"),
         el("p", { class: "phone-meta" }, "Seen ", ageNode(a.last_seen), " · " + (a.unread || 0) + " unread · " + (a.unacked || 0) + " unacked"),
-        a.workdir ? el("p", { class: "phone-meta mono" }, a.workdir) : null,
+        a.workdir ? el("p", { class: "phone-meta mono", title: a.workdir }, a.workdir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() || a.workdir) : null,
         metric("Context", context.used_percent),
         el("p", { class: "phone-meta" }, u.model || "Model unavailable", context.window_assumed ? " · assumed context window" : ""),
         ...list((usage.plans || {})[a.kind] && usage.plans[a.kind].windows).map((w) => metric(w.label || "Plan", w.used_percent)),
-        el("button", { class: "btn", type: "button", onclick: () => filterAgent(a.name) }, "View messages"));
+        el("button", { class: "btn phone-agent-message", type: "button", onclick: () => openCompose({ to: a.name, kind: "note" }) }, "Message"));
     }));
     if (!agents.length) $("phoneAgents").append(empty("No agents registered yet."));
   }
   function renderMessage(m) {
     const authority = ["owner-web", "owner-remote", "hub"].includes(m.authority) ? m.authority : "agent-claimed";
-    const content = el("div", { class: "md" });
+    const content = el("div", { class: "md phone-body", id: "phone-body-" + m.id });
     content.innerHTML = window.renderMarkdown(m.body || ""); // Shared renderer escapes all source text.
     let body = content;
     if ((m.body || "").length > 900 || (m.body || "").split("\n").length > 16) {
-      body = el("details", {}, el("summary", {}, "Read message · " + (m.body || "").length.toLocaleString() + " characters"), content);
-      body.open = state.expanded.has(m.id);
-      body.addEventListener("toggle", () => { if (body.open) state.expanded.add(m.id); else state.expanded.delete(m.id); });
+      const toggle = el("button", { class: "phone-text-action phone-body-toggle", type: "button", "aria-controls": content.id });
+      const apply = () => {
+        const expanded = state.expanded.has(m.id);
+        content.classList.toggle("is-collapsed", !expanded);
+        toggle.textContent = expanded ? "less" : "more";
+        toggle.setAttribute("aria-expanded", String(expanded));
+        for (const link of content.querySelectorAll("a")) { if (expanded) link.removeAttribute("tabindex"); else link.tabIndex = -1; }
+      };
+      toggle.addEventListener("click", () => { if (state.expanded.has(m.id)) state.expanded.delete(m.id); else state.expanded.add(m.id); apply(); });
+      apply(); body = el("div", {}, content, toggle);
     }
     const receipts = list(m.receipts);
     const acked = receipts.filter((r) => r.acked_at).length;
     const read = receipts.filter((r) => r.read_at || r.acked_at).length;
-    return el("article", { class: "phone-card phone-message auth-" + authority },
-      el("div", { class: "phone-route" }, el("b", {}, m.from), el("span", { "aria-label": "to" }, "→"), el("b", {}, m.to), pill(m.kind)),
-      el("div", { class: "phone-route" }, pill(authority), pill(m.via || "hub"), el("time", { datetime: m.ts, title: fmtTime(m.ts) }, fmtTime(m.ts))),
+    const receipt = String(m.to || "").startsWith("#") ? acked + "/" + receipts.length + " acked" : acked ? "acked" : read ? "read" : "unread";
+    const threadCount = state.threadCounts.get(m.thread_id) || 1;
+    const canReply = state.snapshot.agents.some((a) => a.name === m.from) || list(state.snapshot.channels).includes(m.from) && !["#all", "owner", "hub"].includes(m.from);
+    return el("article", { class: "phone-card phone-message auth-" + authority + (m.to === "owner" ? " to-owner" : ""), dataset: { messageId: String(m.id) }, title: "#" + m.id + " · " + authority + " · via " + (m.via || "hub") },
+      el("div", { class: "phone-route" }, el("b", {}, m.from), " → ", el("b", {}, m.to), " · " + m.kind + " · ", el("time", { datetime: m.ts, title: fmtTime(m.ts) }, Number.isFinite(Date.parse(m.ts)) ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Unknown time")),
+      authority !== "agent-claimed" ? pill(authority) : null,
       m.subject ? el("h3", {}, m.subject) : null,
       body,
       list(m.files).length ? el("details", {}, el("summary", {}, "File references (" + m.files.length + ")"), m.files.map((f) => el("p", { class: "phone-meta mono" }, f.path || "File", finite(f.bytes) ? " · " + f.bytes.toLocaleString() + " bytes" : ""))) : null,
-      el("div", { class: "phone-meta" }, "#" + m.id + " · read " + read + " · acked " + acked),
-      el("button", { class: "btn phone-thread-link", type: "button", onclick: () => {
-        $("filterThread").value = String(m.thread_id || m.id); state.limit = 50; renderTimeline(); $("filterThread").focus();
-      } }, "Thread #" + (m.thread_id || m.id)));
+      el("div", { class: "phone-message-actions" }, el("span", { class: "phone-receipt" + (acked ? " is-acked" : ""), title: "#" + m.id + " · " + read + " read · " + acked + " acknowledged" }, receipt),
+        el("span", {}, threadCount > 1 ? el("button", { class: "phone-text-action phone-thread-link", type: "button", "aria-label": "Open thread #" + m.thread_id + " with " + threadCount + " messages", onclick: () => openThread(m.thread_id) }, "thread (" + threadCount + ")") : null,
+          canReply ? el("button", { class: "phone-text-action phone-reply", type: "button", onclick: () => replyToMessage(m) }, "Reply") : null)));
   }
   function renderTimeline() {
     if (!state.snapshot) return;
     const agent = $("filterAgent").value, thread = $("filterThread").value, kind = $("filterKind").value, text = $("filterText").value.toLowerCase().trim();
     const cutoff = Date.now() - 7 * 86400000;
-    const messages = state.snapshot.messages.filter((m) => Date.parse(m.ts) >= cutoff && (!agent || m.from === agent || m.to === agent) && (!thread || String(m.thread_id) === thread) && (!kind || m.kind === kind) && (!text || [m.subject, m.body, m.from, m.to].join(" ").toLowerCase().includes(text))).sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts) || b.id - a.id);
-    $("phoneMessageCount").textContent = Math.min(state.limit, messages.length) + " of " + messages.length + " messages · newest first";
+    const messages = state.snapshot.messages.filter((m) => Date.parse(m.ts) >= cutoff && (!state.toYou || m.to === "owner") && (!agent || m.from === agent || m.to === agent) && (!thread || String(m.thread_id) === thread) && (!kind || m.kind === kind) && (!text || [m.subject, m.body, m.from, m.to].join(" ").toLowerCase().includes(text))).sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts) || b.id - a.id);
+    $("filterAll").setAttribute("aria-pressed", String(!state.toYou && !agent));
+    $("filterToYou").setAttribute("aria-pressed", String(state.toYou));
+    const advanced = Number(!!thread) + Number(!!kind);
+    $("phoneFilterBadge").hidden = !advanced; $("phoneFilterBadge").textContent = String(advanced);
+    $("phoneMessageCount").textContent = Math.min(state.limit, messages.length) + " of " + messages.length + " · Last 7 days · Newest first";
     $("phoneTimeline").replaceChildren(...messages.slice(0, state.limit).map(renderMessage));
     if (!messages.length) $("phoneTimeline").append(empty("No messages match this view."));
     $("phoneMore").hidden = messages.length <= state.limit;
@@ -2685,7 +2828,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
       labels: { owner: "you · this phone", ownerTitle: "This phone, reading the hub through GitHub", link: "snapshot via GitHub · " + ago(s.generated_at), linkTitle: "Encrypted snapshot, updated " + ago(s.generated_at) },
       repos: list((s.repos || {}).repos), repoStaleAfter: (s.repos || {}).stale_after_seconds || 60,
       messages: s.messages, rel: ago, now: Date.now(), windowMinutes: Number($("phoneMapWindow").value),
-    }, { onAgent: filterAgent, onOwner: () => { $("filterAgent").value = "owner"; renderTimeline(); showView("timeline", true); }, onRepo: () => showView("repos", true) });
+    }, { onAgent: filterAgent, onOwner: () => scopeToYou(true), onRepo: () => showView("repos", true) });
     $("phoneMapInfo").textContent = s.agents.length + " agents · " + info.pairs + " conversations in this window";
   }
   function tracking(value, name) { return value && !value.error ? (name || "Tracking") + ": " + (value.ahead || 0) + " ahead, " + (value.behind || 0) + " behind" : ""; }
@@ -2709,7 +2852,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     if (usage.enabled === false) { $("phoneUsage").replaceChildren(empty(usage.note || "Usage monitoring is disabled.")); return; }
     for (const [tool, plan] of Object.entries(usage.plans || {})) {
       cards.push(el("article", { class: "phone-card" }, el("h3", {}, tool + (plan.plan_type ? " · " + plan.plan_type : "") + " plan"),
-        list(plan.windows).length ? list(plan.windows).map((w) => el("div", {}, metric(w.label || "Plan", w.used_percent), el("p", { class: "phone-hint" }, w.reset_passed ? "Window reset since this reading" : w.resets_at ? "Resets " + fmtTime(w.resets_at) : "Reset time unavailable"))) : el("p", { class: "phone-meta" }, plan.note || "Plan usage unavailable"),
+        list(plan.windows).length ? list(plan.windows).map((w) => el("div", { class: "phone-usage-window" }, metric(w.label || "Plan", w.used_percent), el("p", { class: "phone-hint" }, w.reset_passed ? "Window reset since this reading" : w.resets_at ? "Resets " + fmtTime(w.resets_at) : "Reset time unavailable"))) : el("p", { class: "phone-meta" }, plan.note || "Plan usage unavailable"),
         plan.observed_at ? el("p", { class: "phone-meta" }, "Observed ", ageNode(plan.observed_at)) : null));
     }
     for (const [name, u] of Object.entries(usage.agents || {})) {
@@ -2730,6 +2873,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     if (!$("composeTo").options.length) return "No eligible agents or channels are available.";
     if (!$("composeKind").options.length) return "No message kinds are enabled for the Inbox.";
     if (!state.session) return "Connect to the hub before sending.";
+    if (state.replyTo && ![...$("composeTo").options].some((option) => option.value === state.replyTo.to)) return "The reply recipient is unavailable. Cancel reply to write a new message.";
     return "";
   }
   function renderCompose() {
@@ -2740,6 +2884,8 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     const reason = composeReason();
     notice("phoneComposeReason", reason);
     $("phoneComposeFields").disabled = !!reason || state.sending;
+    $("phoneReplyContext").hidden = !state.replyTo;
+    $("phoneReplyLabel").textContent = state.replyTo ? "Reply to #" + state.replyTo.id + " · " + state.replyTo.to : "";
   }
   function renderDeliveries() {
     const decisions = list((state.snapshot || {}).decisions);
@@ -2757,8 +2903,10 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
   function clearCredentials() { $("setupToken").value = ""; $("setupPassphrase").value = ""; $("composeCode").value = ""; }
   async function disconnect(message) {
     ++state.epoch; stopPolling(); state.session = null; state.snapshot = null; state.polling = false;
-    state.deliveries = []; state.expanded.clear();
+    state.deliveries = []; state.expanded.clear(); state.replyTo = null; state.toYou = false; state.threadCounts.clear(); state.scrolls.clear();
     $("phoneSetup").hidden = false; $("phoneApp").hidden = true; $("phoneRefresh").disabled = true;
+    $("phoneTabs").hidden = true; document.body.classList.remove("phone-connected", "phone-mapmode");
+    $("phoneReplyContext").hidden = true; $("phoneReplyLabel").textContent = "";
     $("phoneTitle").textContent = "Agent Hub"; $("phoneAge").textContent = "Connect to your hub"; $("phoneAge").className = "phone-age";
     // Remove decrypted content and drafts when a phone is forgotten or credentials expire.
     for (const id of ["phoneOverview", "phoneTimeline", "phoneAgents", "phoneRepos", "phoneUsage", "phoneDeliveries", "filterAgent", "filterThread", "filterKind", "composeTo", "composeKind"]) {
@@ -2842,7 +2990,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
     if (!body.trim() || !/^[0-9]{6}$/.test(code)) { notice("phoneSendError", "Enter a message and the current 6-digit authenticator code.", "error"); return; }
     if (new TextEncoder().encode(body).length > max) { notice("phoneSendError", "The message is too long. The limit is " + max.toLocaleString() + " bytes.", "error"); return; }
     const session = state.session, epoch = state.epoch;
-    const message = { to: $("composeTo").value, kind: $("composeKind").value, subject: $("composeSubject").value.trim(), body, code };
+    const message = { to: $("composeTo").value, kind: $("composeKind").value, subject: $("composeSubject").value.trim(), body, code, reply_to: state.replyTo ? state.replyTo.id : null };
     $("composeCode").value = "";
     state.sending = true; renderCompose(); notice("phoneSendError", ""); $("phoneSend").textContent = "Sending…";
     try {
@@ -2850,6 +2998,7 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
       if (epoch !== state.epoch) return;
       state.deliveries.unshift({ id: result.comment_id }); state.deliveries.length = Math.min(20, state.deliveries.length);
       $("composeBody").value = ""; $("composeSubject").value = "";
+      state.replyTo = null;
       renderDeliveries();
       await refresh();
     } catch (err) {
@@ -2882,8 +3031,12 @@ body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto
         if (target !== null) { event.preventDefault(); showView(tabs[target].dataset.view, true); }
       });
     });
-    for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { state.limit = 50; renderTimeline(); });
-    $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.limit = 50; renderTimeline(); });
+    for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
+    $("filterAll").addEventListener("click", () => scopeToYou(false));
+    $("filterToYou").addEventListener("click", () => scopeToYou(true));
+    $("phoneCancelReply").addEventListener("click", () => { state.replyTo = null; renderCompose(); });
+    $("composeTo").addEventListener("change", () => { state.replyTo = null; renderCompose(); });
+    $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
     $("phoneMore").addEventListener("click", () => { state.limit += 50; renderTimeline(); });
     $("phoneMapWindow").addEventListener("change", renderMap);
     window.addEventListener("resize", () => { if (state.view === "map") renderMap(); });
