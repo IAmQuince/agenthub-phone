@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qTfgvKbQz8F/hYc2nSeCnJvBavKQM2EHGJ0viQh59W8=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-A7cSdJcqOUqPaywtU/l3MfOaZi6IIKfq4uiQEBnwFw0=' 'sha256-TCbKx7vZ020hVhIp5lqyr50xpTeEu/Z0bpeDPgS47Dc='; style-src 'sha256-OA/YzVP8EGJpJtQALzse4pilnjUYSJ8ySRGYSL4qRPY='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BsNbQ6E9+gDDBO7DCGHjMVG1ZNI29AhafW/u6Xzt94k=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-fvkFq7rbmqH3dUHMC9Vk+L19ikGxKtxpYzHAXVfU/ns='; style-src 'sha256-OA/YzVP8EGJpJtQALzse4pilnjUYSJ8ySRGYSL4qRPY='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -1145,7 +1145,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-17T20:25:11Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-17T21:12:22Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Agent Hub page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2366,6 +2366,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
  *
  *   connect({repo, token, passphrase})            -> {snapshot, etag, kid, keys}
  *   poll({repo, token, etag, keys})               -> {changed, snapshot?, etag, kid}
+ *        snapshot: the live state + messages (all day files, newest first) + beat {at, next_by, every}
+ *        + updated_at (the newer of the beat and the live state)
  *   send({repo, token, issue, keys, message})     -> {comment_id, url}
  *        message: {to, kind, subject, body, code, reply_to?}   (reply_to: a message id; threads the answer)
  *   remember({repo, token, keys}) · load() -> {repo, token, keys} | null · forget()
@@ -2382,7 +2384,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   // Only a test build (hub/phonepage.build(test_api=...)) sets AgentHubPhoneTestApi, and only then does
   // the page's CSP allow that origin; a real build talks to GitHub and nothing else.
   const API = globalThis.AgentHubPhoneTestApi || "https://api.github.com";
-  const FILE = "hub.seal.json";
+  const LIVE = "live.seal.json", BEAT = "beat.seal.json", LEGACY = "hub.seal.json";
+  const DAY_RE = /^msgs-[0-9A-Za-z-]{1,40}\.seal\.json$/;  // message block files (by id; older hubs: by day)
   const BRANCH = "status";
   const PREFIX = "🔒 agenthub ";
   const REPO_RE = /^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})\/[A-Za-z0-9._-]{1,100}$/;
@@ -2533,33 +2536,76 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (res.status === 401) throw new PhoneError("AUTH", "GitHub rejected the token (expired or revoked?)");
     if ((res.status === 403 || res.status === 429) && res.headers.get("X-RateLimit-Remaining") === "0") throw new PhoneError("RATE", "GitHub rate limit; try again in a few minutes");
     if (res.status === 403) throw new PhoneError("AUTH", "the token lacks a permission for this (" + msg + ")");
-    if (res.status === 404) throw new PhoneError("NOT_FOUND", "not found: check the repository name, the token's repository access, and that the hub has published");
+    if (res.status === 404 || res.status === 409) throw new PhoneError("NOT_FOUND", "not found: check the repository name, the token's repository access, and that the hub has published");
     throw new PhoneError("NETWORK", "GitHub answered " + res.status + (msg ? ": " + msg : ""));
   }
 
-  async function fetchEnvelope(repo, token, etag) {
-    const r = await gh(token, "GET", "/repos/" + repo + "/contents/" + FILE + "?ref=" + BRANCH, { etag, accept: "application/vnd.github.raw+json" });
+  // The hub publishes the branch as separate sealed files: live.seal.json (current state), message
+  // blocks msgs-NNNNNN.seal.json (20 messages each by id; an unchanged block keeps identical bytes) and
+  // beat.seal.json (the heartbeat). One conditional tree request per poll (free when nothing changed); a file is
+  // downloaded only when its blob changed, and each blob is decrypted once per page session.
+  const opened = new Map();  // "kid:purpose:blob sha" -> opened value
+
+  async function listBranch(repo, token, etag) {
+    const r = await gh(token, "GET", "/repos/" + repo + "/git/trees/" + BRANCH, { etag });
     if (r.status === 304) return { changed: false, etag: r.etag };
-    let env;
-    try { env = await r.res.json(); } catch (_) { throw new PhoneError("FORMAT", "the published file is not JSON"); }
-    return { changed: true, etag: r.etag, env };
+    let tree;
+    try { tree = await r.res.json(); } catch (_) { throw new PhoneError("FORMAT", "the branch listing is not JSON"); }
+    const files = {};
+    for (const e of (tree && tree.tree) || []) if (e && e.type === "blob" && typeof e.sha === "string") files[e.path] = e.sha;
+    return { changed: true, etag: r.etag, files };
+  }
+
+  async function blobEnvelope(repo, token, sha) {
+    if (!/^[0-9a-f]{40}$/.test(sha)) throw new PhoneError("FORMAT", "bad file id in the branch listing");
+    const r = await gh(token, "GET", "/repos/" + repo + "/git/blobs/" + sha, { accept: "application/vnd.github.raw+json" });
+    try { return await r.res.json(); } catch (_) { throw new PhoneError("FORMAT", "a published file is not JSON"); }
+  }
+
+  async function openFile(repo, token, sha, keys, purpose, env) {
+    const key = keys.kid + ":" + purpose + ":" + sha;
+    if (!opened.has(key)) opened.set(key, await open(env || await blobEnvelope(repo, token, sha), keys, purpose));
+    return opened.get(key);
+  }
+
+  async function assemble(repo, token, files, keys) {
+    if (!files[LIVE]) {
+      if (files[LEGACY]) return openFile(repo, token, files[LEGACY], keys, "snapshot");  // an older hub's single file
+      throw new PhoneError("NOT_FOUND", "the hub has not published yet");
+    }
+    const days = Object.keys(files).filter((p) => DAY_RE.test(p)).sort();
+    const [live, beat, ...dayLists] = await Promise.all([
+      openFile(repo, token, files[LIVE], keys, "live"),
+      files[BEAT] ? openFile(repo, token, files[BEAT], keys, "beat") : Promise.resolve(null),
+      ...days.map((p) => openFile(repo, token, files[p], keys, "day")),
+    ]);
+    const current = new Set(Object.values(files));
+    for (const k of opened.keys()) if (!current.has(k.split(":")[2])) opened.delete(k);  // days that dropped off
+    const messages = [].concat(...dayLists.map((d) => (d && Array.isArray(d.messages) ? d.messages : []))).sort((a, b) => b.id - a.id);
+    const updated = beat && Date.parse(beat.at) > Date.parse(live.generated_at) ? beat.at : live.generated_at;
+    return Object.assign({}, live, { messages, beat: beat || null, updated_at: updated });
   }
 
   async function connect({ repo, token, passphrase }) {
     repo = String(repo || "").trim();
     token = String(token || "").trim();
     checkInputs(repo, token);
-    const got = await fetchEnvelope(repo, token, null);
-    const keys = await deriveKeys(passphrase, got.env && got.env.kdf);
-    if (got.env.kid !== keys.kid) throw new PhoneError("BAD_KEY", "wrong passphrase");
-    const snapshot = await open(got.env, keys, "snapshot");
+    const got = await listBranch(repo, token, null);
+    const first = got.files[LIVE] ? [LIVE, "live"] : got.files[LEGACY] ? [LEGACY, "snapshot"] : null;
+    if (!first) throw new PhoneError("NOT_FOUND", "the hub has not published yet (switch it to Monitor on the computer)");
+    const env = await blobEnvelope(repo, token, got.files[first[0]]);
+    const keys = await deriveKeys(passphrase, env && env.kdf);
+    if (env.kid !== keys.kid) throw new PhoneError("BAD_KEY", "wrong passphrase");
+    opened.clear();
+    await openFile(repo, token, got.files[first[0]], keys, first[1], env);
+    const snapshot = await assemble(repo, token, got.files, keys);
     return { snapshot, etag: got.etag, kid: keys.kid, keys };
   }
 
   async function poll({ repo, token, etag, keys }) {
-    const got = await fetchEnvelope(repo, token, etag);
+    const got = await listBranch(repo, token, etag);
     if (!got.changed) return { changed: false, etag: got.etag, kid: keys.kid };
-    const snapshot = await open(got.env, keys, "snapshot");
+    const snapshot = await assemble(repo, token, got.files, keys);
     return { changed: true, snapshot, etag: got.etag, kid: keys.kid };
   }
 
@@ -2599,7 +2645,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   const remember = ({ repo, token, keys }) => idb("readwrite", (s) => s.put({ repo, token, keys, saved_at: new Date().toISOString() }, KEY));
   const load = async () => { try { return (await idb("readonly", (s) => s.get(KEY))) || null; } catch (_) { return null; } };
-  const forget = () => idb("readwrite", (s) => s.delete(KEY));
+  const forget = () => { opened.clear(); return idb("readwrite", (s) => s.delete(KEY)); };
 
   globalThis.AgentHubPhone = {
     connect, poll, send, remember, load, forget, PhoneError,
@@ -2642,6 +2688,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const seconds = Math.max(0, Math.floor((Date.now() - date) / 1000));
     return seconds < 60 ? seconds + "s ago" : seconds < 3600 ? Math.floor(seconds / 60) + "m ago" : seconds < 86400 ? Math.floor(seconds / 3600) + "h ago" : Math.floor(seconds / 86400) + "d ago";
   }
+  /** Clock time of a snapshot: "4:31 PM" today, "Oct 16, 4:31 PM" otherwise. */
+  function clock(v) {
+    const date = Date.parse(v);
+    if (!Number.isFinite(date)) return "unknown";
+    const d = new Date(date);
+    const time = d.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    return d.toDateString() === new Date().toDateString() ? time : d.toLocaleDateString([], { month: "short", day: "numeric" }) + ", " + time;
+  }
   function notice(id, text, kind) {
     const node = $(id);
     node.textContent = text || "";
@@ -2653,13 +2707,25 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   function metric(label, value) {
     return el("div", { class: "phone-meter" }, el("span", {}, label), UI.meter(value, { wide: true, label: label + " used" }), el("span", { class: "phone-percent", title: finite(value) ? null : "Usage unavailable" }, percent(value)));
   }
+  /** Whether the hub has spoken within two minutes of when it said it would (its heartbeat's next_by). */
+  function hubOnTime(s) {
+    const due = s.beat && Number.isFinite(Date.parse(s.beat.next_by)) ? Date.parse(s.beat.next_by) : Date.parse(s.updated_at || s.generated_at);
+    return Number.isFinite(due) && Date.now() - due <= 120000;
+  }
   function updateAge() {
     if (!state.snapshot) return;
-    const ts = state.snapshot.generated_at;
-    const age = Date.now() - Date.parse(ts);
-    $("phoneAge").textContent = "Updated " + ago(ts);
-    $("phoneAge").className = "phone-age" + (!Number.isFinite(age) || age > 600000 ? " is-error" : age > 120000 ? " is-warn" : "");
-    $("phoneAge").title = "Snapshot generated " + fmtTime(ts);
+    const s = state.snapshot;
+    const ts = s.updated_at || s.generated_at;
+    // The clock time of the hub's last word (heartbeat or new content). The hub says when the next heartbeat
+    // is due (every 5 min while busy, 30 min when idle), so lateness is measured from that: amber 2 min late,
+    // red 10 min late. Older hubs without a heartbeat: from the snapshot time.
+    const due = s.beat && Number.isFinite(Date.parse(s.beat.next_by)) ? Date.parse(s.beat.next_by) : Date.parse(ts);
+    const late = Date.now() - due;
+    $("phoneAge").textContent = "Updated " + clock(ts);
+    $("phoneAge").className = "phone-age" + (!Number.isFinite(late) || late > 600000 ? " is-error" : late > 120000 ? " is-warn" : "");
+    $("phoneAge").title = "Hub last heard " + fmtTime(ts) + " (" + ago(ts) + ")" +
+      (s.beat && s.beat.next_by ? "; next update due by " + clock(s.beat.next_by) : "") +
+      (s.generated_at && s.generated_at !== ts ? "; content from " + clock(s.generated_at) : "");
     for (const node of document.querySelectorAll("[data-phone-age]")) node.textContent = ago(node.dataset.phoneAge);
     if (state.view === "map") renderMap();
   }
@@ -2824,8 +2890,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const s = state.snapshot;
     const info = AgentMap.render($("phoneMap"), {
       agents: s.agents, usage: (s.usage || {}).agents || {}, owner: s.owner || {}, ownerValid: !!(s.inbox || {}).enabled,
-      hub: { live: Number.isFinite(Date.parse(s.generated_at)) && Date.now() - Date.parse(s.generated_at) <= 120000, address: "Encrypted GitHub snapshot", detail: "Generated " + fmtTime(s.generated_at) },
-      labels: { owner: "you · this phone", ownerTitle: "This phone, reading the hub through GitHub", link: "snapshot via GitHub · " + ago(s.generated_at), linkTitle: "Encrypted snapshot, updated " + ago(s.generated_at) },
+      hub: { live: hubOnTime(s), address: "Encrypted GitHub snapshot", detail: "Updated " + fmtTime(s.updated_at || s.generated_at) },
+      labels: { owner: "you · this phone", ownerTitle: "This phone, reading the hub through GitHub", link: "snapshot via GitHub · " + clock(s.updated_at || s.generated_at), linkTitle: "Encrypted snapshot, updated " + clock(s.updated_at || s.generated_at) },
       repos: list((s.repos || {}).repos), repoStaleAfter: (s.repos || {}).stale_after_seconds || 60,
       messages: s.messages, rel: ago, now: Date.now(), windowMinutes: Number($("phoneMapWindow").value),
     }, { onAgent: filterAgent, onOwner: () => scopeToYou(true), onRepo: () => showView("repos", true) });
