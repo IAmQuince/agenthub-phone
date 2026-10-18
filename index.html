@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-BsNbQ6E9+gDDBO7DCGHjMVG1ZNI29AhafW/u6Xzt94k=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-fvkFq7rbmqH3dUHMC9Vk+L19ikGxKtxpYzHAXVfU/ns='; style-src 'sha256-OA/YzVP8EGJpJtQALzse4pilnjUYSJ8ySRGYSL4qRPY='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Eq+EofS9xLs6z6DBM19FwreFxOU0dD3VocK/I03aH9M=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-fIsWgT4bVBbgjZvr5SWLJcPUPuykCMyGNzR7QxMep68='; style-src 'sha256-eJnzMJsB9yWSerANjMKARRFSxmLq0vJ6wGHOFl0jtHQ='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -543,6 +543,7 @@ body.compact .timeline { padding-top: 6px; }
 .card h4 { margin: 8px 0 4px; font-size: 12.5px; }
 .card .note { color: var(--faint); font-size: 11.5px; margin: 4px 0 0; }
 .win-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 46px; gap: 6px; align-items: center; font-size: 12px; margin: 3px 0; }
+.win-row.plan-window { grid-template-columns: minmax(105px, 36%) minmax(0, 1fr) 46px; }
 .win-row .win-label { color: var(--muted); font-weight: 600; }
 .win-row .win-pct { text-align: right; font-variant-numeric: tabular-nums; }
 .win-reset { grid-column: 2 / span 2; color: var(--faint); font-size: 11px; margin-top: -2px; }
@@ -816,6 +817,71 @@ body.how-page { overflow: auto; display: block; height: auto; min-height: 100%; 
 .keys td:first-child { white-space: nowrap; width: 1%; }
 kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel-2); }
 
+/* Rules reference and shared charts. */
+.rulesview, .graphsview { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px; }
+.rules-toolbar, .rules-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 0; }
+.rules-toolbar { position: sticky; top: -14px; background: var(--panel); z-index: 2; border-bottom: 1px solid var(--border); }
+.rules-toolbar h2 { font-size: 17px; margin: 4px auto 4px 0; }
+.rules-form { border: 0; padding: 0; margin: 0; min-width: 0; }
+.rules-section { margin-block: 12px; }
+.rules-section h3, .graph-card h3 { font-size: 15px; margin: 0 0 12px; }
+.rules-section h4 { margin: 12px 0 8px; }
+.rules-agent { padding: 10px 0; border-bottom: 1px solid var(--border); }
+.rules-agent h4 { display: flex; align-items: center; gap: 8px; overflow-wrap: anywhere; }
+.rules-team { width: 100%; table-layout: fixed; }
+.rules-team th:first-child { width: 145px; }
+.rules-team td, .rules-team th { vertical-align: top; text-align: left; white-space: normal; padding: 8px; }
+.rules-team th .rules-check { font-weight: normal; }
+.rules-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; margin-block: 6px; font-size: 12px; }
+.rules-field input, .rules-field select, .rules-field textarea, .rules-map-row input { width: 100%; min-width: 0; }
+.rules-form input:not([type="checkbox"]):not([type="radio"]), .rules-form select, .rules-form textarea, .graphsview select {
+  background: var(--panel); color: var(--text); border: 1px solid var(--border-strong); border-radius: 4px;
+  padding: 6px 8px; font: inherit; min-height: 32px;
+}
+.rules-form input:focus-visible, .rules-form select:focus-visible, .rules-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+.rules-field textarea { resize: vertical; }
+.rules-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap: 8px 12px; }
+.rules-choices { border: 1px solid var(--border); border-radius: 5px; margin: 8px 0; padding: 8px 10px; min-width: 0; }
+.rules-choices legend { font-size: 12px; color: var(--muted); }
+.rules-check { display: inline-flex; align-items: center; gap: 5px; margin: 5px 12px 5px 0; font-size: 12px; overflow-wrap: anywhere; }
+.rules-check input { flex: 0 0 auto; }
+.rules-command { display: flex; align-items: flex-start; gap: 8px; }
+.rules-command code { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rules-repo { padding-block: 8px; border-bottom: 1px solid var(--border); }
+.rules-map-row { display: grid; grid-template-columns: minmax(110px, 2fr) repeat(4, minmax(50px, 1fr)) auto; gap: 5px; padding-bottom: 6px; }
+.rules-map-row:has(input[type="text"] + input[type="text"]) { grid-template-columns: minmax(110px, 1fr) minmax(120px, 2fr) auto; }
+[aria-invalid="true"] { border-color: var(--bad) !important; outline: 2px solid var(--bad); }
+.lead-badge { color: var(--k-directive); background: var(--k-directive-bg); }
+.rules-table-scroll { overflow-x: auto; }
+.graph-card { margin-block: 12px; min-width: 0; }
+.graph-card h4 { margin: 12px 0 0; }
+.graph-entry { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+.agent-chart { width: 100%; min-width: 0; }
+.agent-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+.chart-interactive { border-radius: 4px; }
+.chart-interactive:focus-visible, .agent-chart rect:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.chart-grid { stroke: var(--border); stroke-width: 1; }
+.chart-tick { fill: var(--muted); font: 10px system-ui, sans-serif; }
+.chart-reset { stroke: var(--warn); stroke-width: 1; stroke-dasharray: 3 4; }
+.chart-projection { fill: none; stroke: var(--accent); stroke-width: 1.5; stroke-dasharray: 5 4; }
+.chart-cursor { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 2 3; }
+.chart-readout { font-size: 12px; color: var(--muted); min-height: 2.6em; margin: 6px 0; overflow-wrap: anywhere; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 5px; }
+.chart-key { background: var(--panel-2); color: var(--text); border: 1px solid var(--border); border-left: 4px solid var(--chart-colour); border-radius: 4px; padding: 5px 7px; font-size: 11px; cursor: pointer; }
+.chart-key[aria-pressed="false"] { opacity: .55; text-decoration: line-through; }
+.chart-colour-0 { --chart-colour: var(--accent); } .chart-colour-1 { --chart-colour: var(--ok); }
+.chart-colour-2 { --chart-colour: var(--k-directive); } .chart-colour-3 { --chart-colour: var(--warn); }
+.chart-colour-4 { --chart-colour: var(--k-report); } .chart-colour-5 { --chart-colour: var(--bad); }
+.history-messages th, .history-messages td { white-space: normal; min-width: 85px; }
+@media (max-width: 760px) {
+  .rulesview, .graphsview { max-height: 80vh; padding: 12px; }
+  .rules-map-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .rules-map-row:has(input[type="text"] + input[type="text"]) { grid-template-columns: minmax(0, 1fr); }
+  .rules-team, .rules-team tbody, .rules-team tr, .rules-team th, .rules-team td { display: block; width: 100%; }
+  .rules-team thead { display: none; }
+  .rules-team th:first-child { width: 100%; }
+}
+
 /* ----------------------------------------------------------- responsive */
 /* Medium widths: the repositories pane stacks under the agents pane, so the
    timeline keeps the full height. */
@@ -981,10 +1047,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 .phone-connected .phone-main { padding-bottom: calc(84px + env(safe-area-inset-bottom)); }
 .phone-overview { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; min-height: 28px; margin: 0 0 10px; color: var(--muted); font-size: 12px; }
 .phone-overview button { padding: 0 4px; border: 0; background: none; color: var(--accent); min-height: 32px; font-size: inherit; }
-.phone-tabs { position: fixed; z-index: 15; bottom: 0; inset-inline: 0; display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 0; margin: 0; padding: 4px max(4px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)); border: 0; border-top: 1px solid var(--border); border-radius: 0; background: var(--panel); }
+.phone-tabs { position: fixed; z-index: 15; bottom: 0; inset-inline: 0; display: grid; grid-auto-flow: column; grid-template-columns: none; grid-auto-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 4px max(4px, env(safe-area-inset-right)) calc(4px + env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)); border: 0; border-top: 1px solid var(--border); border-radius: 0; background: var(--panel); }
 .phone-tabs button { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 0; min-height: 52px; padding: 3px 1px; font-size: 10px; font-weight: 500; border-radius: 8px; }
 .phone-tabs button > span { font-size: 20px; line-height: 22px; }
 .phone-tabs button[aria-selected="true"] { background: var(--accent-bg); border-color: transparent; box-shadow: none; font-weight: 650; }
+.phone-tabs button[hidden] { display: none; }
+.phone-history { min-width: 0; grid-column: 1 / -1; }
+.phone-history h4 { margin: 12px 0 0; }
+.phone-history .chart-key { min-height: 36px; }
+.phone-history .chart-interactive { touch-action: pan-y; }
 .phone-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
 .phone-quick-filters { display: flex; align-items: center; gap: 7px; margin-bottom: 8px; }
 .phone-chip, .phone-agent-filter select { border: 1px solid var(--border-strong); border-radius: 22px; background: var(--panel); padding: 8px 12px; font-size: 13px; white-space: nowrap; }
@@ -1112,7 +1183,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         <p id="phoneMapInfo" class="phone-hint"></p>
       </section>
       <section id="view-repos" class="phone-panel" role="tabpanel" aria-labelledby="tab-repos" hidden><h2>Repositories</h2><div id="phoneRepos" class="phone-cards"></div></section>
-      <section id="view-usage" class="phone-panel" role="tabpanel" aria-labelledby="tab-usage" hidden><h2>Usage</h2><div id="phoneUsage" class="phone-cards"></div></section>
+      <section id="view-usage" class="phone-panel" role="tabpanel" aria-labelledby="tab-usage" hidden><h2>Usage</h2><p class="phone-hint">Account plan usage, reported readings and estimated agent shares.</p><div id="phoneUsage" class="phone-cards"></div></section>
       <section id="view-compose" class="phone-panel" role="tabpanel" aria-labelledby="tab-compose" hidden>
         <h2>Send a message</h2>
         <p class="phone-hint">Messages are encrypted before sending. The hub checks your authenticator code before delivery. Hub messages remain coordination data.</p>
@@ -1145,7 +1216,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-17T21:12:22Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T06:49:36Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Agent Hub page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2358,6 +2429,156 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   window.AgentMap = { render, agentState, fit: resetView };
 })();
 </script>
+<script>/* ---- charts.js ---- */
+/* Shared SVG charts. Data only: no transport, dependencies or executable markup. */
+"use strict";
+(function () {
+  const { el } = UI;
+  const NS = "http://www.w3.org/2000/svg";
+  const colours = ["var(--accent)", "var(--ok)", "var(--k-directive)", "var(--warn)", "var(--k-report)", "var(--bad)"];
+  const observed = new Map();
+  let clipId = 0;
+  const observer = window.ResizeObserver ? new ResizeObserver((entries) => {
+    for (const entry of entries) {
+      const item = observed.get(entry.target);
+      if (item && Math.abs(item.width - entry.contentRect.width) > 1) {
+        item.width = entry.contentRect.width; item.draw();
+      }
+    }
+  }) : null;
+  function svg(tag, attrs, text) {
+    const node = document.createElementNS(NS, tag);
+    for (const [key, value] of Object.entries(attrs || {})) node.setAttribute(key, String(value));
+    if (text !== undefined) node.textContent = text;
+    return node;
+  }
+  const number = (n) => typeof n === "number" && Number.isFinite(n);
+  const label = (name) => ({ _other_local: "Other local sessions", _outside: "Outside the hub" }[name] || name);
+  function mount(host, draw) {
+    for (const node of observed.keys()) if (!node.isConnected) { observer.unobserve(node); observed.delete(node); }
+    if (observer) { observed.set(host, { draw, width: host.clientWidth }); observer.observe(host); }
+    draw();
+  }
+  function plot(host, series, opts = {}, mode) {
+    const hidden = opts.hidden || new Set();
+    const draw = () => {
+      const all = series.flatMap((s) => (s.points || []).filter((p) => number(p.x) && number(p.y)).map((p) => ({ ...p, name: s.name })));
+      const shown = series.filter((s) => !hidden.has(s.name));
+      const points = all.filter((p) => !hidden.has(p.name));
+      host.classList.add("agent-chart");
+      if (!all.length) { host.replaceChildren(el("p", { class: "note" }, opts.empty || "No readings in this window.")); return; }
+      const W = Math.max(280, host.clientWidth || 600), H = 205, L = 43, R = 18, T = 18, B = 39;
+      const min = number(opts.minX) ? opts.minX : Math.min(...all.map((p) => p.x));
+      const max = Math.max(min + 1, number(opts.maxX) ? opts.maxX : Math.max(...all.map((p) => p.x)));
+      const top = opts.maxY || 100;
+      const x = (v) => L + (v - min) / (max - min) * (W - L - R);
+      const y = (v) => H - B - Math.max(0, Math.min(top, v)) / top * (H - B - T);
+      const chart = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": opts.title || "Usage chart" });
+      chart.append(svg("title", {}, (opts.title || "Usage chart") + ". Focus the chart and use arrow keys to explore readings."));
+      const id = "agent-chart-clip-" + ++clipId, defs = svg("defs"), clip = svg("clipPath", { id });
+      clip.append(svg("rect", { x: L - 3, y: T - 3, width: W - L - R + 6, height: H - B - T + 6 })); defs.append(clip); chart.append(defs);
+      const drawing = svg("g", { "clip-path": "url(#" + id + ")" }); chart.append(drawing);
+      for (const value of [0, top / 2, top]) {
+        chart.append(svg("line", { x1: L, x2: W - R, y1: y(value), y2: y(value), class: "chart-grid" }),
+          svg("text", { x: L - 6, y: y(value) + 4, "text-anchor": "end", class: "chart-tick" }, value + (opts.unit ?? "%")));
+      }
+      const fmt = opts.formatX || ((v) => new Date(v).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }));
+      chart.append(svg("text", { x: L, y: H - 9, class: "chart-tick" }, fmt(min)),
+        svg("text", { x: W - R, y: H - 9, "text-anchor": "end", class: "chart-tick" }, fmt(max)));
+      for (const reset of opts.resets || []) if (number(reset) && reset >= min && reset <= max) {
+        const marker = svg("line", { x1: x(reset), x2: x(reset), y1: T, y2: H - B, class: "chart-reset" });
+        marker.append(svg("title", {}, "Reset · " + fmt(reset))); chart.append(marker);
+      }
+      shown.forEach((s) => {
+        let data = (s.points || []).filter((p) => number(p.x) && number(p.y)).sort((a, b) => a.x - b.x);
+        const carry = data.filter((p) => p.x < min).at(-1);
+        data = data.filter((p) => p.x >= min && p.x <= max);
+        if (carry && (!data.length || data[0].x > min)) data.unshift({ ...carry, x: min });
+        if (!data.length) return;
+        const colour = colours[series.indexOf(s) % colours.length];
+        let path = "";
+        data.forEach((p, i) => {
+          if (!i || p.break) path += ` M${x(p.x)},${y(p.y)}`;
+          else path += mode === "steps" ? ` H${x(p.x)} V${y(p.y)}` : ` L${x(p.x)},${y(p.y)}`;
+          drawing.append(svg("circle", { cx: x(p.x), cy: y(p.y), r: 2.5, fill: colour }));
+        });
+        drawing.append(svg("path", { d: path, fill: "none", stroke: colour, "stroke-width": 2 }));
+      });
+      if (opts.projection && number(opts.projection.x) && number(opts.projection.y) && points.length) {
+        const last = points[points.length - 1], p = opts.projection;
+        if (p.x >= min && p.x <= max) {
+          drawing.append(svg("path", { d: `M${x(last.x)},${y(last.y)} L${x(p.x)},${y(p.y)}`, class: "chart-projection" }),
+            svg("text", { x: Math.max(L, Math.min(W - R - 56, x(p.x) - 20)), y: y(p.y) - 8, class: "chart-tick" }, "estimate"));
+        }
+      }
+      const ordered = [...points].sort((a, b) => a.x - b.x);
+      const readout = el("p", { class: "chart-readout", "aria-live": "polite", "aria-atomic": "true" }, "Tap a reading or use the arrow keys.");
+      const cursor = svg("line", { x1: L, x2: L, y1: T, y2: H - B, class: "chart-cursor", visibility: "hidden" });
+      chart.append(cursor);
+      let selected = -1;
+      const show = (i) => {
+        if (!ordered.length) return;
+        selected = (i + ordered.length) % ordered.length;
+        const p = ordered[selected];
+        const at = Math.max(L, Math.min(W - R, x(p.x)));
+        cursor.setAttribute("x1", at); cursor.setAttribute("x2", at); cursor.setAttribute("visibility", "visible");
+        readout.textContent = p.label || `${label(p.name)} · ${fmt(p.x)} · ${Math.round(p.y * 100) / 100}${opts.unit ?? "%"}`;
+      };
+      const wrapper = el("div", { class: "chart-interactive", tabindex: "0", role: "group", "aria-label": (opts.title || "Usage chart") + ". Arrow keys explore readings." }, chart);
+      wrapper.addEventListener("keydown", (event) => {
+        if (["ArrowLeft", "ArrowRight", "Home", "End"].includes(event.key)) {
+          event.preventDefault(); show(event.key === "Home" ? 0 : event.key === "End" ? ordered.length - 1 : selected + (event.key === "ArrowLeft" ? -1 : 1));
+        }
+      });
+      wrapper.addEventListener("pointerdown", (event) => {
+        const rect = chart.getBoundingClientRect(), target = min + ((event.clientX - rect.left) / rect.width * W - L) / (W - L - R) * (max - min);
+        let near = 0; ordered.forEach((p, i) => { if (Math.abs(p.x - target) < Math.abs(ordered[near].x - target)) near = i; }); show(near);
+      });
+      wrapper.addEventListener("pointermove", (event) => { if (event.pointerType === "mouse") wrapper.dispatchEvent(new PointerEvent("pointerdown", { clientX: event.clientX })); });
+      const legend = el("div", { class: "chart-legend" }, series.map((s, i) => {
+        const button = el("button", { type: "button", class: "chart-key chart-colour-" + i % colours.length, dataset: { chartKey: s.name }, "aria-pressed": String(!hidden.has(s.name)), onclick: () => { if (hidden.has(s.name)) hidden.delete(s.name); else hidden.add(s.name); draw(); if (opts.onToggle) opts.onToggle(s.name, host); else [...host.querySelectorAll(".chart-key")].find((b) => b.dataset.chartKey === s.name)?.focus({ preventScroll: true }); } }, label(s.name));
+        return button;
+      }));
+      host.replaceChildren(wrapper, legend, readout);
+    };
+    mount(host, draw);
+  }
+  function stacked(host, buckets, opts = {}) {
+    const names = [...new Set(buckets.flatMap((b) => Object.keys(b.by_agent || {})))];
+    const hidden = opts.hidden || new Set();
+    const draw = () => {
+      host.classList.add("agent-chart");
+      if (!buckets.length) { host.replaceChildren(el("p", { class: "note" }, "No attribution readings in this window.")); return; }
+      const W = Math.max(280, host.clientWidth || 600), H = 195, L = 43, B = 34, T = 15;
+      const sums = buckets.map((b) => Object.entries(b.by_agent || {}).reduce((sum, [n, v]) => sum + (!hidden.has(n) && number(v) ? Math.max(0, v) : 0), 0));
+      const max = Math.max(1, ...sums);
+      const starts = buckets.map((b) => Date.parse(b.start)), ends = buckets.map((b) => Date.parse(b.end));
+      const minTime = Math.min(...starts), maxTime = Math.max(minTime + 1, ...ends);
+      const timed = starts.every(Number.isFinite) && ends.every(Number.isFinite);
+      const step = (W - L - 14) / buckets.length;
+      const x = (time) => L + (time - minTime) / (maxTime - minTime) * (W - L - 14);
+      const chart = svg("svg", { viewBox: `0 0 ${W} ${H}`, role: "img", "aria-label": opts.title || "Estimated share of usage by agent" });
+      chart.append(svg("text", { x: 3, y: T + 4, class: "chart-tick" }, Math.round(max * 100) / 100 + "%"), svg("line", { x1: L, x2: W - 14, y1: H - B, y2: H - B, class: "chart-grid" }));
+      const readout = el("p", { class: "chart-readout", "aria-live": "polite" }, "Tap a bar or Tab to a segment for estimated usage.");
+      buckets.forEach((bucket, i) => {
+        let base = 0;
+        for (const [name, raw] of Object.entries(bucket.by_agent || {})) {
+          if (hidden.has(name) || !number(raw) || raw <= 0) continue;
+          const height = raw / max * (H - B - T);
+          const text = label(name) + " · " + Number(raw.toFixed(3)) + " percentage points (estimate) · " + new Date(bucket.start).toLocaleString();
+          const left = timed ? x(starts[i]) : L + i * step, width = timed ? x(ends[i]) - x(starts[i]) : step;
+          const rect = svg("rect", { x: left + 2, y: H - B - base - height, width: Math.max(1, width - 4), height, fill: colours[names.indexOf(name) % colours.length], tabindex: "0", role: "img", "aria-label": text });
+          rect.append(svg("title", {}, text)); rect.addEventListener("focus", () => { readout.textContent = text; }); rect.addEventListener("pointerdown", () => { readout.textContent = text; }); chart.append(rect); base += height;
+        }
+      });
+      chart.append(svg("text", { x: L, y: H - 8, class: "chart-tick" }, new Date(buckets[0].start).toLocaleDateString()), svg("text", { x: W - 14, y: H - 8, "text-anchor": "end", class: "chart-tick" }, new Date(buckets[buckets.length - 1].end).toLocaleDateString()));
+      host.replaceChildren(chart, el("div", { class: "chart-legend" }, names.map((name, i) => el("button", { type: "button", class: "chart-key chart-colour-" + i % colours.length, dataset: { chartKey: name }, "aria-pressed": String(!hidden.has(name)), onclick: () => { if (hidden.has(name)) hidden.delete(name); else hidden.add(name); draw(); if (opts.onToggle) opts.onToggle(name, host); else [...host.querySelectorAll(".chart-key")].find((b) => b.dataset.chartKey === name)?.focus({ preventScroll: true }); } }, label(name)))), readout);
+    };
+    mount(host, draw);
+  }
+  window.AgentCharts = { steps: (host, series, opts) => plot(host, series, opts, "steps"), lines: (host, series, opts) => plot(host, series, opts, "lines"), stacked };
+})();
+</script>
 <script>/* ---- phone/phonecore.js ---- */
 /* Agent Hub phone core: seal v1 crypto (WebCrypto) and the GitHub link, for the phone page.
  *
@@ -2664,7 +2885,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   const $ = (id) => document.getElementById(id);
   const state = { snapshot: null, session: null, view: "timeline", epoch: 0, polling: false,
     connecting: false, sending: false, limit: 50, expanded: new Set(), deliveries: [], fixture: false,
-    toYou: false, replyTo: null, threadCounts: new Map(), scrolls: new Map() };
+    toYou: false, replyTo: null, threadCounts: new Map(), scrolls: new Map(),
+    checkedAt: null, manualNoteUntil: 0 };  // when this phone last reached GitHub; how long a Refresh result stays up
   let pollTimer = null;
   const errorWords = {
     INPUT: "Check the repository, token and message details, then try again.",
@@ -2721,11 +2943,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     // red 10 min late. Older hubs without a heartbeat: from the snapshot time.
     const due = s.beat && Number.isFinite(Date.parse(s.beat.next_by)) ? Date.parse(s.beat.next_by) : Date.parse(ts);
     const late = Date.now() - due;
-    $("phoneAge").textContent = "Updated " + clock(ts);
+    // "Updated" is the hub's time; "checked" is when this phone last reached GitHub, so a quiet hub
+    // (one heartbeat every 5 or 30 minutes) still shows that the phone itself is live.
+    const checked = state.checkedAt ? new Date(state.checkedAt).toISOString() : null;
+    $("phoneAge").textContent = "Updated " + clock(ts) + (checked ? " · checked " + clock(checked) : "");
     $("phoneAge").className = "phone-age" + (!Number.isFinite(late) || late > 600000 ? " is-error" : late > 120000 ? " is-warn" : "");
     $("phoneAge").title = "Hub last heard " + fmtTime(ts) + " (" + ago(ts) + ")" +
       (s.beat && s.beat.next_by ? "; next update due by " + clock(s.beat.next_by) : "") +
-      (s.generated_at && s.generated_at !== ts ? "; content from " + clock(s.generated_at) : "");
+      (s.generated_at && s.generated_at !== ts ? "; content from " + clock(s.generated_at) : "") +
+      (checked ? "; phone last checked GitHub at " + fmtTime(checked) + " (" + ago(checked) + ")" : "");
     for (const node of document.querySelectorAll("[data-phone-age]")) node.textContent = ago(node.dataset.phoneAge);
     if (state.view === "map") renderMap();
   }
@@ -2741,6 +2967,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (options.some((v) => v.value === previous)) select.value = previous;
   }
   function showView(view, focus) {
+    if (state.snapshot && !viewEnabled(view)) return;
     const changed = state.view !== view;
     if (changed) state.scrolls.set(state.view, $("phoneMain").scrollTop);
     state.view = view;
@@ -2798,13 +3025,16 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   function acceptSnapshot(snapshot) {
     if (!snapshot || snapshot.format !== "agenthub.phone.v1" || !Array.isArray(snapshot.agents) || !Array.isArray(snapshot.messages)) throw { code: "FORMAT" };
     state.snapshot = snapshot;
+    for (const tab of $("phoneTabs").querySelectorAll("[data-view]")) tab.hidden = !viewEnabled(tab.dataset.view);
+    const nextView = viewEnabled(state.view) ? state.view : [...$("phoneTabs").querySelectorAll("[data-view]")].find((tab) => !tab.hidden)?.dataset.view || "compose";
+    showView(nextView);
     $("phoneSetup").hidden = true;
     $("phoneApp").hidden = false;
     $("phoneTabs").hidden = false;
     document.body.classList.add("phone-connected");
     $("phoneTitle").textContent = (snapshot.hub && snapshot.hub.title) || "Agent Hub";
     const unread = snapshot.owner && snapshot.owner.unread || 0;
-    $("phoneOverview").replaceChildren(el("span", {}, snapshot.agents.length + " agents"), "·", el("span", {}, snapshot.messages.length + " msgs"), "·", el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you"));
+    $("phoneOverview").replaceChildren(...[viewEnabled("agents") ? el("span", {}, snapshot.agents.length + " agents") : null, viewEnabled("timeline") ? el("span", {}, snapshot.messages.length + " msgs") : null, viewEnabled("timeline") ? el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you") : null].filter(Boolean));
     choose("filterAgent", [...new Set([...snapshot.agents.map((a) => a.name), ...snapshot.messages.flatMap((m) => [m.from, m.to]).filter((name) => name && !name.startsWith("#"))])].sort(), "Any agent");
     const threads = new Map();
     state.threadCounts = new Map();
@@ -2827,7 +3057,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const u = (usage.agents || {})[a.name] || {}, context = u.context || {};
       const status = AgentMap.agentState(a, u);
       return el("article", { class: "phone-card phone-agent st-" + status.key },
-        el("div", { class: "phone-card-head" }, el("h3", {}, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
+        el("div", { class: "phone-card-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), snapshot.rules?.lead === a.name ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Team lead" }, "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
         el("p", { class: "phone-agent-status" }, a.status || "No status set"),
         el("p", { class: "phone-meta" }, "Seen ", ageNode(a.last_seen), " · " + (a.unread || 0) + " unread · " + (a.unacked || 0) + " unacked"),
         a.workdir ? el("p", { class: "phone-meta mono", title: a.workdir }, a.workdir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() || a.workdir) : null,
@@ -2895,6 +3125,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       repos: list((s.repos || {}).repos), repoStaleAfter: (s.repos || {}).stale_after_seconds || 60,
       messages: s.messages, rel: ago, now: Date.now(), windowMinutes: Number($("phoneMapWindow").value),
     }, { onAgent: filterAgent, onOwner: () => scopeToYou(true), onRepo: () => showView("repos", true) });
+    for (const node of $("phoneMap").querySelectorAll(".map-node.agent")) {
+      const title = node.querySelector("title"), agent = s.agents.find((a) => title?.textContent.startsWith(a.name + " ("));
+      if (!agent) continue;
+      if (agent.name === s.rules?.lead) { const kind = node.querySelector(".t-kind"); if (kind) kind.textContent = "lead"; }
+      if (s.rules?.roles?.[agent.name]) title.textContent += "\nRole: " + s.rules.roles[agent.name];
+    }
     $("phoneMapInfo").textContent = s.agents.length + " agents · " + info.pairs + " conversations in this window";
   }
   function tracking(value, name) { return value && !value.error ? (name || "Tracking") + ": " + (value.ahead || 0) + " ahead, " + (value.behind || 0) + " behind" : ""; }
@@ -2915,11 +3151,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   function renderUsage() {
     const usage = state.snapshot.usage || {}, cards = [];
-    if (usage.enabled === false) { $("phoneUsage").replaceChildren(empty(usage.note || "Usage monitoring is disabled.")); return; }
+    if (usage.enabled === false) cards.push(empty(usage.note || "Usage monitoring is disabled."));
     for (const [tool, plan] of Object.entries(usage.plans || {})) {
       cards.push(el("article", { class: "phone-card" }, el("h3", {}, tool + (plan.plan_type ? " · " + plan.plan_type : "") + " plan"),
         list(plan.windows).length ? list(plan.windows).map((w) => el("div", { class: "phone-usage-window" }, metric(w.label || "Plan", w.used_percent), el("p", { class: "phone-hint" }, w.reset_passed ? "Window reset since this reading" : w.resets_at ? "Resets " + fmtTime(w.resets_at) : "Reset time unavailable"))) : el("p", { class: "phone-meta" }, plan.note || "Plan usage unavailable"),
-        plan.observed_at ? el("p", { class: "phone-meta" }, "Observed ", ageNode(plan.observed_at)) : null));
+        plan.observed_at ? el("p", { class: "phone-meta" }, plan.source === "app-usage-tool" ? "reported by " + (plan.reporter || "a Claude agent") + " · " : "Observed ", ageNode(plan.observed_at)) : null));
     }
     for (const [name, u] of Object.entries(usage.agents || {})) {
       const ctx = u.context || {};
@@ -2930,7 +3166,18 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         ctx.note || u.note ? el("p", { class: "phone-meta" }, ctx.note || u.note) : null));
     }
     $("phoneUsage").replaceChildren(...(cards.length ? cards : [empty("Usage information is not available in this snapshot.")]));
+    const history = state.snapshot.usage_history;
+    if (history && state.snapshot.display?.graphs !== false && window.AgentCharts) {
+      for (const limit of list(history.limits)) {
+        const remaining = el("div", {}), shares = el("div", {});
+        $("phoneUsage").append(el("article", { class: "phone-card phone-history" }, el("h3", {}, limit.tool + " · " + limit.label), el("h4", {}, "Usage remaining · 24 h"), remaining, el("h4", {}, "Who used it · estimate"), shares, el("p", { class: "phone-hint" }, "Agent shares are estimates. Plan limits are shared across the account.")));
+        AgentCharts.steps(remaining, [{ name: "Remaining", points: list(limit.points).map((p, i, source) => ({ x: Date.parse(p.t), y: p.remaining, break: i > 0 && source[i - 1].resets_at !== p.resets_at, label: fmtTime(p.t) + " · " + p.remaining + "% remaining · " + (p.reporter || p.source || "unknown source") })) }], { title: limit.label + " remaining", minX: Date.parse(history.since), maxX: Date.parse(history.until || history.generated_at), resets: list(limit.resets).map(Date.parse) });
+        AgentCharts.stacked(shares, list(limit.shares), { title: limit.label + " estimated shares" });
+      }
+      if (!list(history.limits).length) $("phoneUsage").append(empty(list(history.notes).join(" ") || "No history readings in this snapshot."));
+    }
   }
+  function viewEnabled(view) { const key = view === "timeline" ? "messages" : view; return view === "compose" || state.snapshot?.display?.[key] !== false; }
   function composeReason() {
     const inbox = (state.snapshot || {}).inbox || {};
     if (state.fixture) return "Demo data. Sending is disabled; no GitHub requests are made.";
@@ -2969,6 +3216,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   function clearCredentials() { $("setupToken").value = ""; $("setupPassphrase").value = ""; $("composeCode").value = ""; }
   async function disconnect(message) {
     ++state.epoch; stopPolling(); state.session = null; state.snapshot = null; state.polling = false;
+    state.checkedAt = null; state.manualNoteUntil = 0;
     state.deliveries = []; state.expanded.clear(); state.replyTo = null; state.toYou = false; state.threadCounts.clear(); state.scrolls.clear();
     $("phoneSetup").hidden = false; $("phoneApp").hidden = true; $("phoneRefresh").disabled = true;
     $("phoneTabs").hidden = true; document.body.classList.remove("phone-connected", "phone-mapmode");
@@ -2989,8 +3237,27 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
   }
   async function handleError(err) {
-    if (["AUTH", "BAD_KEY", "KEY_CHANGED"].includes(err && err.code)) await disconnect(errorText(err));
-    else notice("phoneNotice", errorText(err), "error");
+    if (["AUTH", "BAD_KEY", "KEY_CHANGED"].includes(err && err.code)) { await disconnect(errorText(err)); return; }
+    const s = state.snapshot;
+    state.manualNoteUntil = 0;  // the next successful check clears this
+    notice("phoneNotice", errorText(err) + (s ? " Showing the hub’s update from " + clock(s.updated_at || s.generated_at) + "." : ""), "error");
+  }
+  /** After a Refresh press: say what the check found, so an unchanged time is never unexplained. */
+  function refreshNote(changed) {
+    const s = state.snapshot;
+    if (!s) return;
+    const at = clock(new Date(state.checkedAt).toISOString()), sent = clock(s.updated_at || s.generated_at);
+    const next = s.beat && Number.isFinite(Date.parse(s.beat.next_by)) ? clock(s.beat.next_by) : null;
+    if (!hubOnTime(s)) {
+      notice("phoneNotice", "Checked GitHub at " + at + ", but the hub is late" + (next ? ": it said it would check in by " + next : "") +
+        ". The computer may be asleep, the hub stopped, or its internet down. What you see is from " + sent + ".", "warn");
+    } else if (changed) {
+      notice("phoneNotice", "Loaded the hub’s latest update (sent " + sent + ").", "ok");
+    } else {
+      notice("phoneNotice", "Checked GitHub at " + at + ": no newer update yet. The hub sent its last one at " + sent +
+        ". It sends one when something changes" + (next ? ", and checks in by " + next + " even when nothing does" : "") + ".", "ok");
+    }
+    state.manualNoteUntil = Date.now() + 60000;
   }
   async function connect(event) {
     event.preventDefault();
@@ -3011,6 +3278,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (epoch !== state.epoch) return;
       state.session = { repo, token, keys: result.keys, etag: result.etag };
       token = null;
+      state.checkedAt = Date.now(); state.manualNoteUntil = 0;
       notice("phoneNotice", "");
       acceptSnapshot(result.snapshot);
       if (remember) {
@@ -3032,7 +3300,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       }
     } finally { state.connecting = false; $("phoneConnect").disabled = false; $("phoneConnect").textContent = "Connect to hub"; }
   }
-  async function refresh() {
+  /** Check GitHub for a newer snapshot. manual: the Refresh button, which always reports what it found. */
+  async function refresh(manual = false) {
     if (!state.session || state.polling || document.hidden) return;
     const epoch = state.epoch, session = state.session;
     state.polling = true; stopPolling(); $("phoneRefresh").disabled = true; $("phoneRefresh").textContent = "Refreshing…";
@@ -3040,8 +3309,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const result = await AgentHubPhone.poll({ repo: session.repo, token: session.token, keys: session.keys, etag: session.etag });
       if (epoch !== state.epoch) return;
       session.etag = result.etag;
+      state.checkedAt = Date.now();
       if (result.changed) acceptSnapshot(result.snapshot);
-      notice("phoneNotice", ""); updateAge();
+      if (manual) refreshNote(result.changed);
+      // Automatic checks keep a Refresh result up for a minute unless new data replaces it.
+      else if (result.changed || Date.now() > state.manualNoteUntil) notice("phoneNotice", "");
+      updateAge();
     } catch (err) { if (epoch === state.epoch) await handleError(err); }
     finally {
       if (epoch === state.epoch) { state.polling = false; $("phoneRefresh").disabled = !state.snapshot; schedulePoll(); }
@@ -3079,7 +3352,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   async function start() {
     $("phoneConnectForm").addEventListener("submit", connect);
     $("phoneComposeForm").addEventListener("submit", send);
-    $("phoneRefresh").addEventListener("click", refresh);
+    $("phoneRefresh").addEventListener("click", () => refresh(true));
     $("phoneForget").addEventListener("click", async () => {
       $("phoneMenu").open = false;
       const decision = await UI.dialog({ title: "Forget this phone?", body: "Remove saved access and clear this page’s decrypted snapshot. You can connect again with your token and hub passphrase.", buttons: [{ label: "Cancel", value: false }, { label: "Forget phone", value: true, danger: true }] });
@@ -3089,12 +3362,13 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     tabs.forEach((tab, index) => {
       tab.addEventListener("click", () => showView(tab.dataset.view));
       tab.addEventListener("keydown", (event) => {
+        const visible = tabs.filter((item) => !item.hidden), index = visible.indexOf(tab);
         let target = null;
-        if (event.key === "ArrowRight") target = (index + 1) % tabs.length;
-        else if (event.key === "ArrowLeft") target = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === "ArrowRight") target = (index + 1) % visible.length;
+        else if (event.key === "ArrowLeft") target = (index - 1 + visible.length) % visible.length;
         else if (event.key === "Home") target = 0;
-        else if (event.key === "End") target = tabs.length - 1;
-        if (target !== null) { event.preventDefault(); showView(tabs[target].dataset.view, true); }
+        else if (event.key === "End") target = visible.length - 1;
+        if (target !== null) { event.preventDefault(); showView(visible[target].dataset.view, true); }
       });
     });
     for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
