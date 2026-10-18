@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YgRJ4K3LUr/FD+1cHZ0srUoAPd+SPTgnJjBhgKoRhsw=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-cMWjrXk3K9RYKs5J2OuxtAyxGuTAHvCYFTzYAFdU8jc='; style-src 'sha256-5N7qq7qxqwcqnLGX13DZHQj9W6n1BIpteuELV4RnAro='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-cji6TkOCGpc4mMaxVUzkjgMCcX9EJ/wvd+nxQAa4e5I=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-FPyDzk2yRkR44LmRrJFmV7ph88jtTFWOvC/ebNah4wE=' 'sha256-MG9XxHski7vpDXgqEaT0HzDGdbmY1MbPuVEg6vkoTgQ='; style-src 'sha256-S1xCnrUWQEuw/IHucTdK4VTco4gaFM9VjH9kwp7Tqyw='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -371,7 +371,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 /* ------------------------------------------------------------ center tabs */
 .ctabs {
   display: flex; align-items: flex-end; gap: 2px; padding: 5px 10px 0; background: var(--panel-2);
-  border-bottom: 1px solid var(--border); overflow-x: auto; flex: 0 0 auto; scrollbar-width: thin;
+  border-bottom: 1px solid var(--border); overflow-x: auto; overflow-y: hidden; flex: 0 0 auto; scrollbar-width: thin;
 }
 .ctab {
   display: inline-flex; align-items: center; gap: 6px; border: 1px solid transparent; border-bottom: 0;
@@ -857,6 +857,30 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-project-head code { overflow-wrap: anywhere; }
 .rules-group th { text-align: left; padding-top: 14px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted, #6b7280); }
 .rules-lane input[type="search"] { flex: 1; min-width: 180px; max-width: 360px; }
+/* Rules tab: sticky Save bar, jump links, collapsible sections */
+.rules-toolbar { position: sticky; top: 0; z-index: 5; background: var(--bg, #fff); padding: 6px 0; border-bottom: 1px solid var(--border, #d0d7de); }
+.rules-nav { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0; font-size: 13px; }
+.rules-nav a { text-decoration: none; }
+.rules-section > h3 { cursor: pointer; user-select: none; }
+.rules-section > h3::before { content: "▾ "; color: var(--muted, #6b7280); }
+.rules-section.collapsed > h3::before { content: "▸ "; }
+.rules-section.collapsed > .rules-section-body { display: none; }
+.rules-folder { display: flex; align-items: flex-end; gap: 6px; }
+.rules-folder > :first-child { flex: 1; min-width: 0; }
+/* Folder picker */
+.fs-picker { display: flex; flex-direction: column; gap: 8px; min-width: min(640px, 80vw); }
+.fs-roots-wrap, .fs-roots { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.fs-path { display: flex; gap: 6px; }
+.fs-path input { flex: 1; min-width: 0; }
+.fs-crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 2px; font-size: 13px; }
+.fs-sep { color: var(--muted, #6b7280); padding: 0 2px; }
+.fs-link { background: none; border: 0; padding: 2px 4px; color: var(--accent, #2563eb); cursor: pointer; font: inherit; text-align: left; }
+.fs-link:hover { text-decoration: underline; }
+.fs-list { max-height: 42vh; overflow: auto; border: 1px solid var(--border, #d0d7de); border-radius: 6px; padding: 4px; }
+.fs-row { display: flex; align-items: center; gap: 8px; padding: 2px 4px; flex-wrap: wrap; }
+.fs-row.is-repo .fs-link { font-weight: 600; }
+.fs-row code { overflow-wrap: anywhere; }
+.fs-found { max-height: 30vh; overflow: auto; }
 .rules-repo { padding-block: 8px; border-bottom: 1px solid var(--border); }
 .rules-map-row { display: grid; grid-template-columns: minmax(110px, 2fr) repeat(4, minmax(50px, 1fr)) auto; gap: 5px; padding-bottom: 6px; }
 .rules-map-row:has(input[type="text"] + input[type="text"]) { grid-template-columns: minmax(110px, 1fr) minmax(120px, 2fr) auto; }
@@ -1196,12 +1220,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       <section id="view-usage" class="phone-panel" role="tabpanel" aria-labelledby="tab-usage" hidden><h2>Usage</h2><p class="phone-hint">Account plan usage, reported readings and estimated agent shares.</p><div id="phoneUsage" class="phone-cards"></div></section>
       <section id="view-compose" class="phone-panel" role="tabpanel" aria-labelledby="tab-compose" hidden>
         <h2>Send a message</h2>
-        <p class="phone-hint">Messages are encrypted before sending. The hub checks your authenticator code before delivery. Hub messages remain coordination data.</p>
+        <p class="phone-hint">Messages are encrypted before sending. The hub checks your authenticator code before delivery. Hub messages remain coordination data. To start a conversation in a project, send to its #channel with kind <b>request</b>.</p>
         <p id="phoneComposeReason" class="phone-notice" hidden></p>
         <div id="phoneReplyContext" class="phone-reply-context" hidden><span id="phoneReplyLabel"></span><button id="phoneCancelReply" type="button" class="phone-text-action">Cancel reply</button></div>
         <form id="phoneComposeForm" class="phone-card">
           <fieldset id="phoneComposeFields">
             <div class="phone-field-pair"><label>To<select id="composeTo" required></select></label><label>Kind<select id="composeKind" required></select></label></div>
+            <label id="composeToolWrap" hidden>For<select id="composeTool"><option value="">Any agent</option><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
+            <p id="composeRequestHint" class="phone-hint" hidden>New conversation: queued in this project for its lead, or the next chat that joins there. Nothing is launched. The subject is its title.</p>
             <label for="composeSubject">Subject <span class="muted">(optional)</span></label><input id="composeSubject" type="text" maxlength="200">
             <label for="composeBody">Message</label><textarea id="composeBody" rows="7" required placeholder="What would you like to say?"></textarea>
             <label for="composeCode">Authenticator code</label><input id="composeCode" type="password" inputmode="numeric" pattern="[0-9]{6}" minlength="6" maxlength="6" autocomplete="off" required aria-describedby="codeHelp">
@@ -1211,6 +1237,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           <p id="phoneSendError" class="phone-notice is-error" role="alert" hidden></p>
         </form>
         <div id="phoneDeliveries" class="phone-deliveries" aria-live="polite"></div>
+        <h2 id="phoneRequestsTitle" hidden>Conversations</h2>
+        <div id="phoneRequests" class="phone-cards"></div>
       </section>
       <footer class="phone-footer">Encrypted snapshot · Refreshes while this page is visible</footer>
     </div>
@@ -1226,7 +1254,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T13:55:31Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T14:17:19Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Agent Hub page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2850,9 +2878,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (m.reply_to !== undefined && m.reply_to !== null && !(Number.isInteger(m.reply_to) && m.reply_to > 0)) {
       throw new PhoneError("INPUT", "reply_to must be a message id");
     }
+    if (m.kind === "request" && !String(m.subject || "").trim()) throw new PhoneError("INPUT", "a new conversation needs a subject (its title)");
     const inner = { v: 1, to: m.to, kind: m.kind || "note", subject: m.subject || "", body: String(m.body), code,
       sent_at: new Date().toISOString(), cid: hex(crypto.getRandomValues(new Uint8Array(8))),
       reply_to: Number.isInteger(m.reply_to) ? m.reply_to : null };
+    if (m.kind === "request" && typeof m.tool === "string") inner.tool = m.tool;  // which tool should take it ("" = any)
     const env = await seal(inner, keys, "inbox");
     const r = await gh(token, "POST", "/repos/" + repo + "/issues/" + issue + "/comments", { body: { body: commentText(env) } });
     const c = await r.res.json();
@@ -3201,11 +3231,24 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (state.replyTo && ![...$("composeTo").options].some((option) => option.value === state.replyTo.to)) return "The reply recipient is unavailable. Cancel reply to write a new message.";
     return "";
   }
+  function renderRequests() {
+    const reqs = list((state.snapshot || {}).requests);
+    $("phoneRequestsTitle").hidden = !reqs.length;
+    $("phoneRequests").replaceChildren(...reqs.map((r) => el("article", { class: "phone-card" },
+      el("div", { class: "phone-card-head" }, el("h3", {}, "#" + r.id + " " + r.title), pill(r.status), r.tool ? pill("for " + r.tool) : null),
+      el("p", { class: "phone-meta" }, r.project + " · " + (r.claimed_by ? "taken by " + r.claimed_by + " · " : "") + fmtTime(r.finished_at || r.claimed_at || r.created_at)),
+      r.note ? el("p", {}, r.note) : null)));
+  }
   function renderCompose() {
     const s = state.snapshot;
     const blocked = new Set(["owner", "hub", "#all"]);
     choose("composeTo", [...new Set([...s.agents.map((a) => a.name), ...list(s.channels)])].filter((v) => v && !blocked.has(v)).sort());
     choose("composeKind", list((s.inbox || {}).kinds));
+    // A request to a project channel starts a conversation there; it asks which tool should take it.
+    const isRequest = $("composeKind").value === "request";
+    $("composeToolWrap").hidden = !isRequest;
+    $("composeRequestHint").hidden = !isRequest;
+    renderRequests();
     const reason = composeReason();
     notice("phoneComposeReason", reason);
     $("phoneComposeFields").disabled = !!reason || state.sending;
@@ -3235,7 +3278,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("phoneReplyContext").hidden = true; $("phoneReplyLabel").textContent = "";
     $("phoneTitle").textContent = "Agent Hub"; $("phoneAge").textContent = "Connect to your hub"; $("phoneAge").className = "phone-age";
     // Remove decrypted content and drafts when a phone is forgotten or credentials expire.
-    for (const id of ["phoneOverview", "phoneTimeline", "phoneAgents", "phoneRepos", "phoneUsage", "phoneDeliveries", "filterAgent", "filterThread", "filterKind", "composeTo", "composeKind"]) {
+    for (const id of ["phoneOverview", "phoneTimeline", "phoneAgents", "phoneRepos", "phoneUsage", "phoneDeliveries", "phoneRequests", "filterAgent", "filterThread", "filterKind", "composeTo", "composeKind"]) {
       $(id).replaceChildren(); delete $(id).dataset.options;
     }
     // A fresh canvas also releases the map renderer's per-container snapshot closure.
@@ -3342,6 +3385,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (new TextEncoder().encode(body).length > max) { notice("phoneSendError", "The message is too long. The limit is " + max.toLocaleString() + " bytes.", "error"); return; }
     const session = state.session, epoch = state.epoch;
     const message = { to: $("composeTo").value, kind: $("composeKind").value, subject: $("composeSubject").value.trim(), body, code, reply_to: state.replyTo ? state.replyTo.id : null };
+    if (message.kind === "request") {
+      if (!message.to.startsWith("#") || !list(state.snapshot.projects).some((pr) => pr.channel === message.to)) { notice("phoneSendError", "A new conversation goes to a project channel (#project).", "error"); return; }
+      if (!message.subject) { notice("phoneSendError", "Give the new conversation a subject (its title).", "error"); return; }
+      message.tool = $("composeTool").value;
+      message.reply_to = null;
+    }
     $("composeCode").value = "";
     state.sending = true; renderCompose(); notice("phoneSendError", ""); $("phoneSend").textContent = "Sending…";
     try {
@@ -3388,6 +3437,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("filterToYou").addEventListener("click", () => scopeToYou(true));
     $("phoneCancelReply").addEventListener("click", () => { state.replyTo = null; renderCompose(); });
     $("composeTo").addEventListener("change", () => { state.replyTo = null; renderCompose(); });
+    $("composeKind").addEventListener("change", () => renderCompose());
     $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
     $("phoneMore").addEventListener("click", () => { state.limit += 50; renderTimeline(); });
     $("phoneMapWindow").addEventListener("change", renderMap);
