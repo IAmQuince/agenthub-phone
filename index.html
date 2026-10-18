@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-Eq+EofS9xLs6z6DBM19FwreFxOU0dD3VocK/I03aH9M=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-fIsWgT4bVBbgjZvr5SWLJcPUPuykCMyGNzR7QxMep68='; style-src 'sha256-eJnzMJsB9yWSerANjMKARRFSxmLq0vJ6wGHOFl0jtHQ='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-YgRJ4K3LUr/FD+1cHZ0srUoAPd+SPTgnJjBhgKoRhsw=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-Uq0qXKuL01oz8HuradHzOIGAVNlc//gSA5TEa4js9WQ=' 'sha256-cMWjrXk3K9RYKs5J2OuxtAyxGuTAHvCYFTzYAFdU8jc='; style-src 'sha256-5N7qq7qxqwcqnLGX13DZHQj9W6n1BIpteuELV4RnAro='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -847,6 +847,16 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-check input { flex: 0 0 auto; }
 .rules-command { display: flex; align-items: flex-start; gap: 8px; }
 .rules-command code { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+.rules-life { display: flex; flex-wrap: wrap; gap: 4px; margin-top: 6px; }
+.rules-lane { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0; }
+.rules-lane input { max-width: 180px; }
+.rules-agent.is-retired, .rules-agent.is-archived { opacity: .72; }
+.rules-project { border: 1px solid var(--border, #d0d7de); border-radius: 8px; padding: 10px 12px; margin: 8px 0; }
+.rules-project-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px; margin-bottom: 6px; }
+.rules-project-head h4 { margin: 0; }
+.rules-project-head code { overflow-wrap: anywhere; }
+.rules-group th { text-align: left; padding-top: 14px; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted, #6b7280); }
+.rules-lane input[type="search"] { flex: 1; min-width: 180px; max-width: 360px; }
 .rules-repo { padding-block: 8px; border-bottom: 1px solid var(--border); }
 .rules-map-row { display: grid; grid-template-columns: minmax(110px, 2fr) repeat(4, minmax(50px, 1fr)) auto; gap: 5px; padding-bottom: 6px; }
 .rules-map-row:has(input[type="text"] + input[type="text"]) { grid-template-columns: minmax(110px, 1fr) minmax(120px, 2fr) auto; }
@@ -1216,7 +1226,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T06:49:36Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T13:55:31Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Agent Hub page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2901,6 +2911,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   };
   const errorText = (err) => errorWords[err && err.code] || "Something went wrong. Try again or check the hub on the computer.";
   const list = (v) => Array.isArray(v) ? v : [];
+  /** The project an agent leads ("" for an older hub's single lead), or undefined. */
+  const leadOf = (snap, name) => snap?.rules?.leads ? snap.rules.leads[name] : snap?.rules?.lead === name ? "" : undefined;
   const finite = (v) => typeof v === "number" && Number.isFinite(v);
   const percent = (v) => finite(v) ? Math.round(v) + "%" : "?";
   const fmtTime = (v) => Number.isFinite(Date.parse(v)) ? new Date(v).toLocaleString([], { month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" }) : "Unknown time";
@@ -3057,7 +3069,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const u = (usage.agents || {})[a.name] || {}, context = u.context || {};
       const status = AgentMap.agentState(a, u);
       return el("article", { class: "phone-card phone-agent st-" + status.key },
-        el("div", { class: "phone-card-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), snapshot.rules?.lead === a.name ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Team lead" }, "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
+        el("div", { class: "phone-card-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), leadOf(snapshot, a.name) !== undefined ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Project lead" }, leadOf(snapshot, a.name) ? "lead · " + leadOf(snapshot, a.name) : "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
         el("p", { class: "phone-agent-status" }, a.status || "No status set"),
         el("p", { class: "phone-meta" }, "Seen ", ageNode(a.last_seen), " · " + (a.unread || 0) + " unread · " + (a.unacked || 0) + " unacked"),
         a.workdir ? el("p", { class: "phone-meta mono", title: a.workdir }, a.workdir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() || a.workdir) : null,
@@ -3128,7 +3140,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     for (const node of $("phoneMap").querySelectorAll(".map-node.agent")) {
       const title = node.querySelector("title"), agent = s.agents.find((a) => title?.textContent.startsWith(a.name + " ("));
       if (!agent) continue;
-      if (agent.name === s.rules?.lead) { const kind = node.querySelector(".t-kind"); if (kind) kind.textContent = "lead"; }
+      if (leadOf(s, agent.name) !== undefined) { const kind = node.querySelector(".t-kind"); if (kind) kind.textContent = "lead"; }
       if (s.rules?.roles?.[agent.name]) title.textContent += "\nRole: " + s.rules.roles[agent.name];
     }
     $("phoneMapInfo").textContent = s.agents.length + " agents · " + info.pairs + " conversations in this window";
