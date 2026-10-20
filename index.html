@@ -1,15 +1,15 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-cji6TkOCGpc4mMaxVUzkjgMCcX9EJ/wvd+nxQAa4e5I=' 'sha256-w2QbkUBwl1PTBngHauvteqxlYNnzc9g7+bk2yxruCHQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-fIzJnpRy19TAlTKyqjKq369YZLFY8rGNznq5ORRElD8=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-FPyDzk2yRkR44LmRrJFmV7ph88jtTFWOvC/ebNah4wE=' 'sha256-MG9XxHski7vpDXgqEaT0HzDGdbmY1MbPuVEg6vkoTgQ='; style-src 'sha256-S1xCnrUWQEuw/IHucTdK4VTco4gaFM9VjH9kwp7Tqyw='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qPVwvK2KjHcUXDiyMh7KqpnufCIqMgt/wKZZlj2zfJU=' 'sha256-B4iyeB6YAKDpsJio7aL4ZMPN6Ow4h+fs3g6p77yQcmQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-KiY6KA4Z2stSgWKNXLUNGQpVl2BKD6120PlcTv4DMDI=' 'sha256-EYtUkPmvPIeEn2O5cddvKYcF+G4kTWno1PDLH7+WY0g=' 'sha256-yAhLWJPV/ZjCG6D+QPdIinDiBunY0Xhzhyd3nPHsUUc=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-P2yN/h5kSLT73o4mX9spPa4Nu0PYwyUwvvKAoXF4h5w=' 'sha256-wk3wxs9/RrcEZRifYMaVPWwC3NtwxQFGVJbarZ7fYCs='; style-src 'sha256-Fqq7TbAK52oaVMcLXdvqvmRIEuYpgW55aYQTZyH79FE='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
   <meta name="referrer" content="no-referrer">
-  <meta name="description" content="Your Agent Hub, on your phone.">
-  <title>Agent Hub · Phone</title>
+  <meta name="description" content="Your Locus, on your phone.">
+  <title>Locus · Phone</title>
   <style>/* ---- app.css ---- */
-/* Agent Hub owner page. Dense, calm, readable; light and dark themes. */
+/* Locus owner page. Dense, calm, readable; light and dark themes. */
 
 :root {
   --bg: #f4f5f7;
@@ -542,6 +542,23 @@ body.compact .timeline { padding-top: 6px; }
 .card h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .card h4 { margin: 8px 0 4px; font-size: 12.5px; }
 .card .note { color: var(--faint); font-size: 11.5px; margin: 4px 0 0; }
+/* Persistent card folds share a header without moving existing actions. */
+.fold-card { min-width: 0; }
+.fold-card > .fold-head { display: flex; align-items: center; flex-wrap: wrap; gap: 5px 8px; margin-bottom: 6px; min-width: 0; }
+.fold-toggle { border: 0; background: transparent; color: inherit; font: inherit; letter-spacing: inherit; text-transform: inherit; text-align: left; padding: 3px 0; cursor: pointer; max-width: 100%; overflow-wrap: anywhere; }
+.fold-toggle::before { content: "▾ "; color: var(--muted); }
+.collapsed > .fold-head .fold-toggle::before { content: "▸ "; }
+.fold-toggle:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
+.fold-summary { flex: 1 1 100px; min-width: 0; color: var(--muted); font-size: 11px; font-weight: normal; letter-spacing: normal; text-transform: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.fold-body { min-width: 0; }
+.fold-body[hidden] { display: none !important; }
+.fold-body > .tbl { display: block; max-width: 100%; overflow-x: auto; }
+.fold-card.collapsed > .fold-head { margin-bottom: 0; flex-wrap: nowrap; }
+.fold-card.collapsed > .fold-head .fold-toggle { min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.u-limit { padding: 7px 0; border-bottom: 1px solid var(--border); }
+.u-limit:last-child { border-bottom: 0; }
+.u-limit > .fold-head { font-size: 12px; letter-spacing: normal; text-transform: none; }
+.u-agent.fold-card > .fold-head { margin-bottom: 4px; }
 .win-row { display: grid; grid-template-columns: 34px minmax(0, 1fr) 46px; gap: 6px; align-items: center; font-size: 12px; margin: 3px 0; }
 .win-row.plan-window { grid-template-columns: minmax(105px, 36%) minmax(0, 1fr) 46px; }
 .win-row .win-label { color: var(--muted); font-weight: 600; }
@@ -952,6 +969,232 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
   .policy-labels { float: none; margin: 0 0 3px; display: flex; }
   .hubmeta { display: none; }
 }
+/* Home-network owner review. Full plaintext is local and uses text nodes. */
+.links { display: grid; gap: 14px; min-width: 0; }
+.links > div, .links .card { min-width: 0; }
+.link-field { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.link-field input:not([type=checkbox]) { min-width: 120px; max-width: 100%; flex: 1; }
+.link-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.link-text { white-space: pre-wrap; overflow-wrap: anywhere; font: inherit; background: var(--bg); padding: 10px; max-width: 100%; }
+.link-fingerprints { font-size: .9em; overflow-wrap: anywhere; }
+.link-fingerprints pre { font-family: monospace; }
+.link-warning { color: var(--warn, #bb6800); font-weight: 600; }
+.link-item { border-top: 1px solid var(--line); padding-top: 12px; margin-top: 12px; }
+.link-item h4 { display: flex; align-items: baseline; gap: 8px; overflow-wrap: anywhere; }
+.links input[type="checkbox"], .dialog .link-field input[type="checkbox"] { width: auto; min-width: 0; flex: 0 0 auto; align-self: center; }
+
+/* Phase 8: compact cards retain identity and receipts while content folds. */
+.fold-compact { flex: 0 0 18px; width: 18px; padding: 2px; text-align: center; }
+.fold-card.collapsed > .meta .fold-toggle::before { content: "▸ "; }
+.agent.fold-card > .fold-head, .owner-card.fold-card > .fold-head { flex-wrap: nowrap; gap: 5px; }
+.agent-top .picon { flex-shrink: 0; }
+.fold-all { flex-shrink: 0; font-size: 17px; }
+.sect-head .fold-all { margin-left: auto; }
+.message-summary { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 5px; font-size: 12px; }
+.message-summary[hidden] { display: none; }
+.message-names, .acker { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
+.acker { margin-left: 5px; }
+.receipts { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 3px; white-space: normal; }
+.not-listening { color: var(--warn); font-size: 11px; margin-top: 5px; }
+.unread.not-listening-count { color: var(--warn); }
+.pres-doorbell .dot { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
+
+/* ---- pixelicon.css ---- */
+/* Locus pixel icons: the small identifier tiles, and the owner's icon editor
+ * (inspired by RetroWeb's Pixel Icon Generator). Icons sit on the same dark
+ * tile in both themes so an identity looks the same everywhere. */
+
+.picon {
+  display: inline-block;
+  flex: none;
+  width: 16px;
+  height: 16px;
+  vertical-align: -3px;
+  background: #0b1119;
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px rgba(103, 247, 255, 0.18);
+  image-rendering: pixelated;
+  -webkit-user-drag: none;
+  user-select: none;
+}
+.picon-sm { width: 12px; height: 12px; vertical-align: -2px; image-rendering: auto; }
+.picon-lg { width: 32px; height: 32px; vertical-align: middle; border-radius: 3px; }
+.picon-gen { box-shadow: 0 0 0 1px rgba(160, 170, 185, 0.22); }
+
+/* ------------------------------------------------------------------ editor */
+.pie {
+  display: grid;
+  grid-template-columns: auto minmax(220px, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+.pie-main { display: grid; gap: 6px; justify-items: start; }
+.pie-canvas {
+  width: 288px;
+  height: 288px;
+  background: #05090f;
+  border: 1px solid rgba(103, 247, 255, 0.38);
+  border-radius: 4px;
+  box-shadow: 0 0 14px rgba(103, 247, 255, 0.12) inset;
+  cursor: crosshair;
+  touch-action: none;
+}
+.pie-canvas:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pie-caption { font-size: 11px; color: var(--muted); }
+.pie-side { display: grid; gap: 9px; min-width: 0; }
+.pie-active {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  gap: 8px;
+  align-items: center;
+  font-size: 12px;
+  padding: 5px 8px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--panel-2);
+}
+.pie-chip, .pie-sw {
+  border: 1px solid rgba(230, 251, 255, 0.25);
+  border-radius: 3px;
+}
+.pie-chip { width: 16px; height: 16px; }
+.pie-chip.erase, .pie-sw.erase {
+  background: repeating-linear-gradient(45deg, #02070f 0 4px, rgba(103, 247, 255, 0.22) 4px 8px);
+}
+.pie-palette { display: grid; grid-template-columns: repeat(8, 1fr); gap: 5px; }
+.pie-sw { height: 22px; min-width: 0; padding: 0; cursor: pointer; }
+.pie-sw:hover { transform: translateY(-1px); }
+.pie-sw.on { outline: 2px solid var(--accent); outline-offset: 2px; }
+.pie-cmds { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; }
+.pie-cmd { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; letter-spacing: 0.06em; }
+.pie-cmd.on { background: var(--accent-bg); border-color: var(--accent); color: var(--accent); }
+.pie-previews { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.pie-tile {
+  display: inline-grid;
+  place-items: center;
+  padding: 6px;
+  background: #05090f;
+  border: 1px solid rgba(103, 247, 255, 0.22);
+  border-radius: 6px;
+}
+.pie-sample { display: inline-flex; align-items: center; gap: 5px; font-size: 13px; }
+.pie-status { font-size: 12px; color: var(--muted); min-height: 1.3em; }
+.pie-status.warn { color: var(--warn); }
+.pie-textwrap summary { cursor: pointer; font-size: 12px; color: var(--muted); }
+.pie-text {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  font-size: 12px;
+  line-height: 1.25;
+  letter-spacing: 0.08em;
+  resize: vertical;
+}
+.pie-text-tools { display: flex; gap: 6px; margin-top: 6px; }
+
+@media (max-width: 640px) {
+  .pie { grid-template-columns: 1fr; }
+}
+.pie-blocked { font-size: 12px; color: var(--warn); }
+
+/* ---- tasks.css ---- */
+/* Task status/priority/flag colors are shared by desktop and both phone views. */
+:root {
+  --task-slate: #455568; --task-slate-bg: #eaf0f6;
+  --task-blue: #174da3; --task-blue-bg: #e8f0ff;
+  --task-red: #a42925; --task-red-bg: #fff0eb;
+  --task-green: #196239; --task-green-bg: #e8f5ec;
+  --task-amber: #775000; --task-amber-bg: #fff3cf;
+}
+:root[data-theme="dark"] {
+  --task-slate: #bdcada; --task-slate-bg: #252d38;
+  --task-blue: #a8cbff; --task-blue-bg: #152c4c;
+  --task-red: #ffb3a9; --task-red-bg: #3c211f;
+  --task-green: #9bddb1; --task-green-bg: #183323;
+  --task-amber: #f4d48b; --task-amber-bg: #3b2e14;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --task-slate: #bdcada; --task-slate-bg: #252d38;
+    --task-blue: #a8cbff; --task-blue-bg: #152c4c;
+    --task-red: #ffb3a9; --task-red-bg: #3c211f;
+    --task-green: #9bddb1; --task-green-bg: #183323;
+    --task-amber: #f4d48b; --task-amber-bg: #3b2e14;
+  }
+}
+.task-not_started { --task-color: var(--task-slate); --task-bg: var(--task-slate-bg); }
+.task-in_progress { --task-color: var(--task-blue); --task-bg: var(--task-blue-bg); }
+.task-blocked { --task-color: var(--task-red); --task-bg: var(--task-red-bg); }
+.task-done { --task-color: var(--task-green); --task-bg: var(--task-green-bg); }
+.task-card { border: 1px solid var(--border); border-left: 3px solid var(--task-color); border-radius: 6px; padding: 10px; margin: 8px 0; background: var(--panel); min-width: 0; overflow-wrap: anywhere; }
+.task-head { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; }
+.task-card.fold-card.collapsed > .task-head { flex-wrap: wrap; }
+.task-head > .task-badge { flex-shrink: 0; white-space: nowrap; }
+.task-title { flex: 1 1 130px; font-size: 13px; }
+.task-head > button.task-title { text-align: left; color: var(--text); }
+.task-head .fold-toggle { flex: 0 0 18px; }
+.task-head .fold-summary { display: none; }
+.task-state, .task-status-select { background: var(--task-bg); color: var(--task-color); border: 1px solid currentColor; }
+.task-status-select { font: inherit; max-width: 130px; padding: 2px; }
+.task-badge { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--border); border-radius: 10px; padding: 2px 6px; font-size: 11px; line-height: 1.4; overflow-wrap: anywhere; }
+button.task-badge { cursor: pointer; }
+.task-badge[aria-pressed="true"], .task-filter[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 1px; }
+.task-card.task-done { background: var(--panel-2); }
+.task-done .task-title { text-decoration: line-through; }
+.task-card.priority-urgent:not(.task-done) { background: var(--task-red-bg); }
+.task-priority.priority-urgent, .task-overdue.task-badge { color: var(--task-red); background: var(--task-red-bg); }
+.task-priority.priority-high, .task-stale.task-badge, .task-due_today.task-badge { color: var(--task-amber); background: var(--task-amber-bg); }
+.task-priority.priority-low { color: var(--muted); }
+.task-card.task-stale { border-left-style: dashed; }
+.task-unassigned.task-badge { border-style: dashed; color: var(--muted); background: transparent; }
+.task-status-note { font-style: italic; color: var(--muted); }
+.task-blocked .task-status-note { color: var(--task-red); }
+.task-coordinators, .task-coordinator, .task-summary, .task-actions, .task-tags { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 6px 0; }
+.task-coordinator { font-size: 11px; margin: 0; }
+.task-inactive { color: var(--muted); text-decoration: line-through; }
+.task-selected { outline: 2px solid var(--accent); outline-offset: 1px; }
+.task-project-unknown { border-style: dashed !important; }
+.task-tools { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; padding: 8px 0; }
+.task-tools > input { flex: 1 1 150px; min-width: 80px; }
+.task-tools select { max-width: 100%; flex: 1 1 100px; min-width: 0; }
+.task-state-filters { flex: 1 1 100%; display: flex; flex-wrap: wrap; gap: 4px; }
+.task-filter { background: var(--panel-2); border: 1px solid var(--border); color: var(--text); border-radius: 4px; font: inherit; padding: 4px 6px; cursor: pointer; }
+.task-quick { display: flex; flex-wrap: wrap; gap: 5px; }
+.task-quick > input { flex: 1 1 150px; min-width: 80px; }
+.task-quick > select { max-width: 90px; }
+.task-group { margin: 10px 0; min-width: 0; }
+.task-group > .fold-head { background: var(--panel-2); border-radius: 4px; padding: 6px; }
+.task-history p { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
+.task-editor { display: grid; gap: 8px; min-width: 0; }
+.task-editor > label { display: grid; gap: 4px; }
+.task-editor input:not([type="checkbox"]), .task-editor textarea, .task-editor select { width: 100%; min-width: 0; }
+.task-coordinator-pick { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
+.task-coordinator-pick label { display: flex; align-items: center; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
+.task-coordinator-pick select { width: 110px; flex-shrink: 0; }
+.task-check { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+.task-check input { width: auto; }
+.task-project-0 { color: var(--task-blue); background: var(--task-blue-bg); }
+.task-project-1 { color: var(--task-green); background: var(--task-green-bg); }
+.task-project-2 { color: var(--task-red); background: var(--task-red-bg); }
+.task-project-3 { color: var(--task-amber); background: var(--task-amber-bg); }
+.task-project-4 { color: #623d94; background: #f1eafa; }
+.task-project-5 { color: #12606a; background: #e5f5f7; }
+.task-project-6 { color: #8d3d63; background: #fbeafa; }
+.task-project-7 { color: var(--task-slate); background: var(--task-slate-bg); }
+:root[data-theme="dark"] .task-project-4 { color: #d5b8ff; background: #30233f; }
+:root[data-theme="dark"] .task-project-5 { color: #9ddddf; background: #143337; }
+:root[data-theme="dark"] .task-project-6 { color: #f6bad7; background: #3a2032; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .task-project-4 { color: #d5b8ff; background: #30233f; }
+  :root:not([data-theme="light"]) .task-project-5 { color: #9ddddf; background: #143337; }
+  :root:not([data-theme="light"]) .task-project-6 { color: #f6bad7; background: #3a2032; }
+}
+.task-pulse { animation: task-pulse 2s ease-in-out infinite; }
+.task-live-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--task-blue); flex: 0 0 6px; }
+@keyframes task-pulse { 50% { box-shadow: 0 0 0 2px var(--task-blue); } }
+@media (prefers-reduced-motion: reduce) { .task-pulse { animation: none; } }
+@media (max-width: 420px) { .task-tools { gap: 5px; } .task-card { padding: 7px; } .task-head { gap: 4px; } }
+.mobile-page .m-tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
 /* ---- phone/phone.css ---- */
 /* Phone-only overrides. Keep the shared desktop page and map styles intact. */
@@ -1149,13 +1392,24 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 .phone-mapmode #view-map > #phoneMapInfo { display: block; flex: 0 0 auto; margin: 0; padding: 4px 0; font-size: 10px; }
 .phone-page .toasts { bottom: calc(78px + env(safe-area-inset-bottom)); }
 @media (min-width: 650px) { .phone-tabs { padding-inline: max(8px, calc((100vw - 936px) / 2)); } }
+.phone-route, .phone-agent-open { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+.phone-route .phone-receipt { flex-basis: 100%; display: flex; align-items: center; flex-wrap: wrap; gap: 3px; }
+.phone-message.fold-card.collapsed > .phone-route { flex-wrap: wrap; }
+.phone-message > .link-warning { font-size: 11px; margin: 6px 0; }
+.phone-message .message-summary { white-space: normal; }
+.phone-agent.fold-card > .phone-card-head { flex-wrap: wrap; }
+#phoneTasks .task-list, #phoneTasks .task-tools { min-width: 0; }
+#phoneTasks .task-title { text-align: left; color: var(--text); }
+#phoneTaskPreview { display: block; overflow-wrap: anywhere; }
+.phone-page .dialog { width: min(95vw, 620px); }
+.phone-page .dialog-foot { flex-wrap: wrap; }
 </style>
 </head>
 <body class="phone-page">
   <a class="phone-skip" href="#phoneMain">Skip to content</a>
   <header class="phone-header">
     <div class="phone-heading">
-      <div><h1 id="phoneTitle">Agent Hub</h1><p id="phoneAge" class="phone-age">Connect to your hub</p></div>
+      <div><h1 id="phoneTitle">Locus</h1><p id="phoneAge" class="phone-age">Connect to your hub</p></div>
     </div>
     <div class="phone-actions">
       <button id="phoneRefresh" type="button" class="btn" disabled>Refresh</button>
@@ -1206,9 +1460,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           <button id="phoneClearFilters" type="button" class="phone-text-action">Clear all filters</button>
         </details>
         <p id="phoneMessageCount" class="phone-message-count"></p>
+        <button id="phoneFoldMessages" type="button" class="btn small">Collapse all messages</button>
         <div id="phoneTimeline"></div>
         <button id="phoneMore" type="button" class="btn phone-more" hidden>Show more messages</button>
       </section>
+      <section id="view-tasks" class="phone-panel" role="tabpanel" aria-labelledby="tab-tasks" hidden><h2>Tasks</h2><div id="phoneTasks"></div><output id="phoneTaskPreview" class="phone-hint"></output></section>
       <section id="view-agents" class="phone-panel" role="tabpanel" aria-labelledby="tab-agents" hidden><h2>Agents</h2><div id="phoneAgents" class="phone-cards"></div></section>
       <section id="view-map" class="phone-panel" role="tabpanel" aria-labelledby="tab-map" hidden>
         <div class="phone-section-head"><h2>Live map</h2><label>Traffic<select id="phoneMapWindow"><option value="60">Last hour</option><option value="1440">Last day</option><option value="10080">Last 7 days</option></select></label></div>
@@ -1245,6 +1501,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     <noscript><p class="phone-notice">JavaScript is needed to decrypt and display your hub.</p></noscript>
   </main>
   <nav id="phoneTabs" class="phone-tabs" role="tablist" aria-label="Hub views" hidden>
+    <button id="tab-tasks" type="button" role="tab" data-view="tasks" aria-controls="view-tasks" aria-selected="false" tabindex="-1"><span aria-hidden="true">▣</span>Tasks</button>
     <button id="tab-timeline" type="button" role="tab" data-view="timeline" aria-controls="view-timeline" aria-selected="true"><span aria-hidden="true">☰</span>Timeline</button>
     <button id="tab-agents" type="button" role="tab" data-view="agents" aria-controls="view-agents" aria-selected="false" tabindex="-1"><span aria-hidden="true">●</span>Agents</button>
     <button id="tab-map" type="button" role="tab" data-view="map" aria-controls="view-map" aria-selected="false" tabindex="-1"><span aria-hidden="true">◇</span>Map</button>
@@ -1254,9 +1511,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.1.0", "built_at": "2026-10-18T14:17:19Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-20T16:23:38Z"};</script>
 <script>/* ---- ui.js ---- */
-/* Agent Hub page primitives: elements, storage, toasts, busy buttons,
+/* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
  *
  * No dependencies. Styles are applied through classes and the CSSOM only
@@ -1297,6 +1554,137 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       try { return JSON.parse(v); } catch (_) { return fallback; }
     },
     set(k, v) { UI.store.setRaw(k, v === null || v === undefined ? null : JSON.stringify(v)); },
+  };
+
+  // ------------------------------------------------------- stable refreshes
+  const rendered = new WeakMap();
+  const deferred = new Map();
+  UI.invalidate = (root) => { rendered.delete(root); deferred.delete(root); };
+  const editable = (node) => !!node && node.matches("input:not([type=button]):not([type=submit]),textarea,select,[contenteditable=true]");
+  UI.isEditing = (root = document) => editable(document.activeElement) && root.contains(document.activeElement);
+
+  /** Compare data, ignoring only explicitly named volatile fields. */
+  UI.signature = function signature(value, omit = []) {
+    const ignored = new Set(omit);
+    const sort = (v) => v instanceof Set ? [...v].sort() : Array.isArray(v) ? v.map(sort)
+      : v && typeof v === "object" ? Object.fromEntries(Object.keys(v).sort().filter((k) => !ignored.has(k)).map((k) => [k, sort(v[k])])) : v;
+    return JSON.stringify(sort(value));
+  };
+
+  function stateKey(node, root) {
+    if (node === root) return ":root";
+    if (node.id) return "id:" + node.id;
+    for (const attr of ["data-state-key", "data-message-id", "data-repo", "data-chart-id", "data-chart-key", "data-tab", "data-rule-field", "aria-label", "name"]) {
+      const value = node.getAttribute(attr);
+      if (value) return stateKey(node.parentElement, root) + "/" + attr + ":" + value;
+    }
+    if (!node.parentElement || !root.contains(node.parentElement)) return ":outside";
+    const same = [...node.parentElement.children].filter((n) => n.tagName === node.tagName);
+    const label = node.tagName === "DETAILS" ? node.querySelector("summary")?.textContent : "";
+    return stateKey(node.parentElement, root) + "/" + node.tagName + ":" + (label || same.indexOf(node));
+  }
+
+  UI.capture = function capture(root) {
+    const nodes = [root, ...root.querySelectorAll("*")];
+    const scroll = nodes.filter((n) => n.scrollTop || n.scrollLeft).map((n) => ({ key: stateKey(n, root), top: n.scrollTop, left: n.scrollLeft }));
+    const ancestors = [];
+    for (let n = root.parentElement; n; n = n.parentElement) ancestors.push({ node: n, top: n.scrollTop, left: n.scrollLeft });
+    const active = document.activeElement;
+    const focus = active && root.contains(active) ? { key: stateKey(active, root), start: active.selectionStart, end: active.selectionEnd, direction: active.selectionDirection } : null;
+    const open = nodes.filter((n) => n.tagName === "DETAILS" || n.matches(".fold-card,.rules-section")).map((n) => ({ key: stateKey(n, root), details: n.tagName === "DETAILS", open: n.open, collapsed: n.classList.contains("collapsed") }));
+    return { scroll, ancestors, focus, open, x: window.scrollX, y: window.scrollY };
+  };
+
+  UI.restore = function restore(root, snapshot) {
+    const nodes = new Map([root, ...root.querySelectorAll("*")].map((n) => [stateKey(n, root), n]));
+    for (const saved of snapshot.open) {
+      const node = nodes.get(saved.key); if (!node) continue;
+      if (saved.details) node.open = saved.open;
+      else {
+        node.classList.toggle("collapsed", saved.collapsed);
+        const toggle = node.querySelector(".fold-toggle,[aria-expanded]");
+        if (toggle) toggle.setAttribute("aria-expanded", String(!saved.collapsed));
+        const body = node.querySelector(".fold-body"); if (body) body.hidden = saved.collapsed;
+      }
+    }
+    const saved = snapshot.focus, focus = saved && nodes.get(saved.key);
+    if (focus && !focus.disabled) {
+      focus.focus({ preventScroll: true });
+      if (typeof saved.start === "number" && typeof focus.setSelectionRange === "function") {
+        try { focus.setSelectionRange(saved.start, saved.end, saved.direction || "none"); } catch (_) { /* non-text input */ }
+      }
+    }
+    for (const s of snapshot.scroll) { const node = nodes.get(s.key); if (node) { node.scrollTop = s.top; node.scrollLeft = s.left; } }
+    for (const s of snapshot.ancestors) { s.node.scrollTop = s.top; s.node.scrollLeft = s.left; }
+    window.scrollTo(snapshot.x, snapshot.y);
+  };
+
+  /** A background render never replaces an active editor or a dirty draft. */
+  UI.update = function update(root, signature, draw, opts = {}) {
+    if (!root) return false;
+    if (opts.force !== true && (UI.isEditing(opts.editRoot || document) || (opts.blocked && opts.blocked()))) {
+      deferred.set(root, () => UI.update(root, signature, draw, opts));
+      return false;
+    }
+    deferred.delete(root);
+    if (opts.force !== true && rendered.get(root) === signature) return false;
+    const snapshot = UI.capture(root);
+    rendered.delete(root); // a partial or failed draw must never look current
+    try { draw(); } finally { UI.restore(root, snapshot); }
+    if (opts.afterRestore) opts.afterRestore();
+    rendered.set(root, signature);
+    return true;
+  };
+  document.addEventListener("focusout", () => setTimeout(() => {
+    for (const [root, retry] of deferred) {
+      if (!root.isConnected) deferred.delete(root); else retry();
+    }
+  }, 0));
+
+  /** Keep a complete card's actions/content, with an accessible persistent fold. */
+  let foldId = 0;
+  UI.card = function card(page, key, node, { title, summary = "", collapsed = false, compact = false } = {}) {
+    node.dataset.stateKey = page + ":" + key;
+    const storageKey = "locus.collapsed." + page + "." + key;
+    if (node.tagName === "DETAILS") {
+      node.open = !UI.store.get(storageKey, !node.open);
+      node.addEventListener("toggle", () => UI.store.set(storageKey, !node.open));
+      return node;
+    }
+    node.classList.add("fold-card");
+    let head = [...node.children].find((n) => n.matches("h3,.repo-head,.agent-top,.u-agent-head"));
+    const hint = head?.getAttribute("title") || [...(head?.children || [])].find((n) => n.tagName === "B")?.getAttribute("title") || "";
+    const body = el("div", { class: "fold-body" });
+    if (head) {
+      // Keep action buttons and status indicators in the original heading.
+      title ||= [...head.childNodes].filter((n) => n.nodeType === 3 || n.nodeName === "B").map((n) => n.textContent).join("").trim();
+      if (!compact) for (const n of [...head.childNodes]) if (n.nodeType === 3 || n.nodeName === "B") n.remove();
+    } else head = el("div", {});
+    for (const n of [...node.childNodes]) if (n !== head) body.append(n);
+    body.setAttribute("id", "fold-body-" + (++foldId));
+    const button = el("button", { class: "fold-toggle" + (compact ? " fold-compact" : ""), type: "button", title: [title || key, hint].filter(Boolean).join("\n"), "aria-controls": body.id, "aria-label": "Show or hide " + (title || key) }, compact ? "" : title || key);
+    const apply = (closed) => { node.classList.toggle("collapsed", closed); body.hidden = closed; button.setAttribute("aria-expanded", String(!closed)); };
+    node._setCollapsed = (closed) => { apply(closed); UI.store.set(storageKey, closed); UI.onFoldChange?.(); };
+    button.addEventListener("click", (event) => { event.stopPropagation?.(); node._setCollapsed(!node.classList.contains("collapsed")); });
+    button.addEventListener("keydown", (event) => { if (event.key === "Enter" || event.key === " ") event.stopPropagation(); });
+    head.classList.add("fold-head");
+    head.prepend(button, ...(compact ? [] : [el("span", { class: "fold-summary", title: summary }, summary)]));
+    node.replaceChildren(head, body);
+    apply(!!UI.store.get(storageKey, collapsed));
+    return node;
+  };
+
+  /** Mixed states always converge to a single state; never toggle each card. */
+  UI.collapseAll = function collapseAll(nodes, closed) {
+    const cards = [...nodes].filter((node) => typeof node._setCollapsed === "function");
+    if (closed === undefined) closed = cards.some((node) => !node.classList.contains("collapsed"));
+    for (const node of cards) if (node.classList.contains("collapsed") !== closed) node._setCollapsed(closed);
+    return closed;
+  };
+
+  UI.notificationCandidate = function notificationCandidate(agent, last, focused) {
+    return !!(agent.unread && agent.latest_unread_id > last && !focused &&
+      !agent.waiting_http && !agent.waiting_spool && !agent.waiting_doorbell);
   };
 
   // ------------------------------------------------------------------ toasts
@@ -1870,8 +2258,865 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   window.escapeHtml = esc;
 })();
 </script>
+<script>/* ---- pixelicon.js ---- */
+/* Locus pixel icons: small identifiers beside agent and owner names, and the
+ * owner's icon editor, inspired by RetroWeb's Pixel Icon Generator.
+ *
+ * Format locus.icon.v1: a 16 x 16 grid of hexadecimal digits indexing a fixed
+ * 16-color palette (0 is transparent), stored as 256 lowercase characters.
+ * Agents design their own icon (locus.py icon --set); an identity without one
+ * gets a deterministic, deliberately blocky generated icon.
+ *
+ * No dependencies beyond window.UI (editor only). Content security policy:
+ * no style="" attributes; colors go through the CSSOM and canvas, images are
+ * data: URLs. The pure functions also load in Node (tests/pixelicon.mjs).
+ */
+"use strict";
+(function (root) {
+  const SIZE = 16;
+  const CELLS = SIZE * SIZE;
+  const HEX = "0123456789abcdef";
+
+  // Indices 1-7 are RetroWeb's neon palette; the server's ICON_PALETTE matches.
+  const DEFAULT_PALETTE = [
+    ["transparent", null], ["cyan", "#67f7ff"], ["green", "#42ff9e"], ["yellow", "#ffd166"],
+    ["violet", "#f472ff"], ["orange", "#ff9f1c"], ["blue", "#5aa9ff"], ["white", "#e6fbff"],
+    ["red", "#e5483a"], ["maroon", "#8f3f55"], ["lime", "#d4ff4a"], ["indigo", "#5a5fd0"],
+    ["forest", "#2e7560"], ["silver", "#c8ccd8"], ["pink", "#ff7aa8"], ["slate", "#7d869c"],
+  ].map(([name, hex], index) => ({ index, name, hex }));
+
+  // The hub's fixed glyph: a locus ring with a centre point.
+  const HUB = [
+    "0000000000000000",
+    "0000011111100000",
+    "0001100000011000",
+    "0010000ff0000100",
+    "0100000ff0000010",
+    "0100006666000010",
+    "1000060000600001",
+    "1ff0060770600ff1",
+    "1ff0060770600ff1",
+    "1000060000600001",
+    "0100006666000010",
+    "0100000ff0000010",
+    "0010000ff0000100",
+    "0001100000011000",
+    "0000011111100000",
+    "0000000000000000",
+  ].join("");
+
+  let palette = DEFAULT_PALETTE.map((p) => ({ ...p }));
+  let rules = { format: "locus.icon.v1", size: SIZE, min_cells: 12, min_distance: 16 };
+  let icons = new Map();          // name -> stored grid
+  const urls = new Map();         // palette signature + grid -> data URL
+  const genCache = new Map();     // name -> generated grid
+  let paletteSig = palette.map((p) => p.hex).join();
+
+  // ------------------------------------------------------------ pure helpers
+  /** Parse rows (or one 256-character line) into the stored form, or throw. */
+  function normalize(text) {
+    if (typeof text !== "string") throw new Error("An icon is text: 16 rows of 16 characters.");
+    const lines = text.split(/\r?\n/).map((l) => l.trim()).filter((l) => l && !l.startsWith("#")).map((l) => l.replace(/\s+/g, ""));
+    let rows = lines;
+    if (lines.length === 1 && lines[0].length === CELLS) rows = lines[0].match(/.{16}/g);
+    if (rows.length !== SIZE) throw new Error("An icon needs " + SIZE + " rows of " + SIZE + " characters; found " + rows.length + " row" + (rows.length === 1 ? "" : "s") + ".");
+    rows.forEach((row, i) => {
+      if (row.length !== SIZE) throw new Error("Row " + (i + 1) + " has " + row.length + " characters; each row needs " + SIZE + ".");
+      const bad = row.match(/[^0-9a-fA-F.]/);
+      if (bad) throw new Error("Row " + (i + 1) + " has '" + bad[0] + "'; use 0-9, a-f, or . for transparent.");
+    });
+    return rows.join("").toLowerCase().replace(/\./g, "0");
+  }
+
+  function isGrid(grid) { return typeof grid === "string" && grid.length === CELLS && /^[0-9a-f]+$/.test(grid); }
+  function rows(grid) { return grid.match(/.{16}/g); }
+  function painted(grid) { let n = 0; for (const c of grid) if (c !== "0") n++; return n; }
+  function distance(a, b) { let n = 0; for (let i = 0; i < CELLS; i++) if (a[i] !== b[i]) n++; return n; }
+  function mirrorIndex(i) { return i - (i % SIZE) + (SIZE - 1 - (i % SIZE)); }
+
+  /** null when the grid may be saved for name, else a readable reason. */
+  function check(grid, name) {
+    if (!isGrid(grid)) return "An icon needs " + CELLS + " cells.";
+    const n = painted(grid);
+    if (n < rules.min_cells) return "Paint at least " + rules.min_cells + " cells (" + n + " so far).";
+    for (const [other, g] of icons) {
+      if (other === name) continue;
+      const d = distance(grid, g);
+      if (d < rules.min_distance) {
+        return d === 0 ? "That is exactly " + other + "'s icon; each icon must be unique."
+          : "Too close to " + other + "'s icon (" + d + " cells differ; at least " + rules.min_distance + " must).";
+      }
+    }
+    return null;
+  }
+
+  // FNV-1a over UTF-8, then mulberry32: stable across browsers and Node.
+  function hash32(text) {
+    let h = 0x811c9dc5;
+    for (const b of new TextEncoder().encode(String(text))) { h ^= b; h = Math.imul(h, 0x01000193) >>> 0; }
+    return h >>> 0;
+  }
+  function prng(seed) {
+    let a = seed >>> 0;
+    return function next() {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  const VIVID = [1, 2, 3, 4, 5, 6, 8, 10, 11, 14];
+  /** A deterministic blocky icon: an 8 x 8 mirrored pattern drawn at 2x. */
+  function generated(name) {
+    const key = String(name);
+    if (genCache.has(key)) return genCache.get(key);
+    const rnd = prng(hash32("locus.icon.v1:" + key));
+    const pick = (avoid) => { for (;;) { const c = VIVID[Math.floor(rnd() * VIVID.length)]; if (!avoid.includes(c)) return c; } };
+    const main = pick([]), second = pick([main]), accent = pick([main, second]);
+    let half = null;
+    for (let attempt = 0; attempt < 32; attempt++) {
+      const cells = [];
+      for (let i = 0; i < 32; i++) {
+        const v = rnd();
+        cells.push(v < 0.36 ? main : v < 0.50 ? second : v < 0.55 ? accent : 0);
+      }
+      const n = cells.filter(Boolean).length;
+      half = cells;
+      if (n >= 10 && n <= 24) break;
+    }
+    const logical = [];
+    for (let r = 0; r < 8; r++) {
+      const left = half.slice(r * 4, r * 4 + 4);
+      logical.push(left.concat(left.slice().reverse()));
+    }
+    let out = "";
+    for (let y = 0; y < SIZE; y++) for (let x = 0; x < SIZE; x++) out += HEX[logical[y >> 1][x >> 1]];
+    genCache.set(key, out);
+    return out;
+  }
+
+  /** {grid, generated} for a name; null for channels and empty names. */
+  function gridFor(name) {
+    if (!name || String(name).startsWith("#")) return null;
+    if (icons.has(name)) return { grid: icons.get(name), generated: false };
+    if (name === "hub") return { grid: HUB, generated: false, builtin: true };
+    return { grid: generated(name), generated: true };
+  }
+
+  function configure(cfg) {
+    if (!cfg || typeof cfg !== "object") return;
+    if (Array.isArray(cfg.palette) && cfg.palette.length === SIZE) {
+      palette = cfg.palette.map((p, index) => ({ index, name: String(p.name || p[0] || index), hex: index === 0 ? null : String(p.hex || p[1] || "") }));
+      paletteSig = palette.map((p) => p.hex).join();
+    }
+    for (const k of ["min_cells", "min_distance"]) if (Number.isInteger(cfg[k]) && cfg[k] >= 0) rules[k] = cfg[k];
+    if (cfg.format) rules.format = String(cfg.format);
+  }
+
+  /** Accepts {name: grid} or {name: {grid, ...}}; invalid entries are ignored. */
+  function setIcons(map) {
+    const next = new Map();
+    for (const [name, v] of Object.entries(map || {})) {
+      const grid = typeof v === "string" ? v : v && v.grid;
+      if (isGrid(grid)) next.set(name, grid);
+    }
+    icons = next;
+  }
+
+  // ------------------------------------------------------------- rendering
+  function dataUrl(grid) {
+    const key = paletteSig + "|" + grid;
+    let url = urls.get(key);
+    if (url) return url;
+    const c = document.createElement("canvas");
+    c.width = c.height = SIZE;
+    const ctx = c.getContext("2d");
+    for (let i = 0; i < CELLS; i++) {
+      const p = palette[HEX.indexOf(grid[i])];
+      if (!p || !p.hex) continue;
+      ctx.fillStyle = p.hex;
+      ctx.fillRect(i % SIZE, Math.floor(i / SIZE), 1, 1);
+    }
+    url = c.toDataURL("image/png");
+    if (urls.size > 500) urls.clear();
+    urls.set(key, url);
+    return url;
+  }
+
+  function imgFor(grid, { size = 16, label = "", title = "", generated: gen = false } = {}) {
+    const node = document.createElement("img");
+    node.className = "picon" + (size === 12 ? " picon-sm" : size === 32 ? " picon-lg" : "") + (gen ? " picon-gen" : "");
+    node.src = dataUrl(grid);
+    node.width = node.height = size;
+    node.draggable = false;
+    if (label) node.alt = label;
+    else { node.alt = ""; node.setAttribute("aria-hidden", "true"); }
+    if (title) node.title = title;
+    return node;
+  }
+
+  /** <img class="picon"> for a name, or null for a channel. */
+  function img(name, opts = {}) {
+    const g = gridFor(name);
+    if (!g) return null;
+    const title = opts.title !== undefined ? opts.title : String(name) + (g.generated ? " · generated (no icon designed yet)" : "");
+    return imgFor(g.grid, { size: opts.size, label: opts.label, title, generated: g.generated });
+  }
+
+  // ---------------------------------------------------------------- editor
+  const CELL_PX = 18;
+  const GRID_PX = CELL_PX * SIZE;
+
+  function openEditor(opts = {}) {
+    const UI = root.UI;
+    const el = UI.el;
+    const name = opts.name || "owner";
+    const initial = isGrid(opts.initial) ? opts.initial : isGrid(opts.grid) ? opts.grid : generated(name);
+    const cells = (isGrid(opts.grid) ? opts.grid : initial).split("").map((c) => HEX.indexOf(c));
+    let active = cells.find((v) => v > 0) || 1;
+    let mirror = !!opts.mirror;
+    let cursor = 0, hover = -1, stroke = null;
+
+    const grid = () => cells.map((v) => HEX[v]).join("");
+    const canvas = el("canvas", { class: "pie-canvas", tabindex: "0", role: "img",
+      "aria-label": "Icon paint grid, 16 by 16. Arrow keys move, Space paints, Delete erases, 0-9 and a-f choose a color." });
+    const dpr = Math.max(1, Math.min(3, root.devicePixelRatio || 1));
+    canvas.width = canvas.height = Math.round(GRID_PX * dpr);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+    const status = el("div", { class: "pie-status", role: "status", "aria-live": "polite" });
+    const activeName = el("strong", {});
+    const activeChip = el("span", { class: "pie-chip" });
+    const swatches = palette.map((p) => {
+      const b = el("button", { class: "pie-sw" + (p.index === 0 ? " erase" : ""), type: "button", "aria-label": p.name, title: HEX[p.index] + " · " + p.name + (p.hex ? " " + p.hex : "") });
+      if (p.hex) b.style.backgroundColor = p.hex; // CSSOM, allowed by the CSP
+      b.addEventListener("click", () => { active = p.index; sync("Active color: " + p.name + "."); });
+      return b;
+    });
+    const mirrorBtn = el("button", { class: "btn small pie-cmd", type: "button", title: "Mirror painting across the vertical axis", "aria-pressed": "false" }, "MIR");
+    const cmd = (label, title, fn) => el("button", { class: "btn small pie-cmd", type: "button", title, onclick: fn }, label);
+    const previewSm = el("img", { class: "picon", alt: "", width: "16", height: "16" });
+    const previewLg = el("img", { class: "picon picon-lg", alt: "", width: "32", height: "32" });
+    const previewLine = el("img", { class: "picon", alt: "", width: "16", height: "16" });
+    const text = el("textarea", { class: "pie-text mono", rows: "16", cols: "18", spellcheck: "false", "aria-label": "Icon as text: 16 rows of 16 hexadecimal digits" });
+
+    function draw() {
+      ctx.clearRect(0, 0, GRID_PX, GRID_PX);
+      ctx.fillStyle = "#05090f";
+      ctx.fillRect(0, 0, GRID_PX, GRID_PX);
+      ctx.strokeStyle = "rgba(103,247,255,0.09)";
+      ctx.lineWidth = 1;
+      for (let i = 1; i < SIZE; i++) {
+        const at = i * CELL_PX + 0.5;
+        ctx.beginPath(); ctx.moveTo(at, 0); ctx.lineTo(at, GRID_PX); ctx.stroke();
+        ctx.beginPath(); ctx.moveTo(0, at); ctx.lineTo(GRID_PX, at); ctx.stroke();
+      }
+      ctx.strokeStyle = "rgba(103,247,255,0.22)";
+      ctx.beginPath(); ctx.moveTo(GRID_PX / 2 + 0.5, 0); ctx.lineTo(GRID_PX / 2 + 0.5, GRID_PX); ctx.stroke();
+      for (let i = 0; i < CELLS; i++) {
+        const p = palette[cells[i]];
+        if (!p || !p.hex) continue;
+        ctx.shadowColor = p.hex;
+        ctx.shadowBlur = 5;
+        ctx.fillStyle = p.hex;
+        ctx.fillRect((i % SIZE) * CELL_PX + 1, Math.floor(i / SIZE) * CELL_PX + 1, CELL_PX - 1, CELL_PX - 1);
+      }
+      ctx.shadowBlur = 0;
+      const outline = (i, color, dash) => {
+        ctx.setLineDash(dash ? [3, 2] : []);
+        ctx.strokeStyle = color;
+        ctx.strokeRect((i % SIZE) * CELL_PX + 1.5, Math.floor(i / SIZE) * CELL_PX + 1.5, CELL_PX - 2, CELL_PX - 2);
+        ctx.setLineDash([]);
+      };
+      if (hover >= 0) outline(hover, "rgba(230,251,255,0.55)", false);
+      if (document.activeElement === canvas) outline(cursor, "#ffffff", true);
+    }
+
+    function sync(message) {
+      const g = grid();
+      draw();
+      const url = dataUrl(g);
+      previewSm.src = previewLg.src = previewLine.src = url;
+      swatches.forEach((s, i) => s.classList.toggle("on", i === active));
+      const p = palette[active];
+      activeName.textContent = p.name;
+      activeChip.classList.toggle("erase", active === 0);
+      activeChip.style.backgroundColor = p.hex || "";
+      mirrorBtn.classList.toggle("on", mirror);
+      mirrorBtn.setAttribute("aria-pressed", String(mirror));
+      if (document.activeElement !== text) text.value = rows(g).join("\n");
+      const problem = check(g, name);
+      status.classList.toggle("warn", !!problem);
+      status.textContent = (message ? message + " " : "") + painted(g) + " cells painted" + (mirror ? " · mirror on" : "") + (problem ? " · " + problem : "");
+    }
+
+    function paint(i, value) {
+      const targets = mirror ? [i, mirrorIndex(i)] : [i];
+      let changed = false;
+      for (const t of targets) if (cells[t] !== value) { cells[t] = value; changed = true; }
+      return changed;
+    }
+    function cellAt(e) {
+      const r = canvas.getBoundingClientRect();
+      const x = Math.floor(((e.clientX - r.left) / r.width) * SIZE), y = Math.floor(((e.clientY - r.top) / r.height) * SIZE);
+      return x < 0 || y < 0 || x >= SIZE || y >= SIZE ? -1 : y * SIZE + x;
+    }
+    // Paint every cell on the segment between two cells, so fast drags leave no gaps.
+    function line(a, b, value) {
+      let x0 = a % SIZE, y0 = Math.floor(a / SIZE);
+      const x1 = b % SIZE, y1 = Math.floor(b / SIZE);
+      const dx = Math.abs(x1 - x0), dy = -Math.abs(y1 - y0), sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+      let err = dx + dy;
+      for (;;) {
+        paint(y0 * SIZE + x0, value);
+        if (x0 === x1 && y0 === y1) break;
+        const e2 = 2 * err;
+        if (e2 >= dy) { err += dy; x0 += sx; }
+        if (e2 <= dx) { err += dx; y0 += sy; }
+      }
+    }
+
+    canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+    canvas.addEventListener("pointerdown", (e) => {
+      const i = cellAt(e);
+      if (i < 0) return;
+      e.preventDefault();
+      canvas.focus({ preventScroll: true });
+      cursor = i;
+      if (e.button === 0 && e.altKey) {
+        active = cells[i];
+        sync("Picked " + palette[active].name + ".");
+        return;
+      }
+      if (e.button !== 0 && e.button !== 2) return;
+      stroke = { value: e.button === 2 ? 0 : active, last: i };
+      canvas.setPointerCapture(e.pointerId);
+      paint(i, stroke.value);
+      sync(stroke.value ? "Painting " + palette[stroke.value].name + "." : "Erasing.");
+    });
+    canvas.addEventListener("pointermove", (e) => {
+      const i = cellAt(e);
+      if (stroke && i >= 0 && i !== stroke.last) { line(stroke.last, i, stroke.value); stroke.last = i; cursor = i; sync(); return; }
+      if (i !== hover) { hover = i; draw(); }
+    });
+    const endStroke = () => { if (stroke) { stroke = null; sync(); } };
+    canvas.addEventListener("pointerup", endStroke);
+    canvas.addEventListener("pointercancel", endStroke);
+    canvas.addEventListener("pointerleave", () => { if (!stroke && hover !== -1) { hover = -1; draw(); } });
+    canvas.addEventListener("focus", draw);
+    canvas.addEventListener("blur", draw);
+    canvas.addEventListener("keydown", (e) => {
+      const x = cursor % SIZE, y = Math.floor(cursor / SIZE), step = e.shiftKey ? 4 : 1;
+      const moves = { ArrowLeft: [-step, 0], ArrowRight: [step, 0], ArrowUp: [0, -step], ArrowDown: [0, step] };
+      if (moves[e.key]) {
+        e.preventDefault();
+        const nx = Math.max(0, Math.min(SIZE - 1, x + moves[e.key][0])), ny = Math.max(0, Math.min(SIZE - 1, y + moves[e.key][1]));
+        cursor = ny * SIZE + nx;
+        sync("Row " + (ny + 1) + ", column " + (nx + 1) + ".");
+      } else if (e.key === " " || e.key === "Enter") {
+        e.preventDefault(); paint(cursor, active); sync(active ? "Painted " + palette[active].name + "." : "Erased.");
+      } else if (e.key === "Delete" || e.key === "Backspace") {
+        e.preventDefault(); paint(cursor, 0); sync("Erased.");
+      } else if (!e.ctrlKey && !e.metaKey && !e.altKey && /^[0-9a-f]$/i.test(e.key)) {
+        e.preventDefault(); active = HEX.indexOf(e.key.toLowerCase()); sync("Active color: " + palette[active].name + ".");
+      }
+    });
+
+    mirrorBtn.addEventListener("click", () => { mirror = !mirror; sync(mirror ? "Mirror painting on." : "Mirror painting off."); });
+    const randomize = () => {
+      const colors = [];
+      while (colors.length < 3) { const c = VIVID[Math.floor(Math.random() * VIVID.length)]; if (!colors.includes(c)) colors.push(c); }
+      for (let i = 0; i < CELLS; i++) {
+        if (i % SIZE >= SIZE / 2) continue;
+        const v = Math.random();
+        cells[i] = cells[mirrorIndex(i)] = v < 0.26 ? colors[0] : v < 0.38 ? colors[1] : v < 0.42 ? colors[2] : 0;
+      }
+      sync("Randomized (mirrored).");
+    };
+    const commands = el("div", { class: "pie-cmds" },
+      cmd("RAND", "Fill with a random mirrored pattern", randomize),
+      mirrorBtn,
+      cmd("CLR", "Clear every cell", () => { cells.fill(0); sync("Cleared."); }),
+      cmd("REVERT", "Back to the icon you started from", () => { initial.split("").forEach((c, i) => { cells[i] = HEX.indexOf(c); }); sync("Reverted."); }));
+    const textTools = el("div", { class: "pie-text-tools" },
+      el("button", { class: "btn small", type: "button", title: "Copy the 16 rows, the format agents use with locus.py icon --set",
+        onclick: async () => { const ok = await UI.copy(rows(grid()).join("\n")); UI.toast(ok ? "Copied the icon as text" : "Could not copy; select the text instead", { kind: ok ? "ok" : "error" }); } }, "Copy text"),
+      el("button", { class: "btn small", type: "button", title: "Paint the grid from the text box",
+        onclick: () => {
+          try { normalize(text.value).split("").forEach((c, i) => { cells[i] = HEX.indexOf(c); }); text.blur(); sync("Applied the text."); }
+          catch (err) { status.classList.add("warn"); status.textContent = err.message; }
+        } }, "Apply text"));
+
+    const body = el("div", { class: "pie" },
+      el("div", { class: "pie-main" }, canvas,
+        el("div", { class: "pie-caption" }, "Left-drag paints · right-click erases · Alt-click picks a color")),
+      el("div", { class: "pie-side" },
+        el("div", { class: "pie-active" }, el("span", { class: "muted" }, "Active color"), activeChip, activeName),
+        el("div", { class: "pie-palette", role: "group", "aria-label": "Palette" }, swatches),
+        commands,
+        el("div", { class: "pie-previews" },
+          el("span", { class: "pie-tile" }, previewSm), el("span", { class: "pie-tile" }, previewLg),
+          el("span", { class: "pie-sample" }, previewLine, el("b", {}, name))),
+        status,
+        el("details", { class: "pie-textwrap" },
+          el("summary", {}, "As text (16 rows of 0-f; . is transparent)"),
+          text, textTools)));
+    sync(opts.note || "");
+
+    const canSave = opts.canSave === undefined ? true : opts.canSave;
+    const blocked = canSave !== true ? String(canSave || "Saving is unavailable.") : "";
+    if (blocked) body.querySelector(".pie-side").append(el("div", { class: "pie-blocked", role: "note" }, blocked));
+    const shown = UI.dialog({
+      title: opts.title || "Icon for " + name,
+      body,
+      className: "wide pie-dialog",
+      initialFocus: ".pie-canvas",
+      buttons: [
+        { label: "Cancel", value: null },
+        { label: "Save", value: "save", primary: true, validate: () => blocked || check(grid(), name) },
+      ],
+    });
+    // UI.dialog builds its buttons synchronously; a blocked save is disabled with its reason.
+    if (blocked) UI.setDisabled(document.querySelector("#dialog .dialog-foot .btn.primary"), blocked);
+    return shown.then(async (choice) => {
+      if (choice !== "save") return null;
+      const g = grid();
+      try {
+        if (opts.onSave) await opts.onSave(g);
+        return g;
+      } catch (err) {
+        UI.toast("Icon not saved: " + (err && err.message ? err.message : err), { kind: "error" });
+        return openEditor({ ...opts, initial, grid: g, mirror, note: "Not saved; your work is kept." });
+      }
+    });
+  }
+
+  root.PixelIcon = {
+    SIZE, HUB,
+    configure, setIcons, normalize, rows, check, generated, gridFor, img, openEditor,
+    palette: () => palette.map((p) => ({ ...p })),
+    painted, distance,
+    stored: (name) => icons.get(name) || null,
+    signature: () => [...icons].map(([n, g]) => n + ":" + g).sort().join("|"),
+  };
+})(typeof window !== "undefined" ? window : globalThis);
+</script>
+<script>/* ---- tasks.js ---- */
+/* Local task views. Shared status/project classes also serve both phone views. */
+"use strict";
+(function () {
+  const UI = window.UI, el = UI.el;
+  const labels = { not_started: "Not started", in_progress: "In progress", blocked: "Blocked", done: "Completed" };
+  const order = ["in_progress", "blocked", "not_started", "done"], priorities = ["urgent", "high", "normal", "low"];
+  const projectClass = (name) => "task-project-" + ([...String(name)].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % 8);
+  const classes = (t) => "task-card task-" + (labels[t.status] ? t.status : "not_started") +
+    " priority-" + (priorities.includes(t.priority) ? t.priority : "normal") +
+    Object.entries(t.flags || {}).filter(([, v]) => v).map(([k]) => " task-" + k).join("");
+  const icon = (name) => window.PixelIcon?.img(name, { size: 16 }) || null;
+  const badge = (text, className = "") => el("span", { class: "task-badge " + className }, text);
+  const markdown = (text) => { const node = el("div", { class: "md task-notes" }); node.innerHTML = window.renderMarkdown(text || ""); return node; };
+  const ageDays = (ts) => Math.max(0, Math.floor((Date.now() - Date.parse(ts)) / 86400000));
+  const agentSignature = (agents) => agents.map((a) => [a.name, a.presence, a.lifecycle, a.icon,
+    Date.now() - Date.parse(a.last_seen) > 7200000]);
+  const stateChip = (task) => badge((task.status === "done" ? "✓ " : "") + labels[task.status], "task-state task-" + task.status);
+  const update = (root, signature, draw, opts = {}) => UI.update(root, signature, draw, { editRoot: root, ...opts });
+
+  function mount(root, opts) {
+    const prefs = Object.assign({ status: "open", project: "", agent: "", group: "status", sort: "smart", text: "", flag: "", archived: false }, UI.store.get("locus.tasks.view", {}));
+    let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, loading = null, rerun = false, showOlder = false, conflict = false, focusedTask = null;
+    const tools = el("div", { class: "task-tools" }), summary = el("div", { class: "task-summary" }), list = el("div", { class: "task-list" });
+    const count = el("p", { class: "muted small" }), reason = el("p", { class: "muted small task-owner-reason" });
+    const quick = el("input", { type: "text", placeholder: "Add a task… (Enter)", "aria-label": "Add a task", maxlength: 200 });
+    const quickPriority = select(priorities.map((p) => [p, p]), "Quick-add priority", "normal");
+    const more = button("More…", () => edit());
+    const quickRow = el("div", { class: "task-quick" }, quick, quickPriority, more);
+    const search = el("input", { type: "search", value: prefs.text, placeholder: "Search tasks", "aria-label": "Search tasks" });
+    const states = el("div", { class: "task-state-filters", role: "group", "aria-label": "Task status" });
+    const project = select([], "Task project"), agent = select([], "Task coordinator");
+    const group = select([["status", "Group by status"], ["project", "Group by project"], ["none", "No grouping"]], "Group tasks", prefs.group);
+    const sort = select([["smart", "Smart order"], ["recent", "Recently updated"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]], "Sort tasks", prefs.sort);
+    const fold = button("⊟", () => { UI.collapseAll(list.querySelectorAll(".task-card")); updateFold(); }, "Collapse all tasks");
+    const archived = el("input", { type: "checkbox", checked: prefs.archived });
+    tools.append(search, states, project, agent, group, sort, fold,
+      button("CSV", () => opts.export("csv")), button("JSON", () => opts.export("json")),
+      button("Refresh", () => load()), el("label", { class: "task-check" }, archived, " Include archived"));
+    root.replaceChildren(tools, summary, quickRow, reason, count, list);
+    search.addEventListener("input", () => change("text", search.value));
+    for (const [node, key] of [[project, "project"], [agent, "agent"], [group, "group"], [sort, "sort"]])
+      node.addEventListener("change", () => change(key, node.value));
+    archived.addEventListener("change", () => change("archived", archived.checked));
+    quick.addEventListener("keydown", async (event) => {
+      if (event.key !== "Enter" || !quick.value.trim() || !opts.canEdit()) return;
+      event.preventDefault();
+      const result = await mutate("", { title: quick.value.trim(), priority: quickPriority.value, project: prefs.project === "~none" ? "" : prefs.project });
+      if (result) quick.value = "";
+    });
+
+    function select(values, label, current = "") {
+      const node = el("select", { "aria-label": label }, values.map(([value, text]) => el("option", { value }, text)));
+      node.value = current; return node;
+    }
+    function button(text, action, title = text) {
+      return el("button", { class: "btn small", type: "button", title, onclick: (event) => {
+        event.stopPropagation(); Promise.resolve().then(action).catch((e) => UI.toast(e.message, { kind: "error" }));
+      } }, text);
+    }
+    function change(key, value) {
+      focusedTask = null;
+      prefs[key] = value; UI.store.set("locus.tasks.view", prefs); render(true);
+    }
+    function updateFold() {
+      const cards = [...list.querySelectorAll(".task-card")], any = cards.some((n) => !n.classList.contains("collapsed"));
+      fold.textContent = any ? "⊟" : "⊞"; fold.title = (any ? "Collapse" : "Expand") + " all tasks";
+      fold.setAttribute("aria-label", fold.title); fold.disabled = !cards.length;
+    }
+    async function load() {
+      if (loading) { rerun = true; return loading; }
+      loading = (async () => {
+        try {
+          data = await opts.api("/api/tasks?archived=1");
+          render();
+          opts.changed?.(data);
+        } catch (error) {
+          count.textContent = error.status === 404 ? "Restart Locus after the Tasks phase is committed." : "Tasks unavailable: " + error.message;
+        } finally { loading = null; if (rerun) { rerun = false; load(); } }
+      })();
+      return loading;
+    }
+    async function mutate(path, payload) {
+      conflict = false;
+      if (!opts.canEdit()) { UI.toast("Connect as owner to add or edit tasks"); return null; }
+      try {
+        const result = await opts.api("/api/tasks" + path, { body: { agent: "owner", ...payload }, owner: true });
+        await load(); return result;
+      } catch (error) {
+        if (error.status === 409) {
+          conflict = true;
+          UI.toast("Changed by " + (error.data?.task?.updated_by || "another participant") + " just now — reloaded");
+          await load();
+        } else UI.toast(error.message, { kind: "error" });
+        return null;
+      }
+    }
+    async function status(task, value) {
+      let note;
+      if (value === "blocked") {
+        const input = el("textarea", { rows: 3, maxlength: 300, placeholder: "What are you waiting on?", "aria-label": "Blocking reason" });
+        if (!await UI.dialog({ title: "Block task #" + task.id, body: input, buttons: [{ label: "Cancel", value: false }, { label: "Block", value: true, primary: true, validate: () => input.value.trim() ? null : "Say what you are waiting on." }] })) return;
+        note = input.value.trim();
+      }
+      return mutate("/update", { id: task.id, expect_rev: task.rev, status: value, ...(note === undefined ? {} : { status_note: note }) });
+    }
+    async function edit(task, agentsOnly = false) {
+      if (!opts.canEdit()) return;
+      const values = task || { title: "", notes: "", status: "not_started", priority: quickPriority.value, project: prefs.project === "~none" ? "" : prefs.project, tags: [], coordinators: [] };
+      const form = el("div", { class: "task-editor" }), fields = {};
+      function field(key, label, node) { fields[key] = node; form.append(el("label", {}, label, node)); }
+      if (!agentsOnly) {
+        field("title", "Title", el("input", { value: values.title, maxlength: 200, required: true }));
+        field("notes", "Notes (Markdown)", el("textarea", { value: values.notes, rows: 6 }));
+        const preview = markdown(values.notes); preview.hidden = true;
+        form.append(button("Preview notes", () => { preview.replaceChildren(...markdown(fields.notes.value).childNodes); preview.hidden = !preview.hidden; }), preview);
+        field("status", "Status", select(Object.entries(labels), "Task status", values.status));
+        field("priority", "Priority", select(priorities.map((p) => [p, p]), "Task priority", values.priority));
+        const projectId = "task-project-options";
+        field("project", "Project / repository", el("input", { value: values.project, list: projectId, maxlength: 64 }));
+        form.append(el("datalist", { id: projectId }, data.projects.map((p) => el("option", { value: p }))));
+        field("thread_id", "Thread #", el("input", { value: values.thread_id || "", placeholder: "#123" }));
+        const threadHint = el("span", { class: "muted small" }, values.thread?.subject || "");
+        form.append(threadHint);
+        fields.thread_id.addEventListener("change", async () => {
+          const value = fields.thread_id.value.replace(/^#/, "");
+          if (!value) { threadHint.textContent = ""; return; }
+          try { const res = await opts.api("/api/messages/" + encodeURIComponent(value)); threadHint.textContent = res.message.subject || "Thread #" + res.message.thread_id; }
+          catch (_) { threadHint.textContent = "No message with that number"; }
+        });
+        field("request_id", "Conversation request #", el("input", { type: "number", min: 1, value: values.request_id || "" }));
+        field("due", "Due date", el("input", { type: "date", value: values.due || "" }));
+        field("tags", "Tags (comma separated)", el("input", { value: values.tags.join(", ") }));
+        if (task) field("status_note", "Progress note", el("input", { value: values.status_note || "", maxlength: 300 }));
+      }
+      const picks = new Map(), known = new Map(values.coordinators.map((a) => [a.agent, a.role]));
+      const people = opts.agents();
+      const currentAgents = [...people.filter((a) => a.lifecycle === "active" || !a.lifecycle || known.has(a.name)),
+        ...values.coordinators.filter((a) => !people.some((p) => p.name === a.agent)).map((a) => ({ name: a.agent, lifecycle: "removed" }))];
+      form.append(el("h4", {}, "Coordinators"));
+      for (const a of currentAgents) {
+        const check = el("input", { type: "checkbox", checked: known.has(a.name), disabled: a.lifecycle && a.lifecycle !== "active" });
+        const role = select([["lead", "Lead ★"], ["helper", "Helper"], ["reviewer", "Reviewer ✓"]], "Role for " + a.name, known.get(a.name) || "helper");
+        picks.set(a.name, { check, role });
+        form.append(el("div", { class: "task-coordinator-pick" }, el("label", {}, check, icon(a.name), a.name), role));
+      }
+      while (await UI.dialog({ title: task ? (agentsOnly ? "Coordinators for #" : "Edit task #") + task.id : "New task", body: form,
+        initialFocus: "input", buttons: [{ label: "Cancel", value: false }, { label: "Save", value: true, primary: true,
+          validate: () => fields.title && !fields.title.value.trim() ? "Enter a title." : null }] })) {
+        const coordinators = [...picks].filter(([, p]) => p.check.checked).map(([name, p]) => ({ agent: name, role: p.role.value }));
+        let result = null;
+        if (!agentsOnly) {
+          const payload = {};
+          for (const [key, node] of Object.entries(fields)) payload[key] = node.value;
+          payload.tags = payload.tags.split(",").map((t) => t.trim()).filter(Boolean);
+          payload.thread_id ||= null; payload.request_id = payload.request_id ? Number(payload.request_id) : null; payload.due ||= null;
+          if (task) result = await mutate("/update", { id: task.id, expect_rev: task.rev, ...payload });
+          else result = await mutate("", { ...payload, coordinators });
+          if (!result) { if (conflict) return; continue; }
+        }
+        if (task) {
+          const remove = values.coordinators.filter((a) => !coordinators.some((c) => c.agent === a.agent)).map((a) => a.agent);
+          const add = coordinators.filter((a) => {
+            const person = people.find((p) => p.name === a.agent);
+            return person && (!person.lifecycle || person.lifecycle === "active" || known.get(a.agent) !== a.role);
+          });
+          result = await mutate("/agents", { id: task.id, add, remove });
+          if (!result) { if (conflict) return; continue; }
+        }
+        break;
+      }
+    }
+    function filtered() {
+      return data.tasks.filter((t) => {
+        if (t.id === focusedTask) return true;
+        if (!prefs.archived && t.archived_at) return false;
+        if (prefs.status === "open" && t.status === "done") return false;
+        if (!["open", "all"].includes(prefs.status) && t.status !== prefs.status) return false;
+        if (prefs.project && t.project !== (prefs.project === "~none" ? "" : prefs.project)) return false;
+        if (prefs.agent === "~owner" && t.created_by !== "owner") return false;
+        if (prefs.agent === "~none" && t.coordinators.length) return false;
+        if (prefs.agent && !prefs.agent.startsWith("~") && !t.coordinators.some((a) => a.agent === prefs.agent)) return false;
+        if (prefs.flag && !t.flags[prefs.flag]) return false;
+        if (!showOlder && !["done", "all"].includes(prefs.status) && t.status === "done" && ageDays(t.done_at) > data.done_visible_days) return false;
+        return !prefs.text || ["#" + t.id, t.title, t.notes, t.project, t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
+      }).sort((a, b) => {
+        if (prefs.sort === "recent") return b.updated_at.localeCompare(a.updated_at);
+        if (prefs.sort === "newest") return b.id - a.id;
+        if (prefs.sort === "due") return (a.due || "9999").localeCompare(b.due || "9999");
+        if (prefs.sort === "priority") return priorities.indexOf(a.priority) - priorities.indexOf(b.priority);
+        return order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at);
+      });
+    }
+    function render(force = false) {
+      UI.setDisabled(quick, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
+      UI.setDisabled(quickPriority, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
+      UI.setDisabled(more, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
+      reason.textContent = opts.canEdit() ? "" : "Connect as owner to add or edit tasks";
+      const active = data.tasks.filter((t) => prefs.archived || !t.archived_at);
+      const counts = (s) => active.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
+      update(states, UI.signature([prefs.status, active.map((t) => t.status)]), () => states.replaceChildren(...[["open", "Open"], ...Object.entries(labels), ["all", "All"]].map(([s, label]) =>
+        el("button", { type: "button", class: "task-filter task-" + s, "aria-pressed": String(prefs.status === s), onclick: () => change("status", s) }, label + " " + counts(s)))));
+      function choices(node, values, chosen) {
+        update(node, UI.signature(values), () => node.replaceChildren(...values.map(([v, text]) => el("option", { value: v }, text))));
+        node.value = chosen;
+      }
+      choices(project, [["", "All projects"], ["~none", "No project"], ...[...new Set([...data.projects, ...data.tasks.map((t) => t.project).filter(Boolean)])].sort().map((p) => [p, p])], prefs.project);
+      choices(agent, [["", "Anyone"], ["~owner", "Owner-created"], ["~none", "Unassigned"], ...[...new Set([...opts.agents().map((a) => a.name), ...data.tasks.flatMap((t) => t.coordinators.map((a) => a.agent))])].sort().map((n) => [n, n])], prefs.agent);
+      update(summary, UI.signature([active.map((t) => [t.status, t.done_at, t.flags]), prefs.flag, prefs.status]), () => summary.replaceChildren(
+        ...order.map((s) => el("button", { class: "task-badge task-state task-" + s, type: "button", "aria-pressed": String(prefs.status === s),
+          onclick: () => change("status", prefs.status === s ? "open" : s) }, labels[s] + " " +
+            (s === "done" ? active.filter((t) => t.status === "done" && ageDays(t.done_at) <= data.done_visible_days).length : counts(s)) +
+            (s === "done" ? " (" + data.done_visible_days + "d)" : ""))),
+        ...["overdue", "stale", "unassigned"].map((flag) => el("button", { class: "task-badge task-" + flag, type: "button", "aria-pressed": String(prefs.flag === flag),
+          onclick: () => change("flag", prefs.flag === flag ? "" : flag) }, flag + " " + active.filter((t) => t.flags[flag]).length))));
+      if (!opts.visible()) return;
+      const tasks = filtered();
+      count.textContent = tasks.length + " of " + active.length + " shown" + (focusedTask ? " · task #" + focusedTask + " opened from link" : "");
+      update(list, UI.signature([tasks.map((t) => [t.id, t.rev, t.flags, t.thread?.subject]), prefs, focusedTask,
+        agentSignature(opts.agents()), opts.filters(), opts.canEdit(), opts.timeKey?.()]), () => {
+        const groups = new Map();
+        for (const task of tasks) {
+          const key = prefs.group === "status" ? task.status_label : prefs.group === "project" ? task.project || "No project" : "";
+          if (!groups.has(key)) groups.set(key, []);
+          groups.get(key).push(task);
+        }
+        list.replaceChildren();
+        for (const [key, items] of groups) {
+          const section = el("section", { class: "task-group" }, key ? el("h3", {}, key + " · " + items.length) : null, ...items.map(card));
+          list.append(key ? UI.card("task-groups", prefs.group + ":" + key, section, { title: key }) : section);
+        }
+        if (!tasks.length) list.append(el("p", { class: "muted" }, "No tasks match these filters."));
+        const older = active.filter((t) => t.status === "done" && ageDays(t.done_at) > data.done_visible_days).length;
+        if (older && !["done", "all"].includes(prefs.status)) list.append(button("Show " + older + " older completed", () => { showOlder = true; change("status", "all"); }));
+      }, { force, afterRestore: updateFold });
+    }
+    function card(task) {
+      const selected = opts.filters();
+      const node = el("article", { class: classes(task), dataset: { taskId: task.id, stateKey: "task:" + task.id } });
+      if ((selected.thread && String(task.thread_id) === selected.thread) || (selected.agent && task.coordinators.some((a) => a.agent === selected.agent))) node.classList.add("task-selected");
+      const chip = opts.canEdit() ? el("select", { class: "task-status-select task-" + task.status, "aria-label": "Status for task #" + task.id },
+        Object.entries(labels).map(([s, text]) => el("option", { value: s }, (s === "done" ? "✓ " : "") + text))) : stateChip(task);
+      if (opts.canEdit()) {
+        chip.value = task.status;
+        chip.addEventListener("change", async () => {
+          const result = await status(task, chip.value);
+          chip.value = result?.task?.status || task.status;
+        });
+      }
+      const people = opts.agents(), participating = task.coordinators.map((a) => people.find((p) => p.name === a.agent)).filter(Boolean);
+      const active = participating.some((a) => ["active", "doorbell", "waiting", "working"].includes(a.presence));
+      const head = el("div", { class: "repo-head task-head" },
+        active && task.status === "in_progress" ? el("span", { class: "task-live-dot task-pulse", title: "A coordinator is active" }) : null,
+        chip, task.created_by === "owner" ? icon("owner") : null,
+        badge("#" + task.id), el("strong", { class: "task-title" }, task.title),
+        task.priority !== "normal" ? badge({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority) : null,
+        task.project ? badge(task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : null,
+        task.due ? badge(task.flags.overdue ? "overdue " + ageDays(task.due) + "d" : task.flags.due_today ? "due today" : "due " + task.due, task.flags.overdue ? "task-overdue" : task.flags.due_today ? "task-due_today" : "") : null,
+        task.flags.stale ? badge("stale " + ageDays(task.updated_at) + "d", "task-stale") : null,
+        task.flags.unassigned ? badge("unassigned", "task-unassigned") : null,
+        task.archived_at ? badge("archived") : null);
+      const projectBadge = head.querySelector(".task-project-unknown"); if (projectBadge) projectBadge.title = "not a known project";
+      const coords = el("div", { class: "task-coordinators" }, ...task.coordinators.map((a) => {
+        const current = people.find((p) => p.name === a.agent), inactive = !current || current.lifecycle && current.lifecycle !== "active";
+        return el("span", { class: "task-coordinator" + (inactive ? " task-inactive" : ""), title: a.role + (inactive ? " · " + (current?.lifecycle || "removed") : " · " + current.presence) },
+          icon(a.agent), a.agent, a.role === "lead" ? " ★" : a.role === "reviewer" ? " ✓" : "",
+          inactive ? null : el("span", { class: "dot pres-" + current.presence }));
+      }));
+      if (!task.coordinators.length) coords.append(el("span", { class: "muted" }, "nobody yet"));
+      if (task.status === "in_progress" && (!participating.length || participating.every((a) => Date.now() - Date.parse(a.last_seen) > 7200000)))
+        coords.append(badge("nobody active"));
+      if (task.thread_id) coords.append(button("↳ #" + task.thread_id + " " + (task.thread?.subject || ""), () => opts.openThread(task.thread_id)));
+      if (task.request_id) coords.append(button("req #" + task.request_id, () => opts.openRequest(task.request_id)));
+      const history = el("div", { class: "task-history" }, el("h4", {}, "History"), ...eventNodes(task.events || []));
+      history.append(button("Show all history", async () => {
+        const result = await opts.api("/api/tasks/" + task.id);
+        UI.dialog({ title: "Task #" + task.id + " history", body: el("div", { class: "task-history" }, ...eventNodes(result.events)) });
+      }));
+      node.append(head, coords, el("p", { class: "task-status-note" }, task.status_note || ""),
+        el("p", { class: "muted small" }, "Updated " + opts.stamp(task.updated_at) + " · " + task.updated_by),
+        markdown(task.notes), el("div", { class: "task-tags" }, ...task.tags.map((t) => badge("#" + t))),
+        el("p", { class: "muted small" }, [["Created", task.created_at], ["Started", task.started_at], ["Completed", task.done_at]].filter(([, ts]) => ts).map(([name, ts]) => name + " " + opts.stamp(ts)).join(" · ")), history);
+      if (opts.canEdit()) {
+        const actions = el("div", { class: "task-actions" });
+        for (const [label, value] of [["Start", "in_progress"], ["Block…", "blocked"], ["Complete", "done"], ["Reopen", "not_started"]])
+          if (value !== task.status) actions.append(button(label, () => status(task, value)));
+        actions.append(button("Edit…", () => edit(task)), button("Coordinators…", () => edit(task, true)),
+          button(task.archived_at ? "Unarchive" : "Archive", () => mutate("/archive", { id: task.id, archived: !task.archived_at })),
+          button("Delete…", async () => {
+            if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Permanently delete “" + task.title + "” and its history?",
+              buttons: [{ label: "Cancel", value: false }, { label: "Delete task", value: true, danger: true }] })) await mutate("/delete", { id: task.id });
+          }));
+        node.append(actions);
+      }
+      const result = UI.card("tasks", String(task.id), node, { title: task.title, compact: true });
+      result.querySelector(".fold-toggle").addEventListener("click", updateFold);
+      return result;
+    }
+    function eventNodes(events) {
+      return events.map((e) => {
+        const detail = Object.entries(e.detail || {}).map(([key, value]) => {
+          const text = value && typeof value === "object" && "new" in value ? String(value.old ?? "none") + " → " + String(value.new ?? "none")
+            : value && typeof value === "object" ? Object.keys(value).join(", ") : String(value ?? "");
+          return key.replace(/_/g, " ") + ": " + text;
+        }).join(" · ");
+        return el("p", {}, opts.stamp(e.ts) + " · " + e.actor + " · " + e.action + (detail ? " · " + detail : ""));
+      });
+    }
+    function open(id, coordinator) {
+      if (coordinator) { prefs.agent = coordinator; prefs.status = "open"; }
+      if (id) {
+        focusedTask = Number(id);
+        UI.store.set("locus.collapsed.tasks." + id, false);
+      }
+      UI.store.set("locus.tasks.view", prefs); search.value = prefs.text; archived.checked = prefs.archived;
+      render(true);
+      if (id) { const card = list.querySelector('[data-task-id="' + Number(id) + '"]'); card?.scrollIntoView({ block: "nearest" }); if (card) UI.flash(card, "flash"); }
+    }
+    return { load, render, open, focus: () => quick.focus(), revision: () => data.tasks_rev,
+      tasks: () => data.tasks.filter((t) => !t.archived_at),
+      agentTasks: (name) => data.tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((a) => a.agent === name)) };
+  }
+  window.LocusTasks = { mount, labels, order, projectClass, classes, stateChip, markdown, agentSignature };
+})();
+</script>
+<script>/* ---- taskcards.js ---- */
+/* Compact read-only task browsing shared by the two phone views. */
+"use strict";
+(function () {
+  const { el } = UI, T = window.LocusTasks;
+  const icon = (name) => name === "hidden agent" ? null : window.PixelIcon?.img(name, { size: 16 });
+  function mount(root, opts = {}) {
+    let tasks = [], projects = [], status = UI.store.get(opts.key + ".status", "open"),
+      project = UI.store.get(opts.key + ".project", "");
+    const filters = el("div", { class: "task-state-filters" }), select = el("select", { "aria-label": "Task project" }),
+      controls = el("div", { class: "task-tools" }, filters, select), list = el("div", { class: "task-list" });
+    const add = el("button", { class: "btn primary", type: "button", onclick: () => opts.onNew?.() }, "New task");
+    if (opts.onNew) controls.append(add);
+    const reason = el("p", { class: "phone-hint" });
+    root.replaceChildren(controls, reason, list);
+    select.addEventListener("change", () => { project = select.value; UI.store.set(opts.key + ".project", project); render(); });
+    const coords = (task) => {
+      const people = opts.agents?.() || [];
+      const members = task.coordinators.map((a) => people.find((p) => p.name === a.agent));
+      const row = el("div", { class: "task-coordinators" }, task.coordinators.length
+        ? task.coordinators.map((a, index) => {
+          const person = members[index], hidden = a.agent === "hidden agent";
+          const inactive = !hidden && (!person || person.lifecycle && person.lifecycle !== "active");
+          return el("span", { class: "task-coordinator" + (inactive ? " task-inactive" : hidden ? " muted" : ""),
+            title: hidden ? "Identity hidden by the hub" : person ? person.lifecycle || person.presence || "active" : "removed" },
+            icon(a.agent), a.agent, a.role === "lead" ? " ★" : a.role === "reviewer" ? " ✓" : "",
+            person && !inactive ? el("span", {class:"task-presence pres-"+person.presence},el("span",{class:"dot"})) : null);
+        }) : el("span", { class: "muted" }, "nobody yet"));
+      if (task.status === "in_progress" && members.length && members.every((a) => a && a.presence === "away" && Date.now()-Date.parse(a.last_seen)>7200000))
+        row.append(el("span",{class:"task-badge"},"nobody active"));
+      return row;
+    };
+    async function detail(task) {
+      const body = el("div", { class: T.classes(task) }, T.stateChip(task),
+        task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) }, task.project) : null,
+        coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+        T.markdown(task.notes), el("p", { class: "muted small" }, "Updated " + new Date(task.updated_at).toLocaleString()),
+        ...(task.events || []).slice(0, 10).map((e) => el("p", { class: "muted small" }, e.actor + " · " + e.action +
+          (e.detail?.status_note?.new ? " · " + e.detail.status_note.new : ""))));
+      const buttons = [{ label: "Close", value: null }];
+      if (task.thread_id) buttons.push({ label: "Thread #" + task.thread_id, value: "thread" });
+      if (opts.onStatus && opts.canAct()) for (const [value, label] of
+        [["in_progress", "Start"], ["blocked", "Block"], ["done", "Complete"], ["not_started", "Reopen"]])
+        if (task.status !== value) buttons.push({ label, value });
+      const action = await UI.dialog({ title: "#" + task.id + " " + task.title, body, buttons });
+      if (action === "thread") opts.onThread?.(task.thread_id);
+      else if (action) opts.onStatus?.(task, action);
+    }
+    function render() {
+      const counts = (s) => tasks.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
+      UI.update(filters, UI.signature([tasks.map((t) => t.status), status]), () => filters.replaceChildren(
+        ...[["open", "Open"], ...Object.entries(T.labels), ["all", "All"]].map(([value, label]) => el("button", {
+          class: "task-filter task-" + value, type: "button", "aria-pressed": String(status === value),
+          onclick: () => { status = value; UI.store.set(opts.key + ".status", value); render(); },
+        }, label + " " + counts(value)))));
+      const names = [...new Set([...projects, ...tasks.map((t) => t.project).filter(Boolean)])].sort();
+      UI.update(select, UI.signature(names), () => select.replaceChildren(
+        el("option", { value: "" }, "All projects"), el("option", { value: "~none" }, "No project"),
+        ...names.map((p) => el("option", { value: p }, p))));
+      select.value = project;
+      if (opts.onNew) { add.disabled = !opts.canAct(); reason.textContent = opts.reason?.() || ""; }
+      const shown = tasks.filter((t) => (status === "all" || (status === "open" ? t.status !== "done" : t.status === status))
+        && (!project || t.project === (project === "~none" ? "" : project)));
+      const icons = shown.map((t) => [t.created_by === "owner" ? window.PixelIcon?.gridFor("owner").grid : null,
+        ...t.coordinators.filter((a) => a.agent !== "hidden agent").map((a) => window.PixelIcon?.gridFor(a.agent).grid)]);
+      UI.update(list, UI.signature([shown, status, project, icons, T.agentSignature(opts.agents?.() || [])]), () => list.replaceChildren(...(shown.length
+        ? shown.map((task) => {
+          const title = el("button", { class: "task-title linkbtn", type: "button", onclick: () => detail(task) }, "#" + task.id + " " + task.title);
+          const active = task.status === "in_progress" && task.coordinators.some((a) => (opts.agents?.() || []).some(
+            (p) => p.name === a.agent && ["active","working","waiting","doorbell"].includes(p.presence)));
+          return el("article", { class: T.classes(task) }, el("div", { class: "task-head" },
+            active ? el("span", {class:"task-live-dot task-pulse",title:"A coordinator is active"}) : null, T.stateChip(task),
+            task.created_by === "owner" ? icon("owner") : null, title,
+            task.priority !== "normal" ? el("span", { class: "task-badge task-priority priority-" + task.priority }, {urgent:"!!",high:"!",low:"↓"}[task.priority]) : null,
+            task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) + (task.project_known ? "" : " task-project-unknown") }, task.project) : null,
+            task.due && !task.flags?.overdue && !task.flags?.due_today ? el("span",{class:"task-badge"},"due "+task.due) : null,
+            ...Object.entries(task.flags || {}).filter(([, v]) => v).map(([k]) => el("span", { class: "task-badge task-" + k }, k.replace(/_/g, " ")))),
+            coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+            el("button", { class: "btn small", type: "button", onclick: () => detail(task) }, "Details"));
+        }) : [el("p", { class: "muted" }, "No tasks match these filters.")])));
+    }
+    return { update(next, known = []) { tasks = next || []; projects = known; render(); }, detail, refresh: render };
+  }
+  window.LocusTaskCards = { mount };
+})();
+</script>
 <script>/* ---- map.js ---- */
-/* Agent Hub live map: an SVG diagram of how everything is connected right now.
+/* Locus live map: an SVG diagram of how everything is connected right now.
  *
  * Layout (top to bottom): the owner and the channels, the hub, the agents,
  * the repositories. Agent boxes are colored by state (waiting for messages,
@@ -2166,18 +3411,21 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 
   /** Put a freshly drawn SVG in the container under the kept view. */
   function mount(container, v, svg, W, H) {
+    const snapshot = window.UI ? UI.capture(container) : null;
     svg.setAttribute("preserveAspectRatio", "xMinYMin meet");
     v.svg = svg;
     const cw = container.clientWidth, ch = container.clientHeight;
     if (!cw || !ch) {  // hidden: show it whole; the resize observer re-renders once it has a size
       svg.setAttribute("viewBox", "0 0 " + W + " " + H);
       container.replaceChildren(svg, controls(v));
+      if (snapshot) UI.restore(container, snapshot);
       return;
     }
     Object.assign(v, { W, H, cw, ch });
     if (!v.user || !v.s) fitView(v);
     else { clampView(v); applyView(v); }
     container.replaceChildren(svg, controls(v));
+    if (snapshot) UI.restore(container, snapshot);
   }
 
   function render(container, data, handlers) {
@@ -2382,7 +3630,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         s("title", {}, "The hub: " + (h.live ? "live" : "not reachable from this page") + " · " + h.address),
         s("rect", { class: "box", x: HUB.x, y: HUB.y, width: HUB.w, height: HUB.h, rx: 12 }),
         s("circle", { class: "hub-dot", cx: HUB.x + 20, cy: HUB.y + 22, r: 5 }),
-        s("text", { class: "t-title", x: HUB.x + 32, y: HUB.y + 26 }, "Agent Hub"),
+        s("text", { class: "t-title", x: HUB.x + 32, y: HUB.y + 26 }, "Locus"),
         s("text", { class: "t-small t-muted", x: HUB.x + 32, y: HUB.y + 46 }, fit(h.address + " · " + h.detail, 40)));
       gNodes.append(g);
     }
@@ -2618,7 +3866,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 })();
 </script>
 <script>/* ---- phone/phonecore.js ---- */
-/* Agent Hub phone core: seal v1 crypto (WebCrypto) and the GitHub link, for the phone page.
+/* Locus phone core: seal v1 crypto (WebCrypto) and the GitHub link, for the phone page.
  *
  * Must match hub/seal.py byte for byte (tests/test_seal.py runs tests/seal_vectors.mjs
  * against the Python vectors in Node). The phone page uses only window.AgentHubPhone:
@@ -2742,7 +3990,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 
   /** Verify, then decrypt an envelope sealed for `purpose`; returns the parsed JSON. */
   async function open(env, keys, purpose) {
-    if (!env || env.agenthub !== "seal" || env.v !== 1) throw new PhoneError("FORMAT", "not an Agent Hub seal");
+    if (!env || env.agenthub !== "seal" || env.v !== 1) throw new PhoneError("FORMAT", "not a Locus seal");
     if (env.purpose !== purpose) throw new PhoneError("TAMPERED", "sealed for another purpose");
     if (env.kid !== keys.kid) throw new PhoneError("KEY_CHANGED", "sealed with another passphrase");
     if (env.z !== "deflate" && env.z !== "none") throw new PhoneError("FORMAT", "unknown compression");
@@ -2868,21 +4116,39 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     return { changed: true, snapshot, etag: got.etag, kid: keys.kid };
   }
 
+  function taskMessage(task, code) {
+    if (!task || typeof task !== "object" || Array.isArray(task)) throw new PhoneError("INPUT", "enter a task");
+    const allowed = task.op === "create" ? ["op", "title", "project", "priority", "notes", "coordinator"]
+      : task.op === "status" ? ["op", "id", "status", "note"] : [];
+    if (!allowed.length || Object.keys(task).some(k => !allowed.includes(k))) throw new PhoneError("INPUT", "unsupported task action");
+    if (task.op === "create") {
+      if (typeof task.title !== "string" || !task.title.trim() || task.title.length > 200) throw new PhoneError("INPUT", "a task needs a title of at most 200 characters");
+      if (task.notes !== undefined && (typeof task.notes !== "string" || new TextEncoder().encode(task.notes).length > 8000)) throw new PhoneError("INPUT", "task notes are too long");
+    } else {
+      if (!Number.isInteger(task.id) || task.id < 1 || !["not_started", "in_progress", "blocked", "done"].includes(task.status)) throw new PhoneError("INPUT", "choose a task and status");
+      if (task.note !== undefined && (typeof task.note !== "string" || task.note.length > 300)) throw new PhoneError("INPUT", "a progress note has at most 300 characters");
+      if (task.status === "blocked" && !String(task.note || "").trim()) throw new PhoneError("INPUT", "say what you are waiting on");
+    }
+    return { kind: "task", task: { ...task }, code };
+  }
   async function send({ repo, token, issue, keys, message }) {
     const m = message || {};
     const code = String(m.code || "").replace(/\s/g, "");
     if (!Number.isInteger(issue) || issue <= 0) throw new PhoneError("INPUT", "the Inbox is not open on the hub");
-    if (!m.to || typeof m.to !== "string") throw new PhoneError("INPUT", "choose who the message is for");
-    if (!String(m.body || "").trim()) throw new PhoneError("INPUT", "the message is empty");
+    const isTask = m.kind === "task";
+    if (isTask) taskMessage(m.task, code);
+    if (!isTask && (!m.to || typeof m.to !== "string")) throw new PhoneError("INPUT", "choose who the message is for");
+    if (!isTask && !String(m.body || "").trim()) throw new PhoneError("INPUT", "the message is empty");
     if (!/^\d{6}$/.test(code)) throw new PhoneError("INPUT", "enter the 6-digit code from your authenticator app");
     if (m.reply_to !== undefined && m.reply_to !== null && !(Number.isInteger(m.reply_to) && m.reply_to > 0)) {
       throw new PhoneError("INPUT", "reply_to must be a message id");
     }
     if (m.kind === "request" && !String(m.subject || "").trim()) throw new PhoneError("INPUT", "a new conversation needs a subject (its title)");
-    const inner = { v: 1, to: m.to, kind: m.kind || "note", subject: m.subject || "", body: String(m.body), code,
+    const inner = { v: 1, to: m.to || "", kind: m.kind || "note", subject: m.subject || "", body: String(m.body || ""), code,
       sent_at: new Date().toISOString(), cid: hex(crypto.getRandomValues(new Uint8Array(8))),
       reply_to: Number.isInteger(m.reply_to) ? m.reply_to : null };
     if (m.kind === "request" && typeof m.tool === "string") inner.tool = m.tool;  // which tool should take it ("" = any)
+    if (isTask) inner.task = m.task;
     const env = await seal(inner, keys, "inbox");
     const r = await gh(token, "POST", "/repos/" + repo + "/issues/" + issue + "/comments", { body: { body: commentText(env) } });
     const c = await r.res.json();
@@ -2909,7 +4175,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   const forget = () => { opened.clear(); return idb("readwrite", (s) => s.delete(KEY)); };
 
   globalThis.AgentHubPhone = {
-    connect, poll, send, remember, load, forget, PhoneError,
+    connect, poll, send, remember, load, forget, PhoneError, taskMessage,
     _internals: { deriveKeys, open, seal, commentText, parseCommentText, b64, unb64 },
   };
 })();
@@ -2928,6 +4194,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     toYou: false, replyTo: null, threadCounts: new Map(), scrolls: new Map(),
     checkedAt: null, manualNoteUntil: 0 };  // when this phone last reached GitHub; how long a Refresh result stays up
   let pollTimer = null;
+  let taskCards = null;
+  const closedMessages = new Set(UI.store.get("locus.phone.collapsed.messages", []));
+  const icon = (name) => window.PixelIcon?.img(name, { size: 16 }) || null;
   const errorWords = {
     INPUT: "Check the repository, token and message details, then try again.",
     AUTH: "GitHub rejected this token. Connect again with a new phone token.",
@@ -3003,10 +4272,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const options = values.map((v) => typeof v === "string" ? { value: v, label: v } : v);
     if (placeholder) options.unshift({ value: "", label: placeholder });
     const fingerprint = JSON.stringify(options);
-    if (select.dataset.options === fingerprint) return;
-    select.replaceChildren(...options.map((v) => el("option", { value: v.value }, v.label)));
-    select.dataset.options = fingerprint;
-    if (options.some((v) => v.value === previous)) select.value = previous;
+    UI.update(select, fingerprint, () => {
+      select.replaceChildren(...options.map((v) => el("option", { value: v.value }, v.label)));
+      select.dataset.options = fingerprint;
+      if (options.some((v) => v.value === previous)) select.value = previous;
+    });
   }
   function showView(view, focus) {
     if (state.snapshot && !viewEnabled(view)) return;
@@ -3067,6 +4337,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   function acceptSnapshot(snapshot) {
     if (!snapshot || snapshot.format !== "agenthub.phone.v1" || !Array.isArray(snapshot.agents) || !Array.isArray(snapshot.messages)) throw { code: "FORMAT" };
     state.snapshot = snapshot;
+    window.PixelIcon?.configure(snapshot.icon_config);
+    window.PixelIcon?.setIcons(snapshot.icons || {});
     for (const tab of $("phoneTabs").querySelectorAll("[data-view]")) tab.hidden = !viewEnabled(tab.dataset.view);
     const nextView = viewEnabled(state.view) ? state.view : [...$("phoneTabs").querySelectorAll("[data-view]")].find((tab) => !tab.hidden)?.dataset.view || "compose";
     showView(nextView);
@@ -3074,9 +4346,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("phoneApp").hidden = false;
     $("phoneTabs").hidden = false;
     document.body.classList.add("phone-connected");
-    $("phoneTitle").textContent = (snapshot.hub && snapshot.hub.title) || "Agent Hub";
+    $("phoneTitle").textContent = (snapshot.hub && snapshot.hub.title) || "Locus";
     const unread = snapshot.owner && snapshot.owner.unread || 0;
-    $("phoneOverview").replaceChildren(...[viewEnabled("agents") ? el("span", {}, snapshot.agents.length + " agents") : null, viewEnabled("timeline") ? el("span", {}, snapshot.messages.length + " msgs") : null, viewEnabled("timeline") ? el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you") : null].filter(Boolean));
+    UI.update($("phoneOverview"), UI.signature([viewEnabled("agents"), viewEnabled("timeline"), snapshot.agents.length, snapshot.messages.length, unread]), () => $("phoneOverview").replaceChildren(...[viewEnabled("agents") ? el("span", {}, snapshot.agents.length + " agents") : null, viewEnabled("timeline") ? el("span", {}, snapshot.messages.length + " msgs") : null, viewEnabled("timeline") ? el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you") : null].filter(Boolean)));
     choose("filterAgent", [...new Set([...snapshot.agents.map((a) => a.name), ...snapshot.messages.flatMap((m) => [m.from, m.to]).filter((name) => name && !name.startsWith("#"))])].sort(), "Any agent");
     const threads = new Map();
     state.threadCounts = new Map();
@@ -3087,19 +4359,23 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     choose("filterThread", [...threads].sort((a, b) => Number(b[0]) - Number(a[0])).map(([value, label]) => ({ value, label })), "All threads");
     choose("filterKind", [...new Set(snapshot.messages.map((m) => m.kind))].sort(), "All kinds");
     renderTimeline(); renderAgents(); renderRepos(); renderUsage(); renderCompose(); renderDeliveries(); updateAge();
+    renderTasks();
     if (state.view === "map") renderMap();
     $("phoneRefresh").disabled = false;
   }
   function renderAgents() {
+    return UI.update($("phoneAgents"), UI.signature([state.snapshot.agents, state.snapshot.usage, state.snapshot.rules, state.snapshot.icons]), drawAgents);
+  }
+  function drawAgents() {
     const snapshot = state.snapshot, usage = snapshot.usage || {};
-    const rank = { waiting: 0, working: 1, idle: 2, away: 3 };
+    const rank = { waiting: 0, doorbell: 0, working: 1, active: 1, idle: 2, away: 3 };
     const agentState = (a) => AgentMap.agentState(a, (usage.agents || {})[a.name]);
     const agents = [...snapshot.agents].sort((a, b) => rank[agentState(a).key] - rank[agentState(b).key] || a.name.localeCompare(b.name));
     $("phoneAgents").replaceChildren(...agents.map((a) => {
       const u = (usage.agents || {})[a.name] || {}, context = u.context || {};
       const status = AgentMap.agentState(a, u);
-      return el("article", { class: "phone-card phone-agent st-" + status.key },
-        el("div", { class: "phone-card-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, a.name)), leadOf(snapshot, a.name) !== undefined ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Project lead" }, leadOf(snapshot, a.name) ? "lead · " + leadOf(snapshot, a.name) : "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
+      const card = el("article", { class: "phone-card phone-agent st-" + status.key },
+        el("div", { class: "phone-card-head repo-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, icon(a.name), a.name)), leadOf(snapshot, a.name) !== undefined ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Project lead" }, leadOf(snapshot, a.name) ? "lead · " + leadOf(snapshot, a.name) : "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
         el("p", { class: "phone-agent-status" }, a.status || "No status set"),
         el("p", { class: "phone-meta" }, "Seen ", ageNode(a.last_seen), " · " + (a.unread || 0) + " unread · " + (a.unacked || 0) + " unacked"),
         a.workdir ? el("p", { class: "phone-meta mono", title: a.workdir }, a.workdir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() || a.workdir) : null,
@@ -3107,11 +4383,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         el("p", { class: "phone-meta" }, u.model || "Model unavailable", context.window_assumed ? " · assumed context window" : ""),
         ...list((usage.plans || {})[a.kind] && usage.plans[a.kind].windows).map((w) => metric(w.label || "Plan", w.used_percent)),
         el("button", { class: "btn phone-agent-message", type: "button", onclick: () => openCompose({ to: a.name, kind: "note" }) }, "Message"));
+      return UI.card("phone-agents", a.name, card, { title: a.name, compact: true });
     }));
     if (!agents.length) $("phoneAgents").append(empty("No agents registered yet."));
   }
   function renderMessage(m) {
-    const authority = ["owner-web", "owner-remote", "hub"].includes(m.authority) ? m.authority : "agent-claimed";
+    const authority = ["owner-web", "owner-remote", "hub", "peer", "peer-owner"].includes(m.authority) ? m.authority : "agent-claimed";
     const content = el("div", { class: "md phone-body", id: "phone-body-" + m.id });
     content.innerHTML = window.renderMarkdown(m.body || ""); // Shared renderer escapes all source text.
     let body = content;
@@ -3130,20 +4407,42 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const receipts = list(m.receipts);
     const acked = receipts.filter((r) => r.acked_at).length;
     const read = receipts.filter((r) => r.read_at || r.acked_at).length;
-    const receipt = String(m.to || "").startsWith("#") ? acked + "/" + receipts.length + " acked" : acked ? "acked" : read ? "read" : "unread";
+    const ackers = receipts.filter((r) => r.acked_at);
+    const receipt = String(m.to || "").startsWith("#") ? acked + "/" + receipts.length + " acked" + (acked ? ": " : "") : acked ? "acked by " : read ? "read" : "unread";
     const threadCount = state.threadCounts.get(m.thread_id) || 1;
     const canReply = state.snapshot.agents.some((a) => a.name === m.from) || list(state.snapshot.channels).includes(m.from) && !["#all", "owner", "hub"].includes(m.from);
-    return el("article", { class: "phone-card phone-message auth-" + authority + (m.to === "owner" ? " to-owner" : ""), dataset: { messageId: String(m.id) }, title: "#" + m.id + " · " + authority + " · via " + (m.via || "hub") },
-      el("div", { class: "phone-route" }, el("b", {}, m.from), " → ", el("b", {}, m.to), " · " + m.kind + " · ", el("time", { datetime: m.ts, title: fmtTime(m.ts) }, Number.isFinite(Date.parse(m.ts)) ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Unknown time")),
+    const node = el("article", { class: "phone-card phone-message auth-" + authority + (m.to === "owner" ? " to-owner" : ""), dataset: { messageId: String(m.id) }, title: "#" + m.id + " · " + authority + " · via " + (m.via || "hub") },
+      el("div", { class: "phone-route" }, icon(m.from), el("b", {}, m.from), " → ", icon(m.to), el("b", {}, m.to), " · " + m.kind + " · ", el("time", { datetime: m.ts, title: fmtTime(m.ts) }, Number.isFinite(Date.parse(m.ts)) ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Unknown time")),
       authority !== "agent-claimed" ? pill(authority) : null,
       m.subject ? el("h3", {}, m.subject) : null,
       body,
       list(m.files).length ? el("details", {}, el("summary", {}, "File references (" + m.files.length + ")"), m.files.map((f) => el("p", { class: "phone-meta mono" }, f.path || "File", finite(f.bytes) ? " · " + f.bytes.toLocaleString() + " bytes" : ""))) : null,
-      el("div", { class: "phone-message-actions" }, el("span", { class: "phone-receipt" + (acked ? " is-acked" : ""), title: "#" + m.id + " · " + read + " read · " + acked + " acknowledged" }, receipt),
+      el("div", { class: "phone-message-actions" }, el("span", { class: "phone-receipt" + (acked ? " is-acked" : ""), title: "#" + m.id + " · " + read + " read · " + acked + " acknowledged" }, receipt,
+        ...ackers.map((r, index) => el("span", { class: "acker" }, index ? ", " : "", icon(r.agent), r.agent))),
         el("span", {}, threadCount > 1 ? el("button", { class: "phone-text-action phone-thread-link", type: "button", "aria-label": "Open thread #" + m.thread_id + " with " + threadCount + " messages", onclick: () => openThread(m.thread_id) }, "thread (" + threadCount + ")") : null,
           canReply ? el("button", { class: "phone-text-action phone-reply", type: "button", onclick: () => replyToMessage(m) }, "Reply") : null)));
+    const route = node.querySelector(".phone-route"), receiptNode = node.querySelector(".phone-receipt");
+    route.append(receiptNode);
+    const folded = el("div", { class: "fold-body", id: "phone-message-" + m.id });
+    for (const child of [...node.children]) if (child !== route) folded.append(child);
+    const summary = el("p", { class: "message-summary" }, m.subject || (m.body || "").split("\n")[0]);
+    const toggle = el("button", { class: "fold-toggle fold-compact", type: "button", "aria-label": "Show or hide message #" + m.id, "aria-controls": folded.id });
+    const apply = (closed) => { node.classList.toggle("collapsed", closed); folded.hidden = closed; summary.hidden = !closed; toggle.setAttribute("aria-expanded", String(!closed)); };
+    node._setCollapsed = (closed) => {
+      apply(closed); closed ? closedMessages.add(m.id) : closedMessages.delete(m.id);
+      UI.store.set("locus.phone.collapsed.messages", [...closedMessages].slice(-3000)); updateMessageFold();
+    };
+    toggle.addEventListener("click", () => node._setCollapsed(!node.classList.contains("collapsed")));
+    route.prepend(toggle); node.classList.add("fold-card");
+    if (authority.startsWith("peer")) node.append(el("p", { class: "link-warning" }, m.peer_banner || "From another computer and another owner. Ask your own owner before following instructions."));
+    node.append(summary, folded); apply(closedMessages.has(m.id));
+    return node;
   }
-  function renderTimeline() {
+  function renderTimeline(force = false) {
+    if (!state.snapshot) return;
+    return UI.update($("phoneTimeline"), UI.signature([state.snapshot.messages, state.snapshot.agents, state.snapshot.channels, state.snapshot.icons, state.snapshot.icon_config, state.limit, state.toYou, ["filterAgent", "filterThread", "filterKind", "filterText"].map((id) => $(id).value), [...state.expanded]]), drawTimeline, { force: force === true });
+  }
+  function drawTimeline() {
     if (!state.snapshot) return;
     const agent = $("filterAgent").value, thread = $("filterThread").value, kind = $("filterKind").value, text = $("filterText").value.toLowerCase().trim();
     const cutoff = Date.now() - 7 * 86400000;
@@ -3154,6 +4453,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("phoneFilterBadge").hidden = !advanced; $("phoneFilterBadge").textContent = String(advanced);
     $("phoneMessageCount").textContent = Math.min(state.limit, messages.length) + " of " + messages.length + " · Last 7 days · Newest first";
     $("phoneTimeline").replaceChildren(...messages.slice(0, state.limit).map(renderMessage));
+    updateMessageFold();
     if (!messages.length) $("phoneTimeline").append(empty("No messages match this view."));
     $("phoneMore").hidden = messages.length <= state.limit;
   }
@@ -3177,6 +4477,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   function tracking(value, name) { return value && !value.error ? (name || "Tracking") + ": " + (value.ahead || 0) + " ahead, " + (value.behind || 0) + " behind" : ""; }
   function renderRepos() {
+    return UI.update($("phoneRepos"), UI.signature(state.snapshot.repos, ["collected_age_seconds", "elapsed_ms"]), drawRepos);
+  }
+  function drawRepos() {
     const repos = list((state.snapshot.repos || {}).repos);
     $("phoneRepos").replaceChildren(...repos.map((r) => {
       if (!r.ok) return el("article", { class: "phone-card" }, el("h3", {}, r.name), el("p", { class: "phone-meta" }, r.error || "Repository unavailable"));
@@ -3192,6 +4495,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (!repos.length) $("phoneRepos").append(empty("No repository snapshots available."));
   }
   function renderUsage() {
+    return UI.update($("phoneUsage"), UI.signature([state.snapshot.usage, state.snapshot.usage_history, state.snapshot.display], ["elapsed_ms", "generated_at"]), drawUsage);
+  }
+  function drawUsage() {
     const usage = state.snapshot.usage || {}, cards = [];
     if (usage.enabled === false) cards.push(empty(usage.note || "Usage monitoring is disabled."));
     for (const [tool, plan] of Object.entries(usage.plans || {})) {
@@ -3219,6 +4525,76 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (!list(history.limits).length) $("phoneUsage").append(empty(list(history.notes).join(" ") || "No history readings in this snapshot."));
     }
   }
+  function updateMessageFold() {
+    const nodes = [...$("phoneTimeline").querySelectorAll(".phone-message")];
+    const closed = nodes.some((n) => !n.classList.contains("collapsed"));
+    $("phoneFoldMessages").textContent = (closed ? "Collapse" : "Expand") + " all messages";
+    $("phoneFoldMessages").disabled = !nodes.length;
+  }
+  function taskReason() {
+    if (state.fixture) return "Demo actions preview payloads only; no GitHub requests are made.";
+    const inbox = state.snapshot?.inbox || {};
+    if (!state.session) return "Connect to the hub before changing tasks.";
+    if (!inbox.enabled || !inbox.issue) return "Enable Monitor + Inbox on the computer to change tasks.";
+    if (!list(inbox.kinds).includes("task")) return "Task actions are not enabled in this Inbox.";
+    return "";
+  }
+  function renderTasks() {
+    if (!taskCards) taskCards = window.LocusTaskCards.mount($("phoneTasks"), {
+      key: "locus.phone.tasks", onThread: openThread, agents: () => state.snapshot?.agents || [],
+      canAct: () => !state.sending && (state.fixture || !taskReason()),
+      reason: taskReason, onNew: () => editTask(), onStatus: (task, status) => editTask(task, status),
+    });
+    taskCards.update(list(state.snapshot.tasks), list(state.snapshot.projects).map((p) => p.name));
+  }
+  async function editTask(task, status) {
+    if (state.sending) return;
+    if (!state.fixture && taskReason()) return;
+    const form = el("div", { class: "task-editor" }), fields = {};
+    const field = (name, label, input) => { fields[name] = input; form.append(el("label", {}, label, input)); };
+    if (!task) {
+      field("title", "Title", el("input", { maxlength: 200, required: true }));
+      field("project", "Project", el("select", {}, el("option", { value: "" }, "No project"),
+        ...list(state.snapshot.projects).map((p) => el("option", { value: p.name }, p.name))));
+      field("priority", "Priority", el("select", {}, ...["normal", "high", "urgent", "low"].map((p) => el("option", { value: p }, p))));
+      field("notes", "Notes", el("textarea", { rows: 5 }));
+      field("coordinator", "Coordinator (optional)", el("select", {}, el("option", { value: "" }, "Nobody yet"),
+        ...state.snapshot.agents.filter((a) => !a.lifecycle || a.lifecycle === "active").map((a) => el("option", { value: a.name }, a.name))));
+    } else {
+      form.append(el("p", {}, "#" + task.id + " " + task.title + " → " + LocusTasks.labels[status]));
+      field("note", status === "blocked" ? "What are you waiting on? (required)" : "Progress note (optional)",
+        el("textarea", { maxlength: 300, rows: 3 }));
+    }
+    field("code", "Authenticator code", el("input", { type: "password", inputmode: "numeric", maxlength: 6, autocomplete: "off" }));
+    if (state.fixture) form.append(el("p", { class: "phone-hint" }, "Demo preview only. An authenticator code is not needed."));
+    const accepted = await UI.dialog({ title: task ? "Set task status" : "New task", body: form,
+      initialFocus: task ? "textarea" : "input", buttons: [{ label: "Cancel", value: false },
+        { label: state.fixture ? "Preview action" : "Send encrypted action", value: true, primary: true,
+          validate: () => !task && !fields.title.value.trim() ? "Enter a title." :
+            status === "blocked" && !fields.note.value.trim() ? "Say what you are waiting on." :
+            !state.fixture && !/^\d{6}$/.test(fields.code.value) ? "Enter the 6-digit authenticator code." : null }] });
+    if (!accepted) { fields.code.value = ""; return; }
+    const payload = task ? { op: "status", id: task.id, status,
+        ...(fields.note.value.trim() ? {note:fields.note.value.trim()} : {}) }
+      : { op: "create", title: fields.title.value.trim(), project: fields.project.value,
+          priority: fields.priority.value, notes: fields.notes.value,
+          ...(fields.coordinator.value ? { coordinator: fields.coordinator.value } : {}) };
+    let message;
+    try { message = AgentHubPhone.taskMessage(payload, fields.code.value); }
+    catch (error) { UI.toast(error.message, { kind: "error" }); fields.code.value = ""; return; }
+    fields.code.value = "";
+    if (state.fixture) { $("phoneTaskPreview").textContent = "Demo action preview: " + JSON.stringify(message.task); message.code = ""; return; }
+    const epoch = state.epoch;
+    state.sending = true; renderTasks();
+    try {
+      const sent = await AgentHubPhone.send({ ...state.session, issue: state.snapshot.inbox.issue, message });
+      if (epoch !== state.epoch) return;
+      state.deliveries.unshift({ id: sent.comment_id });
+      UI.toast("Encrypted task action sent; waiting for the hub.");
+      renderDeliveries(); refresh();
+    } catch (error) { if (epoch === state.epoch) await handleError(error); }
+    finally { message.code = ""; if (epoch === state.epoch) { state.sending = false; if (state.snapshot) renderTasks(); } }
+  }
   function viewEnabled(view) { const key = view === "timeline" ? "messages" : view; return view === "compose" || state.snapshot?.display?.[key] !== false; }
   function composeReason() {
     const inbox = (state.snapshot || {}).inbox || {};
@@ -3232,6 +4608,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     return "";
   }
   function renderRequests() {
+    return UI.update($("phoneRequests"), UI.signature(state.snapshot.requests), drawRequests);
+  }
+  function drawRequests() {
     const reqs = list((state.snapshot || {}).requests);
     $("phoneRequestsTitle").hidden = !reqs.length;
     $("phoneRequests").replaceChildren(...reqs.map((r) => el("article", { class: "phone-card" },
@@ -3243,7 +4622,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const s = state.snapshot;
     const blocked = new Set(["owner", "hub", "#all"]);
     choose("composeTo", [...new Set([...s.agents.map((a) => a.name), ...list(s.channels)])].filter((v) => v && !blocked.has(v)).sort());
-    choose("composeKind", list((s.inbox || {}).kinds));
+    choose("composeKind", list((s.inbox || {}).kinds).filter((kind) => kind !== "task"));
     // A request to a project channel starts a conversation there; it asks which tool should take it.
     const isRequest = $("composeKind").value === "request";
     $("composeToolWrap").hidden = !isRequest;
@@ -3256,10 +4635,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("phoneReplyLabel").textContent = state.replyTo ? "Reply to #" + state.replyTo.id + " · " + state.replyTo.to : "";
   }
   function renderDeliveries() {
+    return UI.update($("phoneDeliveries"), UI.signature([state.deliveries, (state.snapshot || {}).decisions]), drawDeliveries);
+  }
+  function drawDeliveries() {
     const decisions = list((state.snapshot || {}).decisions);
     $("phoneDeliveries").replaceChildren(...state.deliveries.map((delivery) => {
       const d = decisions.find((v) => String(v.comment) === String(delivery.id));
-      const text = !d ? "Sent; waiting for the hub. Comment #" + delivery.id + "." : d.result === "delivered" ? "Delivered as message #" + d.message_id + (d.to ? " to " + d.to : "") + "." : "Not delivered: " + (d.detail || d.result || "refused by the hub") + ".";
+      const text = !d ? "Sent; waiting for the hub. Comment #" + delivery.id + "." : d.result === "delivered"
+        ? d.message_id ? "Delivered as message #" + d.message_id + (d.to ? " to " + d.to : "") + "." : "Delivered: " + d.detail
+        : "Not delivered: " + (d.detail || d.result || "refused by the hub") + ".";
       return el("p", { class: "phone-notice" + (d ? d.result === "delivered" ? " is-ok" : " is-error" : "") }, text);
     }));
   }
@@ -3270,15 +4654,21 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   function clearCredentials() { $("setupToken").value = ""; $("setupPassphrase").value = ""; $("composeCode").value = ""; }
   async function disconnect(message) {
-    ++state.epoch; stopPolling(); state.session = null; state.snapshot = null; state.polling = false;
+    ++state.epoch; stopPolling(); state.session = null; state.snapshot = null; state.polling = false; state.sending = false;
+    taskCards = null; window.PixelIcon?.setIcons({});
+    const dialog = $("dialog");
+    if (dialog.open) dialog.dispatchEvent(new Event("cancel", {cancelable:true}));
+    dialog.replaceChildren();
     state.checkedAt = null; state.manualNoteUntil = 0;
     state.deliveries = []; state.expanded.clear(); state.replyTo = null; state.toYou = false; state.threadCounts.clear(); state.scrolls.clear();
     $("phoneSetup").hidden = false; $("phoneApp").hidden = true; $("phoneRefresh").disabled = true;
     $("phoneTabs").hidden = true; document.body.classList.remove("phone-connected", "phone-mapmode");
     $("phoneReplyContext").hidden = true; $("phoneReplyLabel").textContent = "";
-    $("phoneTitle").textContent = "Agent Hub"; $("phoneAge").textContent = "Connect to your hub"; $("phoneAge").className = "phone-age";
+    $("phoneTitle").textContent = "Locus"; $("phoneAge").textContent = "Connect to your hub"; $("phoneAge").className = "phone-age";
     // Remove decrypted content and drafts when a phone is forgotten or credentials expire.
-    for (const id of ["phoneOverview", "phoneTimeline", "phoneAgents", "phoneRepos", "phoneUsage", "phoneDeliveries", "phoneRequests", "filterAgent", "filterThread", "filterKind", "composeTo", "composeKind"]) {
+    for (const id of ["phoneOverview", "phoneTimeline", "phoneAgents", "phoneRepos", "phoneUsage", "phoneTasks", "phoneTaskPreview", "phoneDeliveries", "phoneRequests", "filterAgent", "filterThread", "filterKind", "composeTo", "composeKind"]) {
+      for (const node of $(id).querySelectorAll("*")) UI.invalidate(node);
+      UI.invalidate($(id));
       $(id).replaceChildren(); delete $(id).dataset.options;
     }
     // A fresh canvas also releases the map renderer's per-container snapshot closure.
@@ -3432,7 +4822,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (target !== null) { event.preventDefault(); showView(visible[target].dataset.view, true); }
       });
     });
-    for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
+    for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(true); $("phoneMain").scrollTop = 0; });
     $("filterAll").addEventListener("click", () => scopeToYou(false));
     $("filterToYou").addEventListener("click", () => scopeToYou(true));
     $("phoneCancelReply").addEventListener("click", () => { state.replyTo = null; renderCompose(); });
@@ -3440,6 +4830,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("composeKind").addEventListener("change", () => renderCompose());
     $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
     $("phoneMore").addEventListener("click", () => { state.limit += 50; renderTimeline(); });
+    $("phoneFoldMessages").addEventListener("click", () => { UI.collapseAll($("phoneTimeline").querySelectorAll(".phone-message")); updateMessageFold(); });
     $("phoneMapWindow").addEventListener("change", renderMap);
     window.addEventListener("resize", () => { if (state.view === "map") renderMap(); });
     document.addEventListener("visibilitychange", () => { if (document.hidden) stopPolling(); else { updateAge(); refresh(); } });
