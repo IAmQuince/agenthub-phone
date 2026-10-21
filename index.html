@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-qPVwvK2KjHcUXDiyMh7KqpnufCIqMgt/wKZZlj2zfJU=' 'sha256-B4iyeB6YAKDpsJio7aL4ZMPN6Ow4h+fs3g6p77yQcmQ=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-KiY6KA4Z2stSgWKNXLUNGQpVl2BKD6120PlcTv4DMDI=' 'sha256-EYtUkPmvPIeEn2O5cddvKYcF+G4kTWno1PDLH7+WY0g=' 'sha256-yAhLWJPV/ZjCG6D+QPdIinDiBunY0Xhzhyd3nPHsUUc=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-P2yN/h5kSLT73o4mX9spPa4Nu0PYwyUwvvKAoXF4h5w=' 'sha256-wk3wxs9/RrcEZRifYMaVPWwC3NtwxQFGVJbarZ7fYCs='; style-src 'sha256-Fqq7TbAK52oaVMcLXdvqvmRIEuYpgW55aYQTZyH79FE='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-TPntQB9RRvz6RlDC9qu4jILoSv9o33QdwYBRsPD7qIE=' 'sha256-qBjtGByU9yw2ktRvvCZcoqpwSD8QmrRjHnxuVV/mtkc=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-48E3cOhyXdgIRX/hRJzuCYN8EmWbHuZO6yuJHZXF5rU=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-yAhLWJPV/ZjCG6D+QPdIinDiBunY0Xhzhyd3nPHsUUc=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-OpwKAiy7flRytkurG6LSKHa2NRbV5/60NGVvLxCTTjA=' 'sha256-o4ZqNTGROMcxZjVhvDJZ52XdwC/ufRNAibi+hrMxqgY='; style-src 'sha256-AAPKk6phj5QvmdZOGQ1EhPg3PpvcAGdlL+jGBsZcKLo='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -539,6 +539,7 @@ body.compact .timeline { padding-top: 6px; }
 
 /* ---------------------------------------------------- usage/diagnostics */
 .card { border: 1px solid var(--border); background: var(--panel); border-radius: 6px; padding: 8px 10px; margin-bottom: 10px; box-shadow: var(--shadow); }
+.card.alert { border-color: var(--warn); background: var(--warn-bg); }
 .card h3 { margin: 0 0 6px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); display: flex; align-items: center; gap: 6px; }
 .card h4 { margin: 8px 0 4px; font-size: 12.5px; }
 .card .note { color: var(--faint); font-size: 11.5px; margin: 4px 0 0; }
@@ -1196,6 +1197,72 @@ button.task-badge { cursor: pointer; }
 @media (max-width: 420px) { .task-tools { gap: 5px; } .task-card { padding: 7px; } .task-head { gap: 4px; } }
 .mobile-page .m-tabs { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 
+.ui-popmenu.menu-pop { position: fixed; z-index: 1200; min-width: 170px; max-width: min(310px, calc(100vw - 16px)); max-height: calc(100vh - 16px); overflow: auto; }
+.task-tools-compact { display: grid; gap: 5px; padding: 6px 0; min-width: 0; container-type: inline-size; }
+.task-tool-row { display: flex; align-items: center; gap: 5px; min-width: 0; height: 26px; }
+.task-tool-row > input { flex: 1 1 0; width: 0; min-width: 40px; height: 26px; }
+.task-tool-row > button { flex: 0 0 auto; height: 26px; padding: 3px 7px; white-space: nowrap; }
+.task-tools-compact .task-state-filters { display: flex; flex-wrap: nowrap; gap: 0; overflow: hidden; min-width: 0; width: 100%; height: 26px; }
+.task-tools-compact .task-filter { font-size: 11px; line-height: 18px; padding: 1px 4px; white-space: nowrap; border-radius: 0; border-right-width: 0; flex: 1 1 auto; min-width: 0; }
+.task-label-short { display: none; }
+@container (max-width: 420px) {
+  .task-label-full { display: none; }
+  .task-label-short { display: inline; }
+  .task-tools-compact .task-filter { font-size: 10px; padding: 1px 3px; }
+}
+.task-tools-compact .task-filter:first-child { border-radius: 4px 0 0 4px; }
+.task-tools-compact .task-filter:last-child { border-radius: 0 4px 4px 0; border-right-width: 1px; }
+.task-zero { opacity: .6; }
+.task-filter[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 -2px var(--accent); opacity: 1; }
+.task-filter-form { display: grid; gap: 10px; padding: 7px; width: 250px; max-width: 100%; }
+.task-filter-form > label, .task-editor-more > label { display: grid; gap: 4px; font-size: 12px; }
+.task-filter-form select { width: 100%; }
+.task-filter-form .task-check { display: flex; }
+.task-segment { display: flex; flex-wrap: wrap; }
+.task-segment > button { flex: 1 1 auto; font-size: 12px; }
+.task-count { margin: 2px 0 6px; }
+.task-head.task-head-compact { display: grid; grid-template-columns: 16px minmax(0, 1fr); column-gap: 4px; row-gap: 4px; align-items: start; flex-wrap: nowrap; }
+.task-head-compact > .fold-toggle { grid-column: 1; grid-row: 1; margin: 3px 0 0; }
+.task-topline { grid-column: 2; display: flex; align-items: center; gap: 4px; min-width: 0; }
+.task-topline > .task-state { padding: 2px 4px; font-size: 10px; line-height: 17px; white-space: nowrap; flex: 0 0 auto; }
+.task-topline > .task-title { flex: 1 1 auto; min-width: 0; font-size: 12px; line-height: 1.4; overflow: hidden; white-space: normal; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.task-card-badges { grid-column: 2; display: flex; flex-wrap: wrap; align-items: center; gap: 4px; }
+.task-card-badges > .task-badge { white-space: nowrap; }
+.task-card-badges > .task-icon-stack { margin-left: auto; }
+.task-topline > .task-badge { white-space: nowrap; flex: 0 0 auto; padding: 2px 3px; font-size: 10px; }
+.task-icon-stack { display: inline-flex; align-items: center; flex: 0 0 auto; white-space: nowrap; font-size: 10px; }
+.task-icon-stack img + img { margin-left: -4px; }
+.task-summary-line { grid-column: 2; color: var(--muted); line-height: 1.4; font-size: 12px; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
+.task-plan { max-height: 360px; overflow: auto; }
+.task-plan.task-plan-full { max-height: none; }
+.task-plan input[type="checkbox"] { margin-right: 7px; vertical-align: middle; accent-color: var(--accent); }
+.task-spec { display: flex; flex-wrap: wrap; gap: 5px; align-items: center; font-size: 11px; margin: 8px 0; }
+.task-spec .mono { overflow-wrap: anywhere; }
+.task-history > summary { cursor: pointer; color: var(--muted); font-size: 11px; padding: 6px 0; }
+.task-editor .task-plan-tabs { display: flex; flex-wrap: wrap; gap: 5px; }
+.task-assignment-field { display: grid; gap: 4px; }
+.task-assignment-list { border: 1px solid var(--border); border-radius: 5px; padding: 6px; display: grid; gap: 6px; }
+.task-assignment-list.scrolling { max-height: 260px; min-height: 240px; overflow: auto; }
+.task-coordinator-pick { display: grid; grid-template-columns: minmax(0, 1fr) 90px; gap: 8px; }
+.task-coordinator-pick label { display: grid; grid-template-columns: 16px 16px minmax(0, 1fr) auto; align-items: center; gap: 5px; overflow-wrap: normal; }
+.task-coordinator-pick select { width: 90px; }
+.task-pick-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-pick-presence { font-size: 10px; color: var(--muted); }
+.task-editor input:not([type="checkbox"]), .task-editor textarea, .task-editor select, .profile-editor textarea { background: var(--panel-2); color: var(--text); border: 1px solid var(--border-strong); border-radius: 4px; padding: 6px; }
+.task-editor-more { border-top: 1px solid var(--border); padding-top: 8px; }
+.task-editor-more > summary { cursor: pointer; }
+.task-editor-more > label { margin-top: 8px; }
+.task-card .fold-body > h4 { margin: 10px 0 6px; }
+.dialog-wide { width: min(780px, calc(100vw - 24px)); max-width: calc(100vw - 24px); }
+.task-progress { font-variant-numeric: tabular-nums; color: var(--task-green); background: var(--task-green-bg); }
+.task-progress progress { width: 24px; height: 5px; accent-color: var(--task-green); }
+@media (max-width: 420px) {
+  .task-topline { gap: 3px; }
+  .task-topline > .task-state { font-size: 9px; padding: 2px 3px; }
+  .task-topline > .task-badge { font-size: 9px; }
+  .task-topline > .task-badge.task-stale, .task-topline > .task-badge.task-unassigned { display: none; }
+}
+
 /* ---- phone/phone.css ---- */
 /* Phone-only overrides. Keep the shared desktop page and map styles intact. */
 body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto; font-size: 15px; line-height: 1.5; }
@@ -1511,7 +1578,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-20T16:23:38Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-21T05:43:06Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -1530,6 +1597,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (v === null || v === undefined || v === false) continue;
       if (k === "class") node.className = v;
       else if (k === "text") node.textContent = v;
+      else if (k === "value" && node.tagName === "TEXTAREA") node.value = String(v);
       else if (k === "dataset") Object.assign(node.dataset, v);
       else if (k.startsWith("on")) node.addEventListener(k.slice(2), v);
       else node.setAttribute(k, v === true ? "" : String(v));
@@ -1857,6 +1925,41 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   };
 
   // --------------------------------------------------------------- splitters
+  let activePopover = null;
+  UI.popmenu = function popmenu(anchor, items) {
+    activePopover?.();
+    const pop = el("div", { class: "ui-popmenu menu-pop", role: items.some((i) => i.node) ? "dialog" : "menu" });
+    const cleanup = [];
+    const on = (target, type, fn, capture = false) => { target.addEventListener(type, fn, capture); cleanup.push(() => target.removeEventListener(type, fn, capture)); };
+    const close = (focus = false) => { cleanup.forEach((fn) => fn()); pop.remove(); anchor.setAttribute("aria-expanded", "false"); if (focus) anchor.focus(); activePopover = null; };
+    activePopover = close;
+    for (const item of items) {
+      if (item.node) { pop.append(item.node); continue; }
+      if (item.separator) { pop.append(el("div", { class: "menu-sep", role: "separator" })); continue; }
+      pop.append(el("button", { class: "menu-item", type: "button", role: item.radio ? "menuitemradio" : "menuitem", "aria-checked": item.radio ? String(!!item.checked) : null, disabled: !!item.disabled,
+        onclick: () => { close(); Promise.resolve().then(item.action).catch((e) => UI.toast(e.message, { kind: "error" })); } }, (item.checked ? "✓ " : "") + item.label));
+    }
+    document.body.append(pop);
+    anchor.setAttribute("aria-expanded", "true");
+    const rect = anchor.getBoundingClientRect(), box = pop.getBoundingClientRect();
+    pop.style.left = Math.max(8, Math.min(rect.right - box.width, innerWidth - box.width - 8)) + "px";
+    pop.style.top = Math.max(8, Math.min(rect.bottom + 4, innerHeight - box.height - 8)) + "px";
+    on(document, "pointerdown", (e) => { if (!pop.contains(e.target) && !anchor.contains(e.target)) close(); }, true);
+    on(document, "keydown", (e) => {
+      if (e.key === "Escape") { e.preventDefault(); e.stopPropagation(); close(true); }
+      if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key) && !e.target.matches("input,select,textarea")) {
+        const buttons = [...pop.querySelectorAll("button:not(:disabled)")], at = buttons.indexOf(document.activeElement);
+        if (buttons.length) { e.preventDefault(); buttons[e.key === "Home" ? 0 : e.key === "End" ? buttons.length - 1 : (at + (e.key === "ArrowUp" ? -1 : 1) + buttons.length) % buttons.length].focus(); }
+      }
+      if (e.key === "Tab" && !items.some((i) => i.node)) close();
+    }, true);
+    on(window, "resize", () => close());
+    on(document, "scroll", (e) => { if (!pop.contains(e.target)) close(); }, true);
+    pop.querySelector("input,select,button:not(:disabled)")?.focus();
+    return { close };
+  };
+
+  // --------------------------------------------------------------- splitters
   /**
    * A vertical splitter between panes. get() returns the current width, set(w)
    * applies it (and persists), side says which pane it sizes ("left" grows to
@@ -1967,6 +2070,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
    * shown as an error and the dialog stays open.
    */
   UI.dialog = function dialog({ title, body, buttons, initialFocus, className }) {
+    activePopover?.();
     return new Promise((resolve) => {
       const dlg = document.getElementById("dialog");
       dlg.className = "dialog" + (className ? " " + className : "");
@@ -1989,11 +2093,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (done) return;
         done = true;
         dlg.removeEventListener("cancel", onCancel);
+        dlg.removeEventListener("input", onInput);
         if (dlg.open) dlg.close();
         resolve(v);
       }
       function onCancel(e) { e.preventDefault(); finish(null); }
+      function onInput() { err.textContent = ""; err.hidden = true; }
       dlg.addEventListener("cancel", onCancel);
+      dlg.addEventListener("input", onInput);
       dlg.showModal();
       const f = initialFocus ? dlg.querySelector(initialFocus) : foot.querySelector(".primary");
       if (f) f.focus();
@@ -2705,173 +2812,172 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 })(typeof window !== "undefined" ? window : globalThis);
 </script>
 <script>/* ---- tasks.js ---- */
-/* Local task views. Shared status/project classes also serve both phone views. */
+/* Local task workspace; shared formatting also serves the phone views. */
 "use strict";
 (function () {
   const UI = window.UI, el = UI.el;
   const labels = { not_started: "Not started", in_progress: "In progress", blocked: "Blocked", done: "Completed" };
   const order = ["in_progress", "blocked", "not_started", "done"], priorities = ["urgent", "high", "normal", "low"];
   const projectClass = (name) => "task-project-" + ([...String(name)].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % 8);
-  const classes = (t) => "task-card task-" + (labels[t.status] ? t.status : "not_started") +
-    " priority-" + (priorities.includes(t.priority) ? t.priority : "normal") +
-    Object.entries(t.flags || {}).filter(([, v]) => v).map(([k]) => " task-" + k).join("");
-  const icon = (name) => window.PixelIcon?.img(name, { size: 16 }) || null;
-  const badge = (text, className = "") => el("span", { class: "task-badge " + className }, text);
+  const classes = (t) => "task-card task-" + (labels[t.status] ? t.status : "not_started") + " priority-" +
+    (priorities.includes(t.priority) ? t.priority : "normal") + Object.entries(t.flags || {}).filter(([, v]) => v).map(([k]) => " task-" + k).join("");
+  const badge = (text, cls = "") => el("span", { class: "task-badge " + cls }, text);
+  const stateChip = (t) => badge((t.status === "done" ? "✓ " : "") + labels[t.status], "task-state task-" + t.status);
   const markdown = (text) => { const node = el("div", { class: "md task-notes" }); node.innerHTML = window.renderMarkdown(text || ""); return node; };
+  const icon = (name) => window.PixelIcon?.img(name, { size: 16 }) || null;
+  const agentSignature = (agents) => agents.map((a) => [a.name, a.presence, a.lifecycle, a.icon, Date.now() - Date.parse(a.last_seen) > 7200000]);
   const ageDays = (ts) => Math.max(0, Math.floor((Date.now() - Date.parse(ts)) / 86400000));
-  const agentSignature = (agents) => agents.map((a) => [a.name, a.presence, a.lifecycle, a.icon,
-    Date.now() - Date.parse(a.last_seen) > 7200000]);
-  const stateChip = (task) => badge((task.status === "done" ? "✓ " : "") + labels[task.status], "task-state task-" + task.status);
-  const update = (root, signature, draw, opts = {}) => UI.update(root, signature, draw, { editRoot: root, ...opts });
-
+  const summaryText = (task) => task.summary || (task.notes || "").split("\n").find((line) => line.trim())?.replace(/^\s*(?:#{1,6}\s*|[-*+]\s+(?:\[[ xX]\]\s*)?|\d+[.)]\s+)+/, "")
+    .replace(/!?\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*_`~]/g, "").replace(/\s+/g, " ").trim() || "";
+  const progress = (task) => task.progress ? el("span", { class: "task-badge task-progress", title: task.progress.done + " of " + task.progress.total + " Plan steps complete" },
+    el("progress", { value: task.progress.done, max: task.progress.total, "aria-label": "Plan progress" }), task.progress.done + "/" + task.progress.total) : null;
   function mount(root, opts) {
-    const prefs = Object.assign({ status: "open", project: "", agent: "", group: "status", sort: "smart", text: "", flag: "", archived: false }, UI.store.get("locus.tasks.view", {}));
-    let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, loading = null, rerun = false, showOlder = false, conflict = false, focusedTask = null;
-    const tools = el("div", { class: "task-tools" }), summary = el("div", { class: "task-summary" }), list = el("div", { class: "task-list" });
-    const count = el("p", { class: "muted small" }), reason = el("p", { class: "muted small task-owner-reason" });
-    const quick = el("input", { type: "text", placeholder: "Add a task… (Enter)", "aria-label": "Add a task", maxlength: 200 });
-    const quickPriority = select(priorities.map((p) => [p, p]), "Quick-add priority", "normal");
-    const more = button("More…", () => edit());
-    const quickRow = el("div", { class: "task-quick" }, quick, quickPriority, more);
-    const search = el("input", { type: "search", value: prefs.text, placeholder: "Search tasks", "aria-label": "Search tasks" });
+    const defaults = { status: "open", project: "", agent: "", group: "status", sort: "smart", text: "", flag: "", archived: false };
+    const prefs = Object.assign({}, defaults, UI.store.get("locus.tasks.view", {}));
+    let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, profiles = [], loading = null, rerun = false, focusedTask = null, conflicted = false;
+    const list = el("div", { class: "task-list" }), count = el("p", { class: "muted small task-count", hidden: true });
+    const search = el("input", { type: "search", value: prefs.text, placeholder: "Search tasks…", "aria-label": "Search tasks" });
     const states = el("div", { class: "task-state-filters", role: "group", "aria-label": "Task status" });
-    const project = select([], "Task project"), agent = select([], "Task coordinator");
-    const group = select([["status", "Group by status"], ["project", "Group by project"], ["none", "No grouping"]], "Group tasks", prefs.group);
-    const sort = select([["smart", "Smart order"], ["recent", "Recently updated"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]], "Sort tasks", prefs.sort);
-    const fold = button("⊟", () => { UI.collapseAll(list.querySelectorAll(".task-card")); updateFold(); }, "Collapse all tasks");
-    const archived = el("input", { type: "checkbox", checked: prefs.archived });
-    tools.append(search, states, project, agent, group, sort, fold,
-      button("CSV", () => opts.export("csv")), button("JSON", () => opts.export("json")),
-      button("Refresh", () => load()), el("label", { class: "task-check" }, archived, " Include archived"));
-    root.replaceChildren(tools, summary, quickRow, reason, count, list);
+    const filter = button("Filter ▾", (event) => filterMenu(event.currentTarget));
+    const menu = button("⋯", (event) => UI.popmenu(event.currentTarget, [
+      { label: "Collapse all", action: () => UI.collapseAll(list.querySelectorAll(".task-card"), true) },
+      { label: "Expand all", action: () => UI.collapseAll(list.querySelectorAll(".task-card"), false) },
+      { separator: true }, { label: "Export CSV", action: () => opts.export("csv") },
+      { label: "Export JSON", action: () => opts.export("json") }, { label: "Refresh", action: load }]), "Task actions");
+    const add = button("+ Task", () => edit(), "Add a task"); add.classList.add("primary");
+    root.replaceChildren(el("div", { class: "task-tools task-tools-compact" }, el("div", { class: "task-tool-row" }, search, filter, menu, add), states), count, list);
     search.addEventListener("input", () => change("text", search.value));
-    for (const [node, key] of [[project, "project"], [agent, "agent"], [group, "group"], [sort, "sort"]])
-      node.addEventListener("change", () => change(key, node.value));
-    archived.addEventListener("change", () => change("archived", archived.checked));
-    quick.addEventListener("keydown", async (event) => {
-      if (event.key !== "Enter" || !quick.value.trim() || !opts.canEdit()) return;
-      event.preventDefault();
-      const result = await mutate("", { title: quick.value.trim(), priority: quickPriority.value, project: prefs.project === "~none" ? "" : prefs.project });
-      if (result) quick.value = "";
-    });
-
-    function select(values, label, current = "") {
-      const node = el("select", { "aria-label": label }, values.map(([value, text]) => el("option", { value }, text)));
-      node.value = current; return node;
-    }
-    function button(text, action, title = text) {
+    function button(text, fn, title = text) {
       return el("button", { class: "btn small", type: "button", title, onclick: (event) => {
-        event.stopPropagation(); Promise.resolve().then(action).catch((e) => UI.toast(e.message, { kind: "error" }));
+        event.stopPropagation();
+        try { Promise.resolve(fn(event)).catch((e) => UI.toast(e.message, { kind: "error" })); }
+        catch (e) { UI.toast(e.message, { kind: "error" }); }
       } }, text);
     }
-    function change(key, value) {
-      focusedTask = null;
-      prefs[key] = value; UI.store.set("locus.tasks.view", prefs); render(true);
+    function select(values, value, label) {
+      const node = el("select", { "aria-label": label }, values.map(([v, text]) => el("option", { value: v }, text)));
+      node.value = value; return node;
     }
-    function updateFold() {
-      const cards = [...list.querySelectorAll(".task-card")], any = cards.some((n) => !n.classList.contains("collapsed"));
-      fold.textContent = any ? "⊟" : "⊞"; fold.title = (any ? "Collapse" : "Expand") + " all tasks";
-      fold.setAttribute("aria-label", fold.title); fold.disabled = !cards.length;
+    function segment(values, value, label) {
+      const group = el("div", { class: "seg task-segment", role: "group", "aria-label": label }); group.value = value;
+      for (const [v, text] of values) group.append(el("button", { class: "segbtn", type: "button", "aria-pressed": String(v === value),
+        onclick: () => { group.value = v; for (const node of group.children) node.setAttribute("aria-pressed", String(node.dataset.value === v)); },
+        dataset: { value: v } }, text));
+      return group;
+    }
+    function change(key, value) { focusedTask = null; prefs[key] = value; UI.store.set("locus.tasks.view", prefs); render(true); }
+    function filterMenu(anchor) {
+      const form = el("div", { class: "task-filter-form" });
+      const fields = [
+        ["project", "Project", [["", "All projects"], ["~none", "No project"], ...data.projects.map((p) => [p, p])]],
+        ["agent", "Coordinator", [["", "Anyone"], ["~none", "Unassigned"], ["~owner", "Owner-created"], ...profiles.map((p) => [p.name, p.name])]],
+        ["group", "Group by", [["status", "Status"], ["project", "Project"], ["none", "None"]]],
+        ["sort", "Sort", [["smart", "Smart order"], ["recent", "Recently updated"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]]]
+      ];
+      for (const [key, title, values] of fields) {
+        const input = key === "group" ? segment(values, prefs[key], title) : select(values, prefs[key], title);
+        if (key === "group") input.addEventListener("click", () => change(key, input.value));
+        else input.addEventListener("change", () => change(key, input.value));
+        form.append(el("label", {}, title, input));
+      }
+      const archived = el("input", { type: "checkbox", checked: prefs.archived, onchange: (e) => change("archived", e.target.checked) });
+      form.append(el("label", { class: "task-check" }, archived, " Include archived"),
+        button("Reset filters", () => { Object.assign(prefs, defaults); search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); }));
+      UI.popmenu(anchor, [{ node: form }]);
     }
     async function load() {
       if (loading) { rerun = true; return loading; }
       loading = (async () => {
         try {
-          data = await opts.api("/api/tasks?archived=1");
-          render();
-          opts.changed?.(data);
-        } catch (error) {
-          count.textContent = error.status === 404 ? "Restart Locus after the Tasks phase is committed." : "Tasks unavailable: " + error.message;
-        } finally { loading = null; if (rerun) { rerun = false; load(); } }
+          const result = await Promise.all([opts.api("/api/tasks?archived=1"), opts.api("/api/profiles").catch(() => ({ profiles: opts.agents() }))]);
+          data = result[0]; profiles = result[1].profiles || []; render(); opts.changed?.(data);
+        } catch (error) { count.hidden = false; count.textContent = "Tasks unavailable: " + error.message; }
+        finally { loading = null; if (rerun) { rerun = false; load(); } }
       })();
       return loading;
     }
     async function mutate(path, payload) {
-      conflict = false;
-      if (!opts.canEdit()) { UI.toast("Connect as owner to add or edit tasks"); return null; }
+      conflicted = false;
+      if (!opts.canEdit()) return null;
       try {
         const result = await opts.api("/api/tasks" + path, { body: { agent: "owner", ...payload }, owner: true });
+        if (result.created) UI.store.set("locus.collapsed.tasks." + result.task.id, false);
         await load(); return result;
       } catch (error) {
-        if (error.status === 409) {
-          conflict = true;
-          UI.toast("Changed by " + (error.data?.task?.updated_by || "another participant") + " just now — reloaded");
-          await load();
-        } else UI.toast(error.message, { kind: "error" });
+        conflicted = error.status === 409;
+        UI.toast(error.status === 409 ? "This task changed. Reloaded; review it before trying again." : error.message, { kind: "error" });
+        if (error.status === 409) await load();
         return null;
       }
     }
     async function status(task, value) {
       let note;
-      if (value === "blocked") {
-        const input = el("textarea", { rows: 3, maxlength: 300, placeholder: "What are you waiting on?", "aria-label": "Blocking reason" });
-        if (!await UI.dialog({ title: "Block task #" + task.id, body: input, buttons: [{ label: "Cancel", value: false }, { label: "Block", value: true, primary: true, validate: () => input.value.trim() ? null : "Say what you are waiting on." }] })) return;
-        note = input.value.trim();
+      if (value === "blocked" || value === "done") {
+        const input = el("textarea", { rows: 3, maxlength: 300, placeholder: value === "done" ? "What was the outcome?" : "What are you waiting on?", "aria-label": value === "done" ? "Outcome" : "Blocking reason" });
+        const ok = await UI.dialog({ title: (value === "done" ? "Complete" : "Block") + " task #" + task.id, body: input,
+          buttons: [{ label: "Cancel", value: false }, { label: value === "done" ? "Complete" : "Block", value: true, primary: true,
+            validate: () => input.value.trim() ? null : "Enter a short note." }] });
+        if (!ok) return; note = input.value.trim();
       }
       return mutate("/update", { id: task.id, expect_rev: task.rev, status: value, ...(note === undefined ? {} : { status_note: note }) });
     }
     async function edit(task, agentsOnly = false) {
       if (!opts.canEdit()) return;
-      const values = task || { title: "", notes: "", status: "not_started", priority: quickPriority.value, project: prefs.project === "~none" ? "" : prefs.project, tags: [], coordinators: [] };
+      const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", project: prefs.project === "~none" ? "" : prefs.project, tags: [], coordinators: [] };
       const form = el("div", { class: "task-editor" }), fields = {};
-      function field(key, label, node) { fields[key] = node; form.append(el("label", {}, label, node)); }
+      const field = (key, label, node) => { fields[key] = node; node.setAttribute("aria-label", label); node.id = "task-edit-" + key; form.append(el("label", { for: node.id }, label, node)); };
       if (!agentsOnly) {
         field("title", "Title", el("input", { value: values.title, maxlength: 200, required: true }));
-        field("notes", "Notes (Markdown)", el("textarea", { value: values.notes, rows: 6 }));
+        field("summary", "Summary", el("textarea", { value: values.summary || "", rows: 2, maxlength: 600, required: true }));
+        field("notes", "Plan", el("textarea", { value: values.notes, rows: 7, "aria-label": "Plan" }));
         const preview = markdown(values.notes); preview.hidden = true;
-        form.append(button("Preview notes", () => { preview.replaceChildren(...markdown(fields.notes.value).childNodes); preview.hidden = !preview.hidden; }), preview);
-        field("status", "Status", select(Object.entries(labels), "Task status", values.status));
-        field("priority", "Priority", select(priorities.map((p) => [p, p]), "Task priority", values.priority));
-        const projectId = "task-project-options";
-        field("project", "Project / repository", el("input", { value: values.project, list: projectId, maxlength: 64 }));
-        form.append(el("datalist", { id: projectId }, data.projects.map((p) => el("option", { value: p }))));
-        field("thread_id", "Thread #", el("input", { value: values.thread_id || "", placeholder: "#123" }));
-        const threadHint = el("span", { class: "muted small" }, values.thread?.subject || "");
-        form.append(threadHint);
-        fields.thread_id.addEventListener("change", async () => {
-          const value = fields.thread_id.value.replace(/^#/, "");
-          if (!value) { threadHint.textContent = ""; return; }
-          try { const res = await opts.api("/api/messages/" + encodeURIComponent(value)); threadHint.textContent = res.message.subject || "Thread #" + res.message.thread_id; }
-          catch (_) { threadHint.textContent = "No message with that number"; }
-        });
-        field("request_id", "Conversation request #", el("input", { type: "number", min: 1, value: values.request_id || "" }));
-        field("due", "Due date", el("input", { type: "date", value: values.due || "" }));
-        field("tags", "Tags (comma separated)", el("input", { value: values.tags.join(", ") }));
-        if (task) field("status_note", "Progress note", el("input", { value: values.status_note || "", maxlength: 300 }));
+        form.append(el("div", { class: "task-plan-tabs" },
+          button("Write", () => { fields.notes.hidden = false; preview.hidden = true; }),
+          button("Preview", () => { preview.innerHTML = window.renderMarkdown(fields.notes.value); fields.notes.hidden = true; preview.hidden = false; }),
+          button("Insert checklist", () => { fields.notes.value += (fields.notes.value ? "\n" : "") + "- [ ] First step\n- [ ] Verify the result\n"; fields.notes.hidden = false; preview.hidden = true; fields.notes.focus(); })), preview);
+        field("plan_ref", "Spec file", el("input", { value: values.plan_ref || "", placeholder: "Absolute path to a .md or .txt file", "aria-label": "Spec file" }));
+        form.append(el("span", { class: "muted small" }, values.spec_error || (values.spec_bytes ? values.spec_bytes.toLocaleString() + " bytes · local only" : "Optional · stays on this computer")));
       }
       const picks = new Map(), known = new Map(values.coordinators.map((a) => [a.agent, a.role]));
-      const people = opts.agents();
-      const currentAgents = [...people.filter((a) => a.lifecycle === "active" || !a.lifecycle || known.has(a.name)),
-        ...values.coordinators.filter((a) => !people.some((p) => p.name === a.agent)).map((a) => ({ name: a.agent, lifecycle: "removed" }))];
-      form.append(el("h4", {}, "Coordinators"));
-      for (const a of currentAgents) {
-        const check = el("input", { type: "checkbox", checked: known.has(a.name), disabled: a.lifecycle && a.lifecycle !== "active" });
-        const role = select([["lead", "Lead ★"], ["helper", "Helper"], ["reviewer", "Reviewer ✓"]], "Role for " + a.name, known.get(a.name) || "helper");
-        picks.set(a.name, { check, role });
-        form.append(el("div", { class: "task-coordinator-pick" }, el("label", {}, check, icon(a.name), a.name), role));
+      const all = [...profiles, ...values.coordinators.filter((a) => !profiles.some((p) => p.name === a.agent)).map((a) => ({ name: a.agent, archived_at: "archived" }))];
+      const picker = el("div", { class: "task-assignment-list" + (all.length > 12 ? " scrolling" : ""), role: "group", "aria-label": "Assign to" });
+      for (const p of all) {
+        const check = el("input", { type: "checkbox", "aria-label": "Assign " + p.name, checked: known.has(p.name), disabled: !!p.archived_at && !known.has(p.name) });
+        const role = select([["lead", "Lead"], ["helper", "Helper"], ["reviewer", "Reviewer"]], known.get(p.name) || "helper", "Role for " + p.name);
+        picks.set(p.name, { check, role });
+        picker.append(el("div", { class: "task-coordinator-pick" }, el("label", {}, check, icon(p.name),
+          el("span", { class: "task-pick-name", title: p.name }, p.name), el("span", { class: "task-pick-presence" }, p.in_use ? "live" : "dormant")), role));
       }
-      while (await UI.dialog({ title: task ? (agentsOnly ? "Coordinators for #" : "Edit task #") + task.id : "New task", body: form,
-        initialFocus: "input", buttons: [{ label: "Cancel", value: false }, { label: "Save", value: true, primary: true,
-          validate: () => fields.title && !fields.title.value.trim() ? "Enter a title." : null }] })) {
+      form.append(el("div", { class: "task-assignment-field" }, el("span", {}, "Assign to"), picker));
+      if (!agentsOnly) {
+        field("priority", "Priority", segment(priorities.map((p) => [p, p]), values.priority, "Task priority"));
+        const projectId = "task-project-options";
+        field("project", "Project", el("input", { value: values.project, list: projectId, maxlength: 64 }));
+        form.append(el("datalist", { id: projectId }, data.projects.map((p) => el("option", { value: p }))));
+        const more = el("details", { class: "task-editor-more" }, el("summary", {}, "More"));
+        for (const [key, label, type] of [["due", "Due date", "date"], ["tags", "Tags", "text"], ["thread_id", "Thread #", "text"], ["request_id", "Request #", "number"]]) {
+          const input = el("input", { type, id: "task-edit-" + key, "aria-label": label, value: key === "tags" ? values.tags.join(", ") : values[key] || "" });
+          fields[key] = input; more.append(el("label", { for: "task-edit-" + key }, label, input));
+        }
+        if (task) { const note = el("input", { "aria-label": "Progress note", value: values.status_note || "", maxlength: 300 }); fields.status_note = note; more.append(el("label", {}, "Progress note", note)); }
+        form.append(more);
+      }
+      form.addEventListener("keydown", (e) => { if (e.ctrlKey && e.key === "Enter") { e.preventDefault(); document.querySelector("#dialog .dialog-foot .primary")?.click(); } });
+      while (await UI.dialog({ title: task ? (agentsOnly ? "Coordinators for #" : "Edit task #") + task.id : "New task", body: form, className: "dialog-wide", initialFocus: "input",
+        buttons: [{ label: "Cancel", value: false }, { label: "Save", value: true, primary: true, validate: () => !agentsOnly && (!fields.title.value.trim() || !fields.summary.value.trim()) ? "Enter a title and summary." : null }] })) {
         const coordinators = [...picks].filter(([, p]) => p.check.checked).map(([name, p]) => ({ agent: name, role: p.role.value }));
-        let result = null;
+        let result;
         if (!agentsOnly) {
-          const payload = {};
-          for (const [key, node] of Object.entries(fields)) payload[key] = node.value;
+          const payload = Object.fromEntries(Object.entries(fields).map(([key, node]) => [key, node.value]));
           payload.tags = payload.tags.split(",").map((t) => t.trim()).filter(Boolean);
-          payload.thread_id ||= null; payload.request_id = payload.request_id ? Number(payload.request_id) : null; payload.due ||= null;
-          if (task) result = await mutate("/update", { id: task.id, expect_rev: task.rev, ...payload });
-          else result = await mutate("", { ...payload, coordinators });
-          if (!result) { if (conflict) return; continue; }
+          payload.plan_ref = payload.plan_ref.trim() || null; payload.thread_id ||= null; payload.request_id = payload.request_id ? Number(payload.request_id) : null; payload.due ||= null;
+          result = await mutate(task ? "/update" : "", { ...payload, ...(task ? { id: task.id, expect_rev: task.rev } : { coordinators }) });
+          if (!result) { if (conflicted) return; continue; }
         }
         if (task) {
           const remove = values.coordinators.filter((a) => !coordinators.some((c) => c.agent === a.agent)).map((a) => a.agent);
-          const add = coordinators.filter((a) => {
-            const person = people.find((p) => p.name === a.agent);
-            return person && (!person.lifecycle || person.lifecycle === "active" || known.get(a.agent) !== a.role);
-          });
-          result = await mutate("/agents", { id: task.id, add, remove });
-          if (!result) { if (conflict) return; continue; }
+          result = await mutate("/agents", { id: task.id, add: coordinators, remove });
+          if (!result) return;
         }
         break;
       }
@@ -2880,153 +2986,121 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       return data.tasks.filter((t) => {
         if (t.id === focusedTask) return true;
         if (!prefs.archived && t.archived_at) return false;
-        if (prefs.status === "open" && t.status === "done") return false;
-        if (!["open", "all"].includes(prefs.status) && t.status !== prefs.status) return false;
+        if (prefs.status !== "all" && (prefs.status === "open" ? t.status === "done" : t.status !== prefs.status)) return false;
         if (prefs.project && t.project !== (prefs.project === "~none" ? "" : prefs.project)) return false;
         if (prefs.agent === "~owner" && t.created_by !== "owner") return false;
         if (prefs.agent === "~none" && t.coordinators.length) return false;
         if (prefs.agent && !prefs.agent.startsWith("~") && !t.coordinators.some((a) => a.agent === prefs.agent)) return false;
         if (prefs.flag && !t.flags[prefs.flag]) return false;
-        if (!showOlder && !["done", "all"].includes(prefs.status) && t.status === "done" && ageDays(t.done_at) > data.done_visible_days) return false;
-        return !prefs.text || ["#" + t.id, t.title, t.notes, t.project, t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
-      }).sort((a, b) => {
-        if (prefs.sort === "recent") return b.updated_at.localeCompare(a.updated_at);
-        if (prefs.sort === "newest") return b.id - a.id;
-        if (prefs.sort === "due") return (a.due || "9999").localeCompare(b.due || "9999");
-        if (prefs.sort === "priority") return priorities.indexOf(a.priority) - priorities.indexOf(b.priority);
-        return order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at);
-      });
+        return !prefs.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
+      }).sort((a, b) => prefs.sort === "recent" ? b.updated_at.localeCompare(a.updated_at) : prefs.sort === "newest" ? b.id - a.id :
+        prefs.sort === "due" ? (a.due || "9999").localeCompare(b.due || "9999") : prefs.sort === "priority" ? priorities.indexOf(a.priority) - priorities.indexOf(b.priority) :
+        order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at));
     }
     function render(force = false) {
-      UI.setDisabled(quick, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
-      UI.setDisabled(quickPriority, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
-      UI.setDisabled(more, opts.canEdit() ? null : "Connect as owner to add or edit tasks");
-      reason.textContent = opts.canEdit() ? "" : "Connect as owner to add or edit tasks";
+      UI.setDisabled(add, opts.canEdit() ? null : "Connect as owner to add tasks");
       const active = data.tasks.filter((t) => prefs.archived || !t.archived_at);
       const counts = (s) => active.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
-      update(states, UI.signature([prefs.status, active.map((t) => t.status)]), () => states.replaceChildren(...[["open", "Open"], ...Object.entries(labels), ["all", "All"]].map(([s, label]) =>
-        el("button", { type: "button", class: "task-filter task-" + s, "aria-pressed": String(prefs.status === s), onclick: () => change("status", s) }, label + " " + counts(s)))));
-      function choices(node, values, chosen) {
-        update(node, UI.signature(values), () => node.replaceChildren(...values.map(([v, text]) => el("option", { value: v }, text))));
-        node.value = chosen;
-      }
-      choices(project, [["", "All projects"], ["~none", "No project"], ...[...new Set([...data.projects, ...data.tasks.map((t) => t.project).filter(Boolean)])].sort().map((p) => [p, p])], prefs.project);
-      choices(agent, [["", "Anyone"], ["~owner", "Owner-created"], ["~none", "Unassigned"], ...[...new Set([...opts.agents().map((a) => a.name), ...data.tasks.flatMap((t) => t.coordinators.map((a) => a.agent))])].sort().map((n) => [n, n])], prefs.agent);
-      update(summary, UI.signature([active.map((t) => [t.status, t.done_at, t.flags]), prefs.flag, prefs.status]), () => summary.replaceChildren(
-        ...order.map((s) => el("button", { class: "task-badge task-state task-" + s, type: "button", "aria-pressed": String(prefs.status === s),
-          onclick: () => change("status", prefs.status === s ? "open" : s) }, labels[s] + " " +
-            (s === "done" ? active.filter((t) => t.status === "done" && ageDays(t.done_at) <= data.done_visible_days).length : counts(s)) +
-            (s === "done" ? " (" + data.done_visible_days + "d)" : ""))),
-        ...["overdue", "stale", "unassigned"].map((flag) => el("button", { class: "task-badge task-" + flag, type: "button", "aria-pressed": String(prefs.flag === flag),
-          onclick: () => change("flag", prefs.flag === flag ? "" : flag) }, flag + " " + active.filter((t) => t.flags[flag]).length))));
+      const filterCount = ["project", "agent", "group", "sort", "archived", "flag"].filter((k) => prefs[k] !== defaults[k]).length;
+      filter.textContent = "Filter ▾" + (filterCount ? " " + filterCount : "");
+      UI.update(states, UI.signature([prefs.status, prefs.flag, active.map((t) => [t.status, t.flags])]), () => states.replaceChildren(
+        ...[["open", "Open"], ...Object.entries(labels), ["all", "All"]].map(([s, label]) => {
+          const full = (s === "done" ? "Done" : label) + (counts(s) ? " " + counts(s) : ""), short = ({ in_progress: "Doing", not_started: "To do", blocked: "Block", done: "Done" }[s] || label) + (counts(s) ? " " + counts(s) : "");
+          return el("button", { type: "button", class: "task-filter task-" + s + (counts(s) ? "" : " task-zero"), title: full, "aria-label": full,
+            "aria-pressed": String(prefs.status === s), onclick: () => change("status", s) }, el("span", { class: "task-label-full", "aria-hidden": "true" }, full), el("span", { class: "task-label-short", "aria-hidden": "true" }, short));
+        }),
+        ...["overdue", "stale", "unassigned"].filter((flag) => active.some((t) => t.flags[flag])).map((flag) => {
+          const n = active.filter((t) => t.flags[flag]).length, full = flag + " " + n;
+          return el("button", { type: "button", class: "task-filter task-" + flag, title: full, "aria-label": full,
+            "aria-pressed": String(prefs.flag === flag), onclick: () => change("flag", prefs.flag === flag ? "" : flag) }, el("span", { class: "task-label-full", "aria-hidden": "true" }, full), el("span", { class: "task-label-short", "aria-hidden": "true" }, { overdue: "!", stale: "◷", unassigned: "○" }[flag] + " " + n));
+        })));
       if (!opts.visible()) return;
-      const tasks = filtered();
-      count.textContent = tasks.length + " of " + active.length + " shown" + (focusedTask ? " · task #" + focusedTask + " opened from link" : "");
-      update(list, UI.signature([tasks.map((t) => [t.id, t.rev, t.flags, t.thread?.subject]), prefs, focusedTask,
-        agentSignature(opts.agents()), opts.filters(), opts.canEdit(), opts.timeKey?.()]), () => {
+      const tasks = filtered(); count.hidden = tasks.length === active.length; count.textContent = tasks.length + " of " + active.length + " shown";
+      UI.update(list, UI.signature([tasks, prefs.group, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.()]), () => {
         const groups = new Map();
-        for (const task of tasks) {
-          const key = prefs.group === "status" ? task.status_label : prefs.group === "project" ? task.project || "No project" : "";
-          if (!groups.has(key)) groups.set(key, []);
-          groups.get(key).push(task);
-        }
+        for (const task of tasks) { const key = prefs.group === "status" ? labels[task.status] : prefs.group === "project" ? task.project || "No project" : ""; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(task); }
         list.replaceChildren();
         for (const [key, items] of groups) {
           const section = el("section", { class: "task-group" }, key ? el("h3", {}, key + " · " + items.length) : null, ...items.map(card));
           list.append(key ? UI.card("task-groups", prefs.group + ":" + key, section, { title: key }) : section);
         }
         if (!tasks.length) list.append(el("p", { class: "muted" }, "No tasks match these filters."));
-        const older = active.filter((t) => t.status === "done" && ageDays(t.done_at) > data.done_visible_days).length;
-        if (older && !["done", "all"].includes(prefs.status)) list.append(button("Show " + older + " older completed", () => { showOlder = true; change("status", "all"); }));
-      }, { force, afterRestore: updateFold });
+      }, { force, editRoot: root });
     }
     function card(task) {
-      const selected = opts.filters();
-      const node = el("article", { class: classes(task), dataset: { taskId: task.id, stateKey: "task:" + task.id } });
-      if ((selected.thread && String(task.thread_id) === selected.thread) || (selected.agent && task.coordinators.some((a) => a.agent === selected.agent))) node.classList.add("task-selected");
-      const chip = opts.canEdit() ? el("select", { class: "task-status-select task-" + task.status, "aria-label": "Status for task #" + task.id },
-        Object.entries(labels).map(([s, text]) => el("option", { value: s }, (s === "done" ? "✓ " : "") + text))) : stateChip(task);
-      if (opts.canEdit()) {
-        chip.value = task.status;
-        chip.addEventListener("change", async () => {
-          const result = await status(task, chip.value);
-          chip.value = result?.task?.status || task.status;
-        });
-      }
-      const people = opts.agents(), participating = task.coordinators.map((a) => people.find((p) => p.name === a.agent)).filter(Boolean);
-      const active = participating.some((a) => ["active", "doorbell", "waiting", "working"].includes(a.presence));
-      const head = el("div", { class: "repo-head task-head" },
-        active && task.status === "in_progress" ? el("span", { class: "task-live-dot task-pulse", title: "A coordinator is active" }) : null,
-        chip, task.created_by === "owner" ? icon("owner") : null,
-        badge("#" + task.id), el("strong", { class: "task-title" }, task.title),
+      const people = opts.agents(), selected = opts.filters();
+      const chip = opts.canEdit() ? button("● " + labels[task.status], (event) => UI.popmenu(event.currentTarget,
+        Object.entries(labels).map(([value, label]) => ({ label, radio: true, checked: value === task.status, action: () => status(task, value) })))) : stateChip(task);
+      chip.classList.add("task-state", "task-" + task.status);
+      const stack = el("span", { class: "task-icon-stack", title: task.coordinators.map((a) => a.agent + " · " + a.role).join("\n") },
+        task.coordinators.slice(0, 3).map((a) => icon(a.agent)), task.coordinators.length > 3 ? "+" + (task.coordinators.length - 3) : null);
+      const top = el("div", { class: "task-topline" }, chip, badge("#" + task.id), el("strong", { class: "task-title", title: task.title }, task.title));
+      const badges = el("div", { class: "task-card-badges" },
         task.priority !== "normal" ? badge({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority) : null,
-        task.project ? badge(task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : null,
-        task.due ? badge(task.flags.overdue ? "overdue " + ageDays(task.due) + "d" : task.flags.due_today ? "due today" : "due " + task.due, task.flags.overdue ? "task-overdue" : task.flags.due_today ? "task-due_today" : "") : null,
-        task.flags.stale ? badge("stale " + ageDays(task.updated_at) + "d", "task-stale") : null,
-        task.flags.unassigned ? badge("unassigned", "task-unassigned") : null,
-        task.archived_at ? badge("archived") : null);
-      const projectBadge = head.querySelector(".task-project-unknown"); if (projectBadge) projectBadge.title = "not a known project";
+        task.project ? badge(task.project, projectClass(task.project)) : null, progress(task),
+        task.due ? badge(task.flags.overdue ? "overdue" : task.flags.due_today ? "today" : task.due, task.flags.overdue ? "task-overdue" : "") : null,
+        task.flags.stale ? badge("stale", "task-stale") : null, task.flags.unassigned ? badge("unassigned", "task-unassigned") : null, stack);
+      const head = el("div", { class: "repo-head task-head task-head-compact" }, top, badges,
+        el("div", { class: "task-summary-line" }, summaryText(task)));
+      const node = el("article", { class: classes(task), dataset: { taskId: task.id } }, head,
+        task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+        el("p", { class: "muted small" }, "Updated " + opts.stamp(task.updated_at) + " · " + task.updated_by));
+      if ((selected.thread && String(task.thread_id) === selected.thread) || (selected.agent && task.coordinators.some((a) => a.agent === selected.agent))) node.classList.add("task-selected");
+      function checklist(text, interactive = false) {
+      const plan = markdown(text);
+      let step = 0;
+      for (const item of plan.querySelectorAll("li")) {
+        const first = item.firstChild;
+        if (item.parentElement.tagName !== "UL" || !first || first.nodeType !== 3 || !/^\[([ xX])\]\s/.test(first.textContent)) continue;
+        const done = /^\[[xX]\]/.test(first.textContent), index = ++step;
+        first.textContent = first.textContent.replace(/^\[([ xX])\]\s*/, "");
+        item.prepend(el("input", { type: "checkbox", checked: done, disabled: !interactive || !opts.canEdit(), "aria-label": "Plan step " + index,
+          onchange: interactive ? (event) => mutate("/step", { id: task.id, step: index, done: event.target.checked, expect_rev: task.rev }) : null }));
+      }
+      return plan;
+      }
+      const plan = checklist(task.notes, true); plan.classList.add("task-plan");
+      if (task.notes.trim()) node.append(el("h4", {}, "Plan"), plan);
+      else node.append(el("div", { class: "muted small task-empty-plan" }, "No plan yet. ", opts.canEdit() ? button("Add plan", () => edit(task)) : null));
+      if (task.notes.length > 1400) node.append(button("Show full plan", () => plan.classList.toggle("task-plan-full")));
+      if (task.plan_ref) node.append(el("div", { class: "task-spec" }, el("b", {}, "Spec "), el("span", { class: "mono", title: task.plan_ref }, task.plan_ref.split(/[\\/]/).pop()),
+        task.spec_bytes ? " · " + task.spec_bytes.toLocaleString() + " bytes" : "", button("Open", async () => {
+          const result = await opts.api("/api/tasks/" + task.id + "/plan");
+          UI.dialog({ title: "Spec · " + result.path.split(/[\\/]/).pop(), className: "dialog-wide", body: checklist(result.text) });
+        })));
+      if (task.spec_error) node.append(el("p", { class: "task-status-note" }, task.spec_error));
       const coords = el("div", { class: "task-coordinators" }, ...task.coordinators.map((a) => {
-        const current = people.find((p) => p.name === a.agent), inactive = !current || current.lifecycle && current.lifecycle !== "active";
-        return el("span", { class: "task-coordinator" + (inactive ? " task-inactive" : ""), title: a.role + (inactive ? " · " + (current?.lifecycle || "removed") : " · " + current.presence) },
-          icon(a.agent), a.agent, a.role === "lead" ? " ★" : a.role === "reviewer" ? " ✓" : "",
-          inactive ? null : el("span", { class: "dot pres-" + current.presence }));
+        const current = people.find((p) => p.name === a.agent), presence = current?.lifecycle === "active" || !current?.lifecycle ? current?.presence || "dormant" : "dormant";
+        return el("span", { class: "task-coordinator" }, icon(a.agent), a.agent, " · " + a.role + " · " + presence);
       }));
-      if (!task.coordinators.length) coords.append(el("span", { class: "muted" }, "nobody yet"));
-      if (task.status === "in_progress" && (!participating.length || participating.every((a) => Date.now() - Date.parse(a.last_seen) > 7200000)))
-        coords.append(badge("nobody active"));
-      if (task.thread_id) coords.append(button("↳ #" + task.thread_id + " " + (task.thread?.subject || ""), () => opts.openThread(task.thread_id)));
-      if (task.request_id) coords.append(button("req #" + task.request_id, () => opts.openRequest(task.request_id)));
-      const history = el("div", { class: "task-history" }, el("h4", {}, "History"), ...eventNodes(task.events || []));
-      history.append(button("Show all history", async () => {
-        const result = await opts.api("/api/tasks/" + task.id);
-        UI.dialog({ title: "Task #" + task.id + " history", body: el("div", { class: "task-history" }, ...eventNodes(result.events)) });
-      }));
-      node.append(head, coords, el("p", { class: "task-status-note" }, task.status_note || ""),
-        el("p", { class: "muted small" }, "Updated " + opts.stamp(task.updated_at) + " · " + task.updated_by),
-        markdown(task.notes), el("div", { class: "task-tags" }, ...task.tags.map((t) => badge("#" + t))),
-        el("p", { class: "muted small" }, [["Created", task.created_at], ["Started", task.started_at], ["Completed", task.done_at]].filter(([, ts]) => ts).map(([name, ts]) => name + " " + opts.stamp(ts)).join(" · ")), history);
+      if (task.thread_id) coords.append(button("Thread #" + task.thread_id, () => opts.openThread(task.thread_id)));
+      if (task.request_id) coords.append(button("Request #" + task.request_id, () => opts.openRequest(task.request_id)));
+      const history = el("details", { class: "task-history" }, el("summary", {}, "History · " + task.events.length), ...task.events.map((e) => el("p", {}, opts.stamp(e.ts) + " · " + e.actor + " · " + e.action)));
+      node.append(coords, el("div", { class: "task-tags" }, ...task.tags.map((t) => badge("#" + t))), el("p", { class: "muted small" }, "Created " + opts.stamp(task.created_at)), history);
       if (opts.canEdit()) {
         const actions = el("div", { class: "task-actions" });
-        for (const [label, value] of [["Start", "in_progress"], ["Block…", "blocked"], ["Complete", "done"], ["Reopen", "not_started"]])
-          if (value !== task.status) actions.append(button(label, () => status(task, value)));
-        actions.append(button("Edit…", () => edit(task)), button("Coordinators…", () => edit(task, true)),
-          button(task.archived_at ? "Unarchive" : "Archive", () => mutate("/archive", { id: task.id, archived: !task.archived_at })),
-          button("Delete…", async () => {
-            if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Permanently delete “" + task.title + "” and its history?",
-              buttons: [{ label: "Cancel", value: false }, { label: "Delete task", value: true, danger: true }] })) await mutate("/delete", { id: task.id });
-          }));
-        node.append(actions);
+        for (const value of task.status === "done" ? ["not_started"] : task.status === "not_started" ? ["in_progress"] : task.status === "blocked" ? ["in_progress", "done"] : ["blocked", "done"])
+          actions.append(button({ not_started: "Reopen", in_progress: "Start", blocked: "Block…", done: "Complete" }[value], () => status(task, value)));
+        actions.append(button("Edit", () => edit(task)), button("⋯", (event) => UI.popmenu(event.currentTarget, [
+          { label: "Coordinators", action: () => edit(task, true) },
+          { label: "Message lead…", action: () => opts.messageLead?.(task) },
+          { label: task.archived_at ? "Unarchive" : "Archive", action: () => mutate("/archive", { id: task.id, archived: !task.archived_at }) },
+          { label: "Delete…", action: async () => { if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Delete this task and its history?", buttons: [{ label: "Cancel", value: false }, { label: "Delete", value: true, danger: true }] })) await mutate("/delete", { id: task.id }); } }
+        ]), "More task actions")); node.append(actions);
       }
-      const result = UI.card("tasks", String(task.id), node, { title: task.title, compact: true });
-      result.querySelector(".fold-toggle").addEventListener("click", updateFold);
-      return result;
-    }
-    function eventNodes(events) {
-      return events.map((e) => {
-        const detail = Object.entries(e.detail || {}).map(([key, value]) => {
-          const text = value && typeof value === "object" && "new" in value ? String(value.old ?? "none") + " → " + String(value.new ?? "none")
-            : value && typeof value === "object" ? Object.keys(value).join(", ") : String(value ?? "");
-          return key.replace(/_/g, " ") + ": " + text;
-        }).join(" · ");
-        return el("p", {}, opts.stamp(e.ts) + " · " + e.actor + " · " + e.action + (detail ? " · " + detail : ""));
-      });
+      return UI.card("tasks", String(task.id), node, { title: task.title, compact: true, collapsed: true });
     }
     function open(id, coordinator) {
       if (coordinator) { prefs.agent = coordinator; prefs.status = "open"; }
-      if (id) {
-        focusedTask = Number(id);
-        UI.store.set("locus.collapsed.tasks." + id, false);
-      }
-      UI.store.set("locus.tasks.view", prefs); search.value = prefs.text; archived.checked = prefs.archived;
-      render(true);
-      if (id) { const card = list.querySelector('[data-task-id="' + Number(id) + '"]'); card?.scrollIntoView({ block: "nearest" }); if (card) UI.flash(card, "flash"); }
+      if (id) { focusedTask = Number(id); UI.store.set("locus.collapsed.tasks." + id, false); }
+      UI.store.set("locus.tasks.view", prefs); render(true);
+      if (id) list.querySelector('[data-task-id="' + Number(id) + '"]')?.scrollIntoView({ block: "nearest" });
     }
-    return { load, render, open, focus: () => quick.focus(), revision: () => data.tasks_rev,
+    return { load, render, open, focus: () => edit(), revision: () => data.tasks_rev,
       tasks: () => data.tasks.filter((t) => !t.archived_at),
       agentTasks: (name) => data.tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((a) => a.agent === name)) };
   }
-  window.LocusTasks = { mount, labels, order, projectClass, classes, stateChip, markdown, agentSignature };
+  window.LocusTasks = { mount, labels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText };
 })();
 </script>
 <script>/* ---- taskcards.js ---- */
@@ -3065,6 +3139,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const body = el("div", { class: T.classes(task) }, T.stateChip(task),
         task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) }, task.project) : null,
         coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+        task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
         T.markdown(task.notes), el("p", { class: "muted small" }, "Updated " + new Date(task.updated_at).toLocaleString()),
         ...(task.events || []).slice(0, 10).map((e) => el("p", { class: "muted small" }, e.actor + " · " + e.action +
           (e.detail?.status_note?.new ? " · " + e.detail.status_note.new : ""))));
@@ -3106,6 +3181,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
             task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) + (task.project_known ? "" : " task-project-unknown") }, task.project) : null,
             task.due && !task.flags?.overdue && !task.flags?.due_today ? el("span",{class:"task-badge"},"due "+task.due) : null,
             ...Object.entries(task.flags || {}).filter(([, v]) => v).map(([k]) => el("span", { class: "task-badge task-" + k }, k.replace(/_/g, " ")))),
+            task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
             coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
             el("button", { class: "btn small", type: "button", onclick: () => detail(task) }, "Details"));
         }) : [el("p", { class: "muted" }, "No tasks match these filters.")])));
@@ -4118,11 +4194,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 
   function taskMessage(task, code) {
     if (!task || typeof task !== "object" || Array.isArray(task)) throw new PhoneError("INPUT", "enter a task");
-    const allowed = task.op === "create" ? ["op", "title", "project", "priority", "notes", "coordinator"]
+    const allowed = task.op === "create" ? ["op", "title", "summary", "project", "priority", "notes", "coordinator"]
       : task.op === "status" ? ["op", "id", "status", "note"] : [];
     if (!allowed.length || Object.keys(task).some(k => !allowed.includes(k))) throw new PhoneError("INPUT", "unsupported task action");
     if (task.op === "create") {
       if (typeof task.title !== "string" || !task.title.trim() || task.title.length > 200) throw new PhoneError("INPUT", "a task needs a title of at most 200 characters");
+      if (task.summary !== undefined && (typeof task.summary !== "string" || task.summary.length > 600)) throw new PhoneError("INPUT", "a task summary must be at most 600 characters");
       if (task.notes !== undefined && (typeof task.notes !== "string" || new TextEncoder().encode(task.notes).length > 8000)) throw new PhoneError("INPUT", "task notes are too long");
     } else {
       if (!Number.isInteger(task.id) || task.id < 1 || !["not_started", "in_progress", "blocked", "done"].includes(task.status)) throw new PhoneError("INPUT", "choose a task and status");
@@ -4554,6 +4631,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const field = (name, label, input) => { fields[name] = input; form.append(el("label", {}, label, input)); };
     if (!task) {
       field("title", "Title", el("input", { maxlength: 200, required: true }));
+      field("summary", "Summary", el("textarea", { rows: 2, maxlength: 600 }));
       field("project", "Project", el("select", {}, el("option", { value: "" }, "No project"),
         ...list(state.snapshot.projects).map((p) => el("option", { value: p.name }, p.name))));
       field("priority", "Priority", el("select", {}, ...["normal", "high", "urgent", "low"].map((p) => el("option", { value: p }, p))));
@@ -4576,7 +4654,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (!accepted) { fields.code.value = ""; return; }
     const payload = task ? { op: "status", id: task.id, status,
         ...(fields.note.value.trim() ? {note:fields.note.value.trim()} : {}) }
-      : { op: "create", title: fields.title.value.trim(), project: fields.project.value,
+      : { op: "create", title: fields.title.value.trim(), summary: fields.summary.value.trim(), project: fields.project.value,
           priority: fields.priority.value, notes: fields.notes.value,
           ...(fields.coordinator.value ? { coordinator: fields.coordinator.value } : {}) };
     let message;
