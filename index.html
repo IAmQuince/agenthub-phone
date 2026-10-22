@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-TPntQB9RRvz6RlDC9qu4jILoSv9o33QdwYBRsPD7qIE=' 'sha256-qBjtGByU9yw2ktRvvCZcoqpwSD8QmrRjHnxuVV/mtkc=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-48E3cOhyXdgIRX/hRJzuCYN8EmWbHuZO6yuJHZXF5rU=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-yAhLWJPV/ZjCG6D+QPdIinDiBunY0Xhzhyd3nPHsUUc=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-OpwKAiy7flRytkurG6LSKHa2NRbV5/60NGVvLxCTTjA=' 'sha256-o4ZqNTGROMcxZjVhvDJZ52XdwC/ufRNAibi+hrMxqgY='; style-src 'sha256-AAPKk6phj5QvmdZOGQ1EhPg3PpvcAGdlL+jGBsZcKLo='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7s6GVNYZiU4CDyod0eEa3Ob/26QaabG+NhQLQGM060s=' 'sha256-jR4RmYAfFIL3x8oRi8B9YFCgrVV3igV2favecN9D7TM=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-yWtO/A5jazzHXn1qn8DeUhmmImWWAwGiUGPoNqS/XQg=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-JLHUzJB/rApUKNakJu+/IXDOWP7adXJgS6HAgXOKWO8='; style-src 'sha256-kVaCuZvHgKBUle3BtoKVqZ0ehonwRrU5GDZp6pPX/E4='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -140,6 +140,7 @@ body {
   overflow: hidden;
 }
 body.resizing { cursor: col-resize; user-select: none; }
+body.resizing.resizing-y { cursor: row-resize; }
 code, pre, .mono { font-family: "Cascadia Mono", Consolas, "SFMono-Regular", Menlo, monospace; font-size: 12px; }
 a { color: var(--accent); }
 button, input, select, textarea { font: inherit; color: inherit; }
@@ -392,8 +393,11 @@ button, input, select, textarea { font: inherit; color: inherit; }
 }
 .rtabs [role="tab"]:hover { color: var(--text); }
 .rtabs [role="tab"][aria-selected="true"] { background: var(--panel); border-color: var(--border); color: var(--text); font-weight: 600; }
-.rpanels { flex: 1 1 auto; min-height: 0; }
-.rpanel { padding: 8px 10px 12px; }
+.rpanels { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.rpanel { padding: 8px 10px 12px; flex: 0 0 auto; }
+/* The Tasks panel fills the pane so its tree and detail pane scroll on their own. */
+#panelTasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+#tasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 .panel-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
 
 /* -------------------------------------------------------------- filters */
@@ -1263,6 +1267,136 @@ button.task-badge { cursor: pointer; }
   .task-topline > .task-badge.task-stale, .task-topline > .task-badge.task-unassigned { display: none; }
 }
 
+/* Phase 12: project tree beside a resizable detail pane. The workspace picks
+   its own layout from its width (data-layout, set by tasks.js); the tree's
+   columns and the detail facts reflow through container queries. */
+.task-workspace { flex: 1 1 auto; min-height: 260px; min-width: 0; display: grid; border: 1px solid var(--border); border-radius: 6px; overflow: hidden; background: var(--panel); }
+.task-workspace[data-layout="side"] { grid-template-columns: min(var(--task-tree-w, 50%), calc(100% - 286px)) 6px minmax(0, 1fr); grid-template-rows: minmax(0, 1fr); }
+.task-workspace[data-layout="stack"] { grid-template-columns: minmax(0, 1fr); grid-template-rows: min(var(--task-tree-h, 45%), calc(100% - 126px)) 6px minmax(0, 1fr); }
+.task-split { position: relative; z-index: 2; background: var(--panel-2); touch-action: none; }
+.task-workspace[data-layout="side"] .task-split { cursor: col-resize; border-left: 1px solid var(--border); border-right: 1px solid var(--border); }
+.task-workspace[data-layout="stack"] .task-split { cursor: row-resize; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.task-split::after { content: ""; position: absolute; inset: 0; margin: auto; border-radius: 2px; background: var(--border-strong); }
+.task-workspace[data-layout="side"] .task-split::after { width: 2px; height: 28px; }
+.task-workspace[data-layout="stack"] .task-split::after { width: 28px; height: 2px; }
+.task-split:hover, .task-split.dragging, .task-split:focus-visible { background: var(--accent-bg); outline: none; }
+.task-split:hover::after, .task-split.dragging::after, .task-split:focus-visible::after { background: var(--accent); }
+
+.task-tree { container: tasktree / inline-size; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
+.task-tree-head, .task-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px 128px 48px; column-gap: 6px; align-items: center; padding: 0 8px 0 4px; }
+.task-tree-head { flex: 0 0 auto; border-bottom: 1px solid var(--border); background: var(--panel-2); min-height: 24px; }
+.task-col { border: 0; border-right: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; text-align: left; padding: 3px 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.task-col:last-child { border-right: 0; text-align: right; }
+.task-col:hover { color: var(--text); background: var(--panel); }
+.task-col[aria-pressed="true"] { color: var(--text); font-weight: 600; }
+.task-col-sorted { margin-left: 3px; color: var(--accent); }
+.task-tree-body { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 2px 0 6px; }
+.task-tree-empty { padding: 10px 12px; margin: 0; }
+.task-row { min-height: 24px; border-left: 3px solid transparent; cursor: default; user-select: none; font-size: 12px; }
+.task-row:hover { background: var(--panel-2); }
+.task-row[aria-selected="true"] { background: var(--accent-bg); border-left-color: var(--accent); }
+.task-row:focus { outline: none; }
+.task-row:focus-visible { outline: 1px dotted var(--accent); outline-offset: -1px; }
+.task-row.task-linked { box-shadow: inset 0 0 0 1px var(--accent); }
+.task-row.task-drop { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+.task-row.task-dragging { opacity: .5; }
+.task-row.task-unmatched { opacity: .7; font-style: italic; }
+.task-row-empty { min-height: 20px; }
+.task-row-empty .task-cell-name { padding-left: 40px; font-style: italic; }
+.task-cell { min-width: 0; display: flex; align-items: center; gap: 4px; overflow: hidden; white-space: nowrap; }
+.task-cell-name { gap: 5px; }
+.task-row[aria-level="2"] .task-cell-name { padding-left: 16px; }
+.task-twisty { flex: 0 0 12px; width: 12px; text-align: center; color: var(--muted); font-size: 10px; cursor: pointer; }
+.task-leaf .task-twisty { cursor: default; }
+.task-row-title { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.task-folder .task-row-title { font-weight: 600; }
+.task-row-id { flex: 0 0 auto; color: var(--faint); font-variant-numeric: tabular-nums; font-size: 11px; }
+.task-row-count { flex: 0 0 auto; color: var(--muted); font-size: 10.5px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 0 5px; line-height: 15px; }
+.task-folder-glyph { flex: 0 0 15px; width: 15px; height: 11px; border: 1px solid currentColor; border-radius: 1px 3px 3px 3px; position: relative; margin-top: 2px; }
+.task-folder-glyph.task-folder-none { color: var(--muted); background: var(--panel-2); }
+.task-folder-glyph::before { content: ""; position: absolute; left: -1px; top: -4px; width: 7px; height: 3px; border: 1px solid currentColor; border-bottom: 0; border-radius: 2px 2px 0 0; background: inherit; }
+.task-folder-glyph.task-in_progress, .task-folder-glyph.task-blocked, .task-folder-glyph.task-not_started, .task-folder-glyph.task-done { color: var(--task-color); background: var(--task-bg); }
+.task-folder-none, .task-folder-unknown .task-folder-glyph { border-style: dashed; }
+.task-dot { flex: 0 0 8px; width: 8px; height: 8px; border-radius: 50%; background: var(--task-color); }
+.task-not_started .task-dot { background: transparent; box-shadow: inset 0 0 0 1.5px var(--task-color); }
+.task-leaf.task-done .task-row-title { text-decoration: line-through; color: var(--muted); }
+.task-leaf.task-archived .task-row-title { color: var(--faint); }
+.task-mark { flex: 0 0 auto; font-size: 10px; line-height: 14px; padding: 0 4px; border-radius: 7px; border: 1px solid var(--border); color: var(--muted); }
+.task-mark.task-priority.priority-urgent, .task-mark.task-overdue { color: var(--task-red); background: var(--task-red-bg); border-color: transparent; font-weight: 600; }
+.task-mark.task-priority.priority-high, .task-mark.task-stale, .task-mark.task-due_today { color: var(--task-amber); background: var(--task-amber-bg); border-color: transparent; }
+.task-mark.task-step-mark { font-variant-numeric: tabular-nums; }
+.task-state-pill { display: inline-block; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10.5px; line-height: 16px; padding: 0 6px; border-radius: 8px; color: var(--task-color); background: var(--task-bg); border: 1px solid transparent; }
+.task-not_started.task-state-pill { border-color: var(--task-color); background: transparent; }
+.task-pill-short { display: none; }
+.task-count-pill { font-size: 10.5px; line-height: 15px; padding: 0 5px; border-radius: 8px; color: var(--task-color); background: var(--task-bg); font-variant-numeric: tabular-nums; }
+.task-cell-assign img + img, .task-cell-assign .task-initial + .task-initial { margin-left: -4px; }
+.task-assign-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.task-nobody { color: var(--muted); font-style: italic; }
+.task-more { color: var(--muted); font-size: 10.5px; flex: 0 0 auto; }
+.task-initial { flex: 0 0 16px; width: 16px; height: 16px; border-radius: 3px; background: var(--panel-2); border: 1px solid var(--border); font-size: 9.5px; line-height: 14px; text-align: center; color: var(--muted); }
+.task-cell-updated { justify-content: flex-end; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+@container tasktree (max-width: 520px) {
+  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 54px 92px 38px; column-gap: 4px; }
+  .task-pill-full { display: none; }
+  .task-pill-short { display: inline; }
+  .task-row-id { display: none; }
+}
+@container tasktree (max-width: 400px) {
+  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 50px 38px 32px; }
+  .task-assign-name { display: none; }
+  .task-cell-assign.task-nobody::before { content: "—"; }
+  .task-mark.task-step-mark, .task-mark.task-archived-mark { display: none; }
+  .task-state-pill { padding: 0 4px; }
+}
+@container tasktree (max-width: 290px) {
+  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 38px 32px; }
+  .task-cell-state, .task-col-state { display: none; }
+}
+
+.task-detail { container: taskdetail / inline-size; min-width: 0; min-height: 0; overflow: auto; background: var(--panel); }
+.task-detail:focus { outline: none; }
+.task-detail:focus-visible { box-shadow: inset 0 0 0 2px var(--accent); }
+.task-detail-inner { padding: 10px 14px 18px; min-width: 0; overflow-wrap: anywhere; }
+.task-detail-topline { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.task-detail-topline > .task-state { font-size: 11px; padding: 2px 7px; }
+.task-detail-topline .task-folder-glyph { margin: 0 2px 0 0; }
+.task-detail-title { margin: 8px 0 4px; font-size: 16px; line-height: 1.3; }
+.task-summary-line.task-detail-summary { display: block; -webkit-line-clamp: unset; overflow: visible; margin: 2px 0 8px; font-size: 12.5px; }
+.task-hidden-note { font-size: 11.5px; color: var(--task-amber); background: var(--task-amber-bg); border-radius: 4px; padding: 5px 8px; display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.task-detail .task-status-note { margin: 6px 0; padding: 6px 8px; border-radius: 4px; background: var(--panel-2); font-style: normal; color: var(--text); }
+.task-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(128px, 100%), 1fr)); gap: 10px 16px; margin: 10px 0 12px; padding: 10px 0; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+.task-fact { min-width: 0; }
+.task-fact > dt { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--faint); margin-bottom: 2px; }
+.task-fact > dd { margin: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; min-width: 0; }
+.task-fact-wide { grid-column: 1 / -1; }
+.task-fact-warn > dd { color: var(--task-amber); font-weight: 600; }
+.task-fact-sub { flex: 1 1 100%; color: var(--muted); font-size: 11px; font-weight: 400; }
+.task-person { display: inline-flex; align-items: center; gap: 5px; padding: 2px 7px 2px 3px; border: 1px solid var(--border); border-radius: 12px; background: var(--panel-2); max-width: 100%; min-width: 0; }
+.task-person-name { font-weight: 600; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-person-role { color: var(--muted); font-size: 11px; white-space: nowrap; }
+.task-presence { display: inline-flex; align-items: center; gap: 3px; color: var(--muted); font-size: 11px; white-space: nowrap; }
+.task-presence .dot { width: 7px; height: 7px; flex-basis: 7px; }
+.task-detail .task-actions { margin: 8px 0 4px; }
+.task-detail h4 { margin: 14px 0 6px; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.task-detail .task-plan { max-height: none; overflow: visible; }
+.task-detail .task-history { margin-top: 12px; border-top: 1px solid var(--border); padding-top: 4px; }
+.task-detail-empty { padding: 24px 6px; text-align: center; }
+.task-overview { display: grid; gap: 2px; }
+.task-overview-item { display: grid; grid-template-columns: 10px auto minmax(0, 1fr) auto minmax(0, 110px) 40px; align-items: center; gap: 6px; text-align: left; border: 1px solid transparent; border-radius: 4px; background: transparent; padding: 4px 6px; cursor: pointer; color: var(--text); font-size: 12px; }
+.task-overview-item:hover, .task-overview-item:focus-visible { background: var(--panel-2); border-color: var(--border); }
+.task-overview-item > .task-row-title, .task-overview-item > .task-assign-name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.task-overview-item > .task-assign-name { color: var(--muted); font-size: 11px; }
+.task-overview-item > .task-ago { color: var(--muted); font-size: 11px; text-align: right; }
+.task-overview-item.task-done > .task-row-title { text-decoration: line-through; color: var(--muted); }
+@container taskdetail (max-width: 360px) {
+  .task-detail-inner { padding: 8px 10px 14px; }
+  .task-overview-item { grid-template-columns: 10px minmax(0, 1fr) auto 36px; }
+  .task-overview-item > .task-row-id, .task-overview-item > .task-assign-name { display: none; }
+}
+@media (max-width: 760px) {
+  .task-workspace { flex: none; height: 78vh; }
+}
+
 /* ---- phone/phone.css ---- */
 /* Phone-only overrides. Keep the shared desktop page and map styles intact. */
 body.phone-page { display: block; height: auto; min-height: 100%; overflow: auto; font-size: 15px; line-height: 1.5; }
@@ -1578,7 +1712,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-21T05:43:06Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-22T23:49:02Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -1961,33 +2095,43 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 
   // --------------------------------------------------------------- splitters
   /**
-   * A vertical splitter between panes. get() returns the current width, set(w)
-   * applies it (and persists), side says which pane it sizes ("left" grows to
-   * the right, "right" grows to the left). Keyboard: arrows (Shift = larger
-   * steps), Home/End; double-click resets.
+   * A splitter between panes. get() returns the current size, set(w) applies
+   * it (and persists), side says which pane it sizes ("left"/"top" grows with
+   * the pointer, "right"/"bottom" against it). axis is "x" (default; a
+   * vertical bar) or "y", or a function returning either so one handle can
+   * follow a layout that changes orientation; min may also be a function.
+   * Keyboard: arrows (Shift = larger steps), Home/End; double-click resets.
    */
-  UI.splitter = function splitter(handle, { get, set, side, min, max, reset, enabled }) {
-    const clamp = (w) => Math.max(min, Math.min(max(), Math.round(w)));
+  UI.splitter = function splitter(handle, { get, set, side, min, max, reset, enabled, axis = "x" }) {
+    const lo = () => (typeof min === "function" ? min() : min);
+    const clamp = (w) => Math.max(lo(), Math.min(max(), Math.round(w)));
+    const vertical = () => (typeof axis === "function" ? axis() : axis) === "y";
+    const grows = () => (side === "left" || side === "top" ? 1 : -1);
+    const orient = () => handle.setAttribute("aria-orientation", vertical() ? "horizontal" : "vertical");
     handle.setAttribute("role", "separator");
-    handle.setAttribute("aria-orientation", "vertical");
+    orient();
     handle.tabIndex = 0;
+    handle.addEventListener("focus", orient);
     handle.addEventListener("pointerdown", (e) => {
       if (e.button !== 0 || (enabled && !enabled())) return;
       e.preventDefault();
       handle.setPointerCapture(e.pointerId);
-      const startX = e.clientX;
+      const y = vertical();
+      const startX = y ? e.clientY : e.clientX;
       const startW = get();
+      orient();
       document.body.classList.add("resizing");
+      if (y) document.body.classList.add("resizing-y");
       handle.classList.add("dragging");
       const move = (ev) => {
-        const dx = ev.clientX - startX;
-        set(clamp(side === "left" ? startW + dx : startW - dx), false);
+        const dx = (y ? ev.clientY : ev.clientX) - startX;
+        set(clamp(startW + dx * grows()), false);
       };
       const up = () => {
         handle.removeEventListener("pointermove", move);
         handle.removeEventListener("pointerup", up);
         handle.removeEventListener("pointercancel", up);
-        document.body.classList.remove("resizing");
+        document.body.classList.remove("resizing", "resizing-y");
         handle.classList.remove("dragging");
         set(get(), true);
       };
@@ -1999,11 +2143,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     handle.addEventListener("keydown", (e) => {
       if (enabled && !enabled()) return;
       const step = e.shiftKey ? 64 : 16;
-      const grow = side === "left" ? 1 : -1;
+      const grow = grows();
+      const [more, less] = vertical() ? ["ArrowDown", "ArrowUp"] : ["ArrowRight", "ArrowLeft"];
       let w = null;
-      if (e.key === "ArrowRight") w = get() + step * grow;
-      else if (e.key === "ArrowLeft") w = get() - step * grow;
-      else if (e.key === "Home") w = min;
+      if (e.key === more) w = get() + step * grow;
+      else if (e.key === less) w = get() - step * grow;
+      else if (e.key === "Home") w = lo();
       else if (e.key === "End") w = max();
       else if (e.key === "Enter") { e.preventDefault(); reset(); return; }
       if (w !== null) { e.preventDefault(); set(clamp(w), true); }
@@ -2812,12 +2957,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 })(typeof window !== "undefined" ? window : globalThis);
 </script>
 <script>/* ---- tasks.js ---- */
-/* Local task workspace; shared formatting also serves the phone views. */
+/* Local task workspace: a project tree beside a resizable detail pane.
+ * Shared formatting also serves the phone views. */
 "use strict";
 (function () {
   const UI = window.UI, el = UI.el;
   const labels = { not_started: "Not started", in_progress: "In progress", blocked: "Blocked", done: "Completed" };
+  const shortLabels = { not_started: "To do", in_progress: "Doing", blocked: "Blocked", done: "Done" };
   const order = ["in_progress", "blocked", "not_started", "done"], priorities = ["urgent", "high", "normal", "low"];
+  const NONE = "~none";
   const projectClass = (name) => "task-project-" + ([...String(name)].reduce((n, c) => (n * 31 + c.charCodeAt(0)) >>> 0, 0) % 8);
   const classes = (t) => "task-card task-" + (labels[t.status] ? t.status : "not_started") + " priority-" +
     (priorities.includes(t.priority) ? t.priority : "normal") + Object.entries(t.flags || {}).filter(([, v]) => v).map(([k]) => " task-" + k).join("");
@@ -2831,22 +2979,91 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     .replace(/!?\[([^\]]+)\]\([^)]+\)/g, "$1").replace(/[*_`~]/g, "").replace(/\s+/g, " ").trim() || "";
   const progress = (task) => task.progress ? el("span", { class: "task-badge task-progress", title: task.progress.done + " of " + task.progress.total + " Plan steps complete" },
     el("progress", { value: task.progress.done, max: task.progress.total, "aria-label": "Plan progress" }), task.progress.done + "/" + task.progress.total) : null;
+  const time = (ts) => Date.parse(ts || "") || 0;
+  /** Age of a timestamp: compact ("5m") for tree columns, long ("5 minutes ago") for the detail pane. */
+  function ago(ts, long = false) {
+    const t = time(ts);
+    if (!t) return long ? "never" : "–";
+    const s = Math.max(0, (Date.now() - t) / 1000);
+    if (s < 60) return long ? "just now" : "now";
+    for (const [limit, size, abbr, word] of [[3600, 60, "m", "minute"], [86400, 3600, "h", "hour"], [86400 * 14, 86400, "d", "day"], [86400 * 70, 604800, "w", "week"]])
+      if (s < limit) { const n = Math.floor(s / size); return long ? n + " " + word + (n === 1 ? "" : "s") + " ago" : n + abbr; }
+    const d = new Date(t);
+    return long ? d.toLocaleDateString() : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
+  }
+  /** Plain-language account of one task event. */
+  function describe(e) {
+    const d = e?.detail || {}, keys = Object.keys(d);
+    switch (e?.action) {
+      case "created": return "created the task";
+      case "status": return "set " + (labels[d.status?.new] || "the state") + (d.status_note?.new ? ": " + d.status_note.new : "");
+      case "note": return "noted: " + (d.status_note?.new || "cleared the note");
+      case "edited": return keys.length === 1 && keys[0] === "project" ? "moved it to " + (d.project.new || "No project")
+        : "edited the " + keys.map((k) => ({ notes: "plan", plan_ref: "spec file", status_note: "note", thread_id: "thread", request_id: "request" }[k] || k)).join(", ");
+      case "step": return (d.done ? "checked" : "unchecked") + " plan step " + d.step;
+      case "added": return "added " + d.agent + " as " + d.role;
+      case "joined": return "joined as " + d.role;
+      case "removed": return "removed " + d.agent;
+      case "left": return "left the task";
+      default: return e?.action || "updated the task";
+    }
+  }
+  /** The most recent interaction: a task change, or a newer message in its linked thread. */
+  function lastActivity(task) {
+    const event = task.events?.[0];
+    const own = time(event?.ts) > time(task.updated_at) ? event.ts : task.updated_at;
+    const result = { ts: own, by: event?.actor || task.updated_by || "", what: event ? describe(event) : "updated the task" };
+    if (task.thread?.last_ts && time(task.thread.last_ts) > time(own)) return { ts: task.thread.last_ts, by: "", what: "message in thread #" + task.thread.id };
+    return result;
+  }
+  const leadOf = (task) => (task.coordinators.find((a) => a.role === "lead") || task.coordinators[0])?.agent || "";
+
   function mount(root, opts) {
-    const defaults = { status: "open", project: "", agent: "", group: "status", sort: "smart", text: "", flag: "", archived: false };
-    const prefs = Object.assign({}, defaults, UI.store.get("locus.tasks.view", {}));
-    let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, profiles = [], loading = null, rerun = false, focusedTask = null, conflicted = false;
-    const list = el("div", { class: "task-list" }), count = el("p", { class: "muted small task-count", hidden: true });
+    const defaults = { status: "open", project: "", agent: "", group: "project", sort: "smart", text: "", flag: "", archived: false, empty: false, layout: "auto", v: 2 };
+    const saved = UI.store.get("locus.tasks.view", {});
+    // Phase 12 makes projects the tree's folders; earlier saves carried the old status default.
+    if (saved.v !== 2 && (saved.group === undefined || saved.group === "status")) saved.group = "project";
+    const prefs = Object.assign({}, defaults, saved, { v: 2 });
+    let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, profiles = [], loading = null, rerun = false, conflicted = false;
+    // pinned keeps the selected task in the list after it stops matching the filters, until the owner changes them.
+    let selected = UI.store.get("locus.tasks.selected", ""), pinned = null, reveal = null, rows = [], groupsShown = [], dragging = null, shownKey = null, history = null;
+    const folders = UI.store.get("locus.tasks.folders", {});
+    const sizes = Object.assign({ w: 0, h: 0 }, UI.store.get("locus.tasks.split", {}));
+    const count = el("p", { class: "muted small task-count", hidden: true });
     const search = el("input", { type: "search", value: prefs.text, placeholder: "Search tasks…", "aria-label": "Search tasks" });
     const states = el("div", { class: "task-state-filters", role: "group", "aria-label": "Task status" });
     const filter = button("Filter ▾", (event) => filterMenu(event.currentTarget));
     const menu = button("⋯", (event) => UI.popmenu(event.currentTarget, [
-      { label: "Collapse all", action: () => UI.collapseAll(list.querySelectorAll(".task-card"), true) },
-      { label: "Expand all", action: () => UI.collapseAll(list.querySelectorAll(".task-card"), false) },
+      { label: "Collapse all", action: () => foldAll(true) },
+      { label: "Expand all", action: () => foldAll(false) },
+      { separator: true },
+      ...[["auto", "Details: fit to width"], ["side", "Details beside the list"], ["stack", "Details below the list"]]
+        .map(([value, label]) => ({ label, radio: true, checked: prefs.layout === value, action: () => setLayout(value) })),
       { separator: true }, { label: "Export CSV", action: () => opts.export("csv") },
       { label: "Export JSON", action: () => opts.export("json") }, { label: "Refresh", action: load }]), "Task actions");
     const add = button("+ Task", () => edit(), "Add a task"); add.classList.add("primary");
-    root.replaceChildren(el("div", { class: "task-tools task-tools-compact" }, el("div", { class: "task-tool-row" }, search, filter, menu, add), states), count, list);
+    const head = el("div", { class: "task-tree-head" });
+    const body = el("div", { class: "task-tree-body", role: "tree", "aria-label": "Tasks" });
+    const tree = el("div", { class: "task-tree" }, head, body);
+    const split = el("div", { class: "task-split", title: "Drag to resize · double-click to reset" });
+    const detail = el("div", { class: "task-detail", role: "region", "aria-label": "Task details", tabindex: "-1" });
+    const workspace = el("div", { class: "task-workspace", dataset: { layout: "stack" } }, tree, split, detail);
+    root.replaceChildren(el("div", { class: "task-tools task-tools-compact" }, el("div", { class: "task-tool-row" }, search, filter, menu, add), states), count, workspace);
     search.addEventListener("input", () => change("text", search.value));
+    body.addEventListener("keydown", keydown);
+    const side = () => workspace.dataset.layout === "side";
+    UI.splitter(split, {
+      axis: () => side() ? "x" : "y", side: "left",
+      min: () => side() ? 220 : 80,
+      max: () => side() ? Math.max(220, workspace.clientWidth - 286) : Math.max(80, workspace.clientHeight - 126),
+      get: () => side() ? tree.offsetWidth : tree.offsetHeight,
+      set: (value, persist) => { sizes[side() ? "w" : "h"] = value; applySizes(); if (persist) UI.store.set("locus.tasks.split", sizes); },
+      reset: () => { sizes[side() ? "w" : "h"] = 0; applySizes(); UI.store.set("locus.tasks.split", sizes); },
+    });
+    applySizes();
+    if (window.ResizeObserver) new window.ResizeObserver(() => layout()).observe(workspace);
+    else window.addEventListener?.("resize", () => layout());
+    window.setInterval?.(() => { for (const n of root.querySelectorAll(".task-ago")) n.textContent = (n.dataset.prefix || "") + ago(n.dataset.ts, n.dataset.long === "1"); }, 30000);
     function button(text, fn, title = text) {
       return el("button", { class: "btn small", type: "button", title, onclick: (event) => {
         event.stopPropagation();
@@ -2865,14 +3082,35 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         dataset: { value: v } }, text));
       return group;
     }
-    function change(key, value) { focusedTask = null; prefs[key] = value; UI.store.set("locus.tasks.view", prefs); render(true); }
+    function change(key, value) { pinned = null; prefs[key] = value; UI.store.set("locus.tasks.view", prefs); render(true); }
+    // ------------------------------------------------------------- layout
+    function applySizes() {
+      const style = workspace.style;
+      if (!style.setProperty) return;
+      if (sizes.w) style.setProperty("--task-tree-w", sizes.w + "px"); else style.removeProperty("--task-tree-w");
+      if (sizes.h) style.setProperty("--task-tree-h", sizes.h + "px"); else style.removeProperty("--task-tree-h");
+    }
+    /** Beside at 640 px or more (480 px when the owner asks for it); below otherwise. */
+    function layout() {
+      const width = workspace.clientWidth || 0;
+      const mode = prefs.layout === "stack" ? "stack" : width >= (prefs.layout === "side" ? 480 : 640) ? "side" : "stack";
+      if (workspace.dataset.layout !== mode) workspace.dataset.layout = mode;
+      split.setAttribute("aria-orientation", mode === "side" ? "vertical" : "horizontal");
+      split.setAttribute("aria-label", mode === "side" ? "Resize the task list width" : "Resize the task list height");
+      return mode;
+    }
+    function setLayout(value) {
+      prefs.layout = value; UI.store.set("locus.tasks.view", prefs);
+      if (layout() === "stack" && value === "side" && !opts.widen?.(660 - workspace.clientWidth)) UI.toast("Widen the Tasks pane to show details beside the list.");
+      layout();
+    }
     function filterMenu(anchor) {
       const form = el("div", { class: "task-filter-form" });
       const fields = [
-        ["project", "Project", [["", "All projects"], ["~none", "No project"], ...data.projects.map((p) => [p, p])]],
+        ["project", "Project", [["", "All projects"], [NONE, "No project"], ...data.projects.map((p) => [p, p])]],
         ["agent", "Coordinator", [["", "Anyone"], ["~none", "Unassigned"], ["~owner", "Owner-created"], ...profiles.map((p) => [p.name, p.name])]],
-        ["group", "Group by", [["status", "Status"], ["project", "Project"], ["none", "None"]]],
-        ["sort", "Sort", [["smart", "Smart order"], ["recent", "Recently updated"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]]]
+        ["group", "Group by", [["project", "Project"], ["status", "Status"], ["none", "None"]]],
+        ["sort", "Sort", [["smart", "Smart order"], ["recent", "Recent activity"], ["title", "Name"], ["assignee", "Assignee"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]]]
       ];
       for (const [key, title, values] of fields) {
         const input = key === "group" ? segment(values, prefs[key], title) : select(values, prefs[key], title);
@@ -2881,10 +3119,13 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         form.append(el("label", {}, title, input));
       }
       const archived = el("input", { type: "checkbox", checked: prefs.archived, onchange: (e) => change("archived", e.target.checked) });
+      const empty = el("input", { type: "checkbox", checked: prefs.empty, onchange: (e) => change("empty", e.target.checked) });
       form.append(el("label", { class: "task-check" }, archived, " Include archived"),
-        button("Reset filters", () => { Object.assign(prefs, defaults); search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); }));
+        el("label", { class: "task-check", title: "List watched repositories that have no matching tasks" }, empty, " Show empty projects"),
+        button("Reset filters", () => { Object.assign(prefs, defaults, { layout: prefs.layout }); pinned = null; search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); }));
       UI.popmenu(anchor, [{ node: form }]);
     }
+    // --------------------------------------------------------------- data
     async function load() {
       if (loading) { rerun = true; return loading; }
       loading = (async () => {
@@ -2901,7 +3142,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (!opts.canEdit()) return null;
       try {
         const result = await opts.api("/api/tasks" + path, { body: { agent: "owner", ...payload }, owner: true });
-        if (result.created) UI.store.set("locus.collapsed.tasks." + result.task.id, false);
+        if (result.created) show(result.task.id);
         await load(); return result;
       } catch (error) {
         conflicted = error.status === 409;
@@ -2921,9 +3162,24 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       }
       return mutate("/update", { id: task.id, expect_rev: task.rev, status: value, ...(note === undefined ? {} : { status_note: note }) });
     }
+    const projectNames = () => [...new Set([...data.projects, ...data.tasks.map((t) => t.project).filter(Boolean)])].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
+    function moveTask(task, project) {
+      if ((task.project || "") === project) return null;
+      delete folders["project:" + (project || NONE)]; UI.store.set("locus.tasks.folders", folders);
+      return mutate("/update", { id: task.id, expect_rev: task.rev, project });
+    }
+    async function moveDialog(task) {
+      if (!opts.canEdit()) return;
+      const input = el("input", { value: task.project, list: "task-move-options", maxlength: 64, placeholder: "No project", "aria-label": "Project" });
+      const form = el("div", { class: "task-editor" }, el("label", {}, "Project", input), el("datalist", { id: "task-move-options" }, projectNames().map((p) => el("option", { value: p }))),
+        el("span", { class: "muted small" }, "Leave it empty for no project. A new name starts a new project."));
+      if (await UI.dialog({ title: "Move task #" + task.id, body: form, initialFocus: "input", buttons: [{ label: "Cancel", value: false }, { label: "Move", value: true, primary: true }] }))
+        return moveTask(task, input.value.trim());
+    }
     async function edit(task, agentsOnly = false) {
       if (!opts.canEdit()) return;
-      const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", project: prefs.project === "~none" ? "" : prefs.project, tags: [], coordinators: [] };
+      const folder = !task && prefs.group === "project" && selected.startsWith("g:project:") ? selected.slice(10) : null;
+      const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", project: folder !== null ? (folder === NONE ? "" : folder) : prefs.project === NONE ? "" : prefs.project, tags: [], coordinators: [] };
       const form = el("div", { class: "task-editor" }), fields = {};
       const field = (key, label, node) => { fields[key] = node; node.setAttribute("aria-label", label); node.id = "task-edit-" + key; form.append(el("label", { for: node.id }, label, node)); };
       if (!agentsOnly) {
@@ -2953,7 +3209,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         field("priority", "Priority", segment(priorities.map((p) => [p, p]), values.priority, "Task priority"));
         const projectId = "task-project-options";
         field("project", "Project", el("input", { value: values.project, list: projectId, maxlength: 64 }));
-        form.append(el("datalist", { id: projectId }, data.projects.map((p) => el("option", { value: p }))));
+        form.append(el("datalist", { id: projectId }, projectNames().map((p) => el("option", { value: p }))));
         const more = el("details", { class: "task-editor-more" }, el("summary", {}, "More"));
         for (const [key, label, type] of [["due", "Due date", "date"], ["tags", "Tags", "text"], ["thread_id", "Thread #", "text"], ["request_id", "Request #", "number"]]) {
           const input = el("input", { type, id: "task-edit-" + key, "aria-label": label, value: key === "tags" ? values.tags.join(", ") : values[key] || "" });
@@ -2982,26 +3238,53 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         break;
       }
     }
+    // ---------------------------------------------------------- filtering
     function filtered() {
+      const smart = (a, b) => order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at);
       return data.tasks.filter((t) => {
-        if (t.id === focusedTask) return true;
+        if (t.id === pinned) return true;
         if (!prefs.archived && t.archived_at) return false;
         if (prefs.status !== "all" && (prefs.status === "open" ? t.status === "done" : t.status !== prefs.status)) return false;
-        if (prefs.project && t.project !== (prefs.project === "~none" ? "" : prefs.project)) return false;
+        if (prefs.project && t.project !== (prefs.project === NONE ? "" : prefs.project)) return false;
         if (prefs.agent === "~owner" && t.created_by !== "owner") return false;
         if (prefs.agent === "~none" && t.coordinators.length) return false;
         if (prefs.agent && !prefs.agent.startsWith("~") && !t.coordinators.some((a) => a.agent === prefs.agent)) return false;
         if (prefs.flag && !t.flags[prefs.flag]) return false;
         return !prefs.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
-      }).sort((a, b) => prefs.sort === "recent" ? b.updated_at.localeCompare(a.updated_at) : prefs.sort === "newest" ? b.id - a.id :
-        prefs.sort === "due" ? (a.due || "9999").localeCompare(b.due || "9999") : prefs.sort === "priority" ? priorities.indexOf(a.priority) - priorities.indexOf(b.priority) :
-        order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at));
+      }).sort((a, b) => prefs.sort === "recent" ? time(lastActivity(b).ts) - time(lastActivity(a).ts) : prefs.sort === "newest" ? b.id - a.id :
+        prefs.sort === "title" ? a.title.localeCompare(b.title, undefined, { sensitivity: "base", numeric: true }) :
+        prefs.sort === "assignee" ? (leadOf(a) || "~").localeCompare(leadOf(b) || "~") || smart(a, b) :
+        prefs.sort === "due" ? (a.due || "9999").localeCompare(b.due || "9999") : prefs.sort === "priority" ? priorities.indexOf(a.priority) - priorities.indexOf(b.priority) : smart(a, b));
     }
+    const matches = (task) => { const keep = pinned; pinned = null; try { return filtered().includes(task); } finally { pinned = keep; } };
+    const groupKey = (task) => prefs.group === "status" ? task.status : prefs.group === "project" ? task.project || NONE : "";
+    const folderKey = (group) => "g:" + prefs.group + ":" + group.key;
+    const isClosed = (group) => prefs.group !== "none" && !!folders[prefs.group + ":" + group.key];
+    function groups(tasks) {
+      if (prefs.group === "none") return [{ key: "", label: "", tasks }];
+      const map = new Map(), byStatus = prefs.group === "status";
+      const ensure = (key) => { if (!map.has(key)) map.set(key, { key, label: byStatus ? labels[key] : key === NONE ? "No project" : key, tasks: [] }); return map.get(key); };
+      if (!byStatus && prefs.empty) for (const p of data.projects) if (!prefs.project || prefs.project === p) ensure(p);
+      for (const task of tasks) ensure(groupKey(task)).tasks.push(task);
+      return [...map.values()].sort((a, b) => byStatus ? order.indexOf(a.key) - order.indexOf(b.key)
+        : (a.key === NONE) - (b.key === NONE) || a.key.localeCompare(b.key, undefined, { sensitivity: "base", numeric: true }));
+    }
+    function presence(name) {
+      const current = opts.agents().find((p) => p.name === name);
+      return current?.lifecycle === "active" || !current?.lifecycle ? current?.presence || "dormant" : "dormant";
+    }
+    const avatar = (name) => icon(name) || el("span", { class: "task-initial", "aria-hidden": "true" }, String(name).slice(0, 1).toUpperCase());
+    const agoNode = (ts, long = false, prefix = "") => el("span", { class: "task-ago", dataset: { ts: ts || "", ...(long ? { long: "1" } : {}), ...(prefix ? { prefix } : {}) } }, prefix + ago(ts, long));
+    function linked(task) {
+      const selection = opts.filters();
+      return !!((selection.thread && String(task.thread_id) === selection.thread) || (selection.agent && task.coordinators.some((a) => a.agent === selection.agent)));
+    }
+    // --------------------------------------------------------------- render
     function render(force = false) {
       UI.setDisabled(add, opts.canEdit() ? null : "Connect as owner to add tasks");
       const active = data.tasks.filter((t) => prefs.archived || !t.archived_at);
       const counts = (s) => active.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
-      const filterCount = ["project", "agent", "group", "sort", "archived", "flag"].filter((k) => prefs[k] !== defaults[k]).length;
+      const filterCount = ["project", "agent", "group", "sort", "archived", "flag", "empty"].filter((k) => prefs[k] !== defaults[k]).length;
       filter.textContent = "Filter ▾" + (filterCount ? " " + filterCount : "");
       UI.update(states, UI.signature([prefs.status, prefs.flag, active.map((t) => [t.status, t.flags])]), () => states.replaceChildren(
         ...[["open", "Open"], ...Object.entries(labels), ["all", "All"]].map(([s, label]) => {
@@ -3015,38 +3298,243 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
             "aria-pressed": String(prefs.flag === flag), onclick: () => change("flag", prefs.flag === flag ? "" : flag) }, el("span", { class: "task-label-full", "aria-hidden": "true" }, full), el("span", { class: "task-label-short", "aria-hidden": "true" }, { overdue: "!", stale: "◷", unassigned: "○" }[flag] + " " + n));
         })));
       if (!opts.visible()) return;
-      const tasks = filtered(); count.hidden = tasks.length === active.length; count.textContent = tasks.length + " of " + active.length + " shown";
-      UI.update(list, UI.signature([tasks, prefs.group, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.()]), () => {
-        const groups = new Map();
-        for (const task of tasks) { const key = prefs.group === "status" ? labels[task.status] : prefs.group === "project" ? task.project || "No project" : ""; if (!groups.has(key)) groups.set(key, []); groups.get(key).push(task); }
-        list.replaceChildren();
-        for (const [key, items] of groups) {
-          const section = el("section", { class: "task-group" }, key ? el("h3", {}, key + " · " + items.length) : null, ...items.map(card));
-          list.append(key ? UI.card("task-groups", prefs.group + ":" + key, section, { title: key }) : section);
-        }
-        if (!tasks.length) list.append(el("p", { class: "muted" }, "No tasks match these filters."));
-      }, { force, editRoot: root });
+      layout();
+      resolve();
+      const tasks = filtered(), list = groups(tasks);
+      groupsShown = list;
+      count.hidden = tasks.length === active.length; count.textContent = tasks.length + " of " + active.length + " shown";
+      const selection = opts.filters();
+      UI.update(body, UI.signature([list.map((g) => [g.key, g.tasks]), prefs.group, data.projects, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), [selection.thread, selection.agent], pinned, data.tasks_rev < 0]),
+        () => drawTree(list), { force, editRoot: root });
+      if (reveal !== null) showRow(reveal);
+      if (!rows.some((r) => r.key === selected)) selected = rows.find((r) => r.task)?.key || rows[0]?.key || "";
+      syncSelection();
+      UI.update(head, prefs.sort, drawHead, { force });
+      drawDetail(force);
     }
-    function card(task) {
-      const people = opts.agents(), selected = opts.filters();
-      const chip = opts.canEdit() ? button("● " + labels[task.status], (event) => UI.popmenu(event.currentTarget,
-        Object.entries(labels).map(([value, label]) => ({ label, radio: true, checked: value === task.status, action: () => status(task, value) })))) : stateChip(task);
-      chip.classList.add("task-state", "task-" + task.status);
-      const stack = el("span", { class: "task-icon-stack", title: task.coordinators.map((a) => a.agent + " · " + a.role).join("\n") },
-        task.coordinators.slice(0, 3).map((a) => icon(a.agent)), task.coordinators.length > 3 ? "+" + (task.coordinators.length - 3) : null);
-      const top = el("div", { class: "task-topline" }, chip, badge("#" + task.id), el("strong", { class: "task-title", title: task.title }, task.title));
-      const badges = el("div", { class: "task-card-badges" },
-        task.priority !== "normal" ? badge({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority) : null,
-        task.project ? badge(task.project, projectClass(task.project)) : null, progress(task),
-        task.due ? badge(task.flags.overdue ? "overdue" : task.flags.due_today ? "today" : task.due, task.flags.overdue ? "task-overdue" : "") : null,
-        task.flags.stale ? badge("stale", "task-stale") : null, task.flags.unassigned ? badge("unassigned", "task-unassigned") : null, stack);
-      const head = el("div", { class: "repo-head task-head task-head-compact" }, top, badges,
-        el("div", { class: "task-summary-line" }, summaryText(task)));
-      const node = el("article", { class: classes(task), dataset: { taskId: task.id } }, head,
-        task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
-        el("p", { class: "muted small" }, "Updated " + opts.stamp(task.updated_at) + " · " + task.updated_by));
-      if ((selected.thread && String(task.thread_id) === selected.thread) || (selected.agent && task.coordinators.some((a) => a.agent === selected.agent))) node.classList.add("task-selected");
-      function checklist(text, interactive = false) {
+    /** Keep the selected task in the list while it stays selected; open() and new tasks also land here. */
+    function resolve() {
+      const id = selected.startsWith("t:") ? Number(selected.slice(2)) : null, task = id && data.tasks.find((t) => t.id === id);
+      if (task && pinned === null && matches(task)) pinned = task.id;
+      if (!task && pinned !== null && !data.tasks.some((t) => t.id === pinned)) pinned = null;
+    }
+    function drawHead() {
+      head.replaceChildren(...[["name", "Name", "title", "Name"], ["state", "State", "smart", "State"], ["assign", "Assigned", "assignee", "Who"], ["updated", "Updated", "recent", "Age"]]
+        .map(([id, label, sort, short]) => el("button", { class: "task-col task-col-" + id, type: "button", "aria-pressed": String(prefs.sort === sort),
+          "aria-label": "Sort by " + label.toLowerCase(), title: "Sort by " + label.toLowerCase(), onclick: () => change("sort", sort) },
+          el("span", { class: "task-pill-full", "aria-hidden": "true" }, label), el("span", { class: "task-pill-short", "aria-hidden": "true" }, short),
+          prefs.sort === sort ? el("span", { class: "task-col-sorted", "aria-hidden": "true" }, "▾") : null)));
+    }
+    function drawTree(list) {
+      rows = []; body.replaceChildren();
+      for (const group of list) {
+        let folder = null;
+        if (prefs.group !== "none") { folder = folderRow(group); body.append(folder); rows.push({ key: folder.dataset.key, node: folder, group }); }
+        for (const task of group.tasks) {
+          const row = taskRow(task, group, folder ? 2 : 1);
+          row.hidden = isClosed(group); body.append(row);
+          rows.push({ key: row.dataset.key, node: row, group, task, folder });
+        }
+        if (folder && !group.tasks.length) {
+          const empty = el("div", { class: "task-row task-row-empty", role: "presentation" }, el("span", { class: "task-cell task-cell-name muted small" }, "No matching tasks"));
+          empty.hidden = isClosed(group); body.append(empty); rows.push({ key: "", node: empty, group, empty: true, folder });
+        }
+      }
+      if (!rows.length) body.append(el("p", { class: "muted task-tree-empty" }, data.tasks_rev < 0 ? "Loading tasks…" : data.tasks.length ? "No tasks match these filters." : "No tasks yet."));
+    }
+    function folderRow(group) {
+      const key = folderKey(group), closed = isClosed(group), byProject = prefs.group === "project";
+      const known = byProject && data.projects.includes(group.key);
+      const counts = order.map((s) => [s, group.tasks.filter((t) => t.status === s).length]).filter(([, n]) => n);
+      const people = [...new Set(group.tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
+      const latest = group.tasks.map(lastActivity).sort((a, b) => time(b.ts) - time(a.ts))[0];
+      const glyph = el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.key)) : "task-" + group.key), "aria-hidden": "true" });
+      const row = el("div", { class: "task-row task-folder" + (byProject && group.key !== NONE && !known ? " task-folder-unknown" : ""), role: "treeitem", "aria-level": "1",
+        "aria-expanded": String(!closed), "aria-label": group.label + ", " + group.tasks.length + (group.tasks.length === 1 ? " task" : " tasks"), tabindex: "-1",
+        title: byProject ? (group.key === NONE ? "Tasks without a project" : known ? group.key + " · watched repository" : group.key + " · not a watched repository") : labels[group.key] + " tasks",
+        dataset: { key, stateKey: key } },
+        el("span", { class: "task-cell task-cell-name" },
+          el("span", { class: "task-twisty", "aria-hidden": "true", onclick: (event) => { event.stopPropagation(); toggle(group); } }, closed ? "▸" : "▾"),
+          glyph, el("span", { class: "task-row-title" }, group.label), el("span", { class: "task-row-count" }, String(group.tasks.length))),
+        el("span", { class: "task-cell task-cell-state", title: counts.map(([s, n]) => n + " " + labels[s].toLowerCase()).join(" · ") },
+          counts.map(([s, n]) => el("span", { class: "task-count-pill task-" + s }, String(n)))),
+        el("span", { class: "task-cell task-cell-assign", title: people.join("\n") }, people.slice(0, 3).map(avatar), people.length > 3 ? el("span", { class: "task-more" }, "+" + (people.length - 3)) : null),
+        el("span", { class: "task-cell task-cell-updated", title: latest ? "Latest activity " + opts.stamp(latest.ts) : "" }, latest ? agoNode(latest.ts) : null));
+      wire(row, { key, group });
+      return row;
+    }
+    function taskRow(task, group, level) {
+      const key = "t:" + task.id, lead = leadOf(task), act = lastActivity(task), people = task.coordinators;
+      const mark = (text, cls, title) => el("span", { class: "task-mark " + cls, title }, text);
+      const row = el("div", { class: "task-row task-leaf task-" + task.status + " priority-" + task.priority + (linked(task) ? " task-linked" : "") +
+          (task.archived_at ? " task-archived" : "") + (task.id === pinned && !matches(task) ? " task-unmatched" : ""),
+        role: "treeitem", "aria-level": String(level), tabindex: "-1", draggable: prefs.group === "project" && opts.canEdit() ? "true" : null,
+        "aria-label": "#" + task.id + " " + task.title + ", " + labels[task.status] + ", " + (lead ? "assigned to " + lead : "unassigned"),
+        title: task.title + (summaryText(task) ? "\n" + summaryText(task) : ""), dataset: { key, stateKey: key, taskId: String(task.id) } },
+        el("span", { class: "task-cell task-cell-name" }, el("span", { class: "task-twisty", "aria-hidden": "true" }), el("span", { class: "task-dot", "aria-hidden": "true" }),
+          el("span", { class: "task-row-id" }, "#" + task.id), el("span", { class: "task-row-title" }, task.title),
+          task.priority !== "normal" ? mark({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority, task.priority + " priority") : null,
+          task.flags.overdue ? mark("overdue", "task-overdue", "Overdue · due " + task.due) : task.flags.due_today ? mark("today", "task-due_today", "Due today") : null,
+          task.flags.stale ? mark("◷", "task-stale", "Stale · no update for a while") : null,
+          task.progress ? mark(task.progress.done + "/" + task.progress.total, "task-step-mark", task.progress.done + " of " + task.progress.total + " Plan steps complete") : null,
+          task.archived_at ? mark("archived", "task-archived-mark", "Archived") : null),
+        el("span", { class: "task-cell task-cell-state" }, el("span", { class: "task-state-pill task-" + task.status, title: labels[task.status] },
+          el("span", { class: "task-pill-full" }, labels[task.status]), el("span", { class: "task-pill-short" }, shortLabels[task.status]))),
+        el("span", { class: "task-cell task-cell-assign" + (people.length ? "" : " task-nobody"),
+          title: people.length ? people.map((a) => a.agent + " · " + a.role + " · " + presence(a.agent)).join("\n") : "Nobody is assigned" },
+          people.length ? [avatar(lead), el("span", { class: "task-assign-name" }, lead), people.length > 1 ? el("span", { class: "task-more" }, "+" + (people.length - 1)) : null]
+            : el("span", { class: "task-assign-name" }, "Unassigned")),
+        el("span", { class: "task-cell task-cell-updated", title: "Last activity " + opts.stamp(act.ts) + (act.by ? " · " + act.by : "") + " · " + act.what }, agoNode(act.ts)));
+      wire(row, { key, group, task });
+      return row;
+    }
+    function wire(row, info) {
+      row.addEventListener("click", () => choose(info.key, { focus: true }));
+      if (!info.task) row.addEventListener("dblclick", () => toggle(info.group));
+      row.addEventListener("contextmenu", (event) => { event.preventDefault(); choose(info.key, { focus: true }); rowMenu(row, info); });
+      if (prefs.group !== "project" || !opts.canEdit()) return;
+      const target = info.group.key === NONE ? "" : info.group.key;
+      const clear = () => { for (const r of rows) r.node.classList.remove("task-drop"); };
+      if (info.task) {
+        row.addEventListener("dragstart", (event) => {
+          dragging = info.task; row.classList.add("task-dragging");
+          if (event.dataTransfer) { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", "#" + info.task.id + " " + info.task.title); }
+        });
+        row.addEventListener("dragend", () => { dragging = null; row.classList.remove("task-dragging"); clear(); });
+      }
+      const accepts = () => !!dragging && (dragging.project || "") !== target;
+      row.addEventListener("dragover", (event) => {
+        if (!accepts()) return;
+        event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+        clear(); rows.find((r) => !r.task && !r.empty && r.group === info.group)?.node.classList.add("task-drop");
+      });
+      row.addEventListener("drop", (event) => {
+        if (!accepts()) return;
+        event.preventDefault(); const task = dragging; dragging = null; clear();
+        return moveTask(task, target);
+      });
+    }
+    // ------------------------------------------------------- tree behaviour
+    function syncSelection() {
+      let focusable = null;
+      for (const r of rows) {
+        if (r.empty) continue;
+        const on = r.key === selected;
+        r.node.setAttribute("aria-selected", String(on)); r.node.tabIndex = -1;
+        if (on) focusable = r.node.hidden ? r.folder : r.node;
+      }
+      focusable ||= rows.find((r) => !r.empty && !r.node.hidden)?.node;
+      if (focusable) focusable.tabIndex = 0;
+    }
+    function choose(key, { focus = false } = {}) {
+      if (key !== selected) { selected = key; history = null; UI.store.set("locus.tasks.selected", key); }
+      const row = rows.find((r) => r.key === key);
+      pinned = row?.task ? row.task.id : null;
+      syncSelection();
+      if (row && focus && !row.node.hidden) { row.node.focus(); row.node.scrollIntoView?.({ block: "nearest" }); }
+      drawDetail();
+    }
+    function toggle(group, closed = !isClosed(group)) {
+      if (prefs.group === "none") return;
+      const id = prefs.group + ":" + group.key;
+      if (closed) folders[id] = true; else delete folders[id];
+      UI.store.set("locus.tasks.folders", folders);
+      for (const r of rows) {
+        if (r.group !== group) continue;
+        if (r.task || r.empty) { r.node.hidden = closed; continue; }
+        r.node.setAttribute("aria-expanded", String(!closed));
+        const twisty = r.node.querySelector(".task-twisty"); if (twisty) twisty.textContent = closed ? "▸" : "▾";
+      }
+      if (closed && rows.some((r) => r.task && r.group === group && r.key === selected)) choose(folderKey(group), { focus: true });
+      syncSelection();
+    }
+    function foldAll(closed) { for (const group of groupsShown) toggle(group, closed); }
+    /** Select a task, open its folder and bring it into view (used by open() and new tasks). */
+    function show(id) {
+      reveal = Number(id); pinned = reveal; selected = "t:" + reveal; history = null;
+      UI.store.set("locus.tasks.selected", selected);
+    }
+    function showRow(id) {
+      const task = data.tasks.find((t) => t.id === id);
+      if (!task) return;
+      reveal = null;
+      if (prefs.group !== "none" && folders[prefs.group + ":" + groupKey(task)]) {
+        const group = groupsShown.find((g) => g.key === groupKey(task));
+        if (group) toggle(group, false);
+      }
+      rows.find((r) => r.key === "t:" + id)?.node.scrollIntoView?.({ block: "nearest" });
+    }
+    function keydown(event) {
+      const visible = rows.filter((r) => !r.empty && !r.node.hidden);
+      let at = visible.findIndex((r) => r.node === event.target);
+      if (at < 0) at = visible.findIndex((r) => r.key === selected);
+      const current = visible[at];
+      const go = (r) => { event.preventDefault(); if (r) choose(r.key, { focus: true }); };
+      if (event.key === "ArrowDown") go(visible[at + 1]);
+      else if (event.key === "ArrowUp") go(visible[at - 1]);
+      else if (event.key === "Home") go(visible[0]);
+      else if (event.key === "End") go(visible[visible.length - 1]);
+      else if (!current) return;
+      else if (event.key === "ArrowRight" && !current.task) {
+        event.preventDefault();
+        if (isClosed(current.group)) toggle(current.group, false);
+        else if (visible[at + 1]?.task && visible[at + 1].group === current.group) go(visible[at + 1]);
+      } else if (event.key === "ArrowLeft") {
+        event.preventDefault();
+        if (!current.task && !isClosed(current.group)) toggle(current.group, true);
+        else if (current.task && current.folder) go(rows.find((r) => r.node === current.folder));
+      } else if ((event.key === "Enter" || event.key === " ") && !current.task) { event.preventDefault(); toggle(current.group); }
+      else if (event.key === "Enter" && current.task) { event.preventDefault(); detail.focus(); }
+      else if (event.key === "F2" && current.task) { event.preventDefault(); edit(current.task); }
+      else if (event.key === "ContextMenu" || (event.key === "F10" && event.shiftKey)) { event.preventDefault(); rowMenu(current.node, current); }
+      else if (event.key === " ") event.preventDefault();
+    }
+    function statusItems(task) {
+      return Object.entries(labels).map(([value, label]) => ({ label, radio: true, checked: value === task.status, action: () => status(task, value) }));
+    }
+    function taskActions(task) {
+      return [
+        { label: "Coordinators", action: () => edit(task, true) },
+        { label: "Move to project…", action: () => moveDialog(task) },
+        { label: "Message lead…", action: () => opts.messageLead?.(task) },
+        { label: task.archived_at ? "Unarchive" : "Archive", action: () => mutate("/archive", { id: task.id, archived: !task.archived_at }) },
+        { label: "Delete…", action: async () => { if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Delete this task and its history?", buttons: [{ label: "Cancel", value: false }, { label: "Delete", value: true, danger: true }] })) await mutate("/delete", { id: task.id }); } }
+      ];
+    }
+    function rowMenu(anchor, info) {
+      const canEdit = opts.canEdit();
+      if (info.task) {
+        const items = [...(canEdit ? [...statusItems(info.task), { separator: true }, { label: "Edit…", action: () => edit(info.task) }, ...taskActions(info.task)] : [])];
+        if (info.task.thread_id) items.push(...(items.length ? [{ separator: true }] : []), { label: "Open thread #" + info.task.thread_id, action: () => opts.openThread?.(info.task.thread_id) });
+        if (items.length) UI.popmenu(anchor, items);
+        return;
+      }
+      const closed = isClosed(info.group);
+      UI.popmenu(anchor, [{ label: closed ? "Expand" : "Collapse", action: () => toggle(info.group, !closed) },
+        ...(prefs.group === "project" && canEdit ? [{ label: "New task in " + info.group.label + "…", action: () => edit() }] : [])]);
+    }
+    // ----------------------------------------------------------- detail pane
+    function drawDetail(force = false) {
+      const id = selected.startsWith("t:") ? Number(selected.slice(2)) : null;
+      const task = id ? data.tasks.find((t) => t.id === id) : null;
+      const group = !task && selected.startsWith("g:") ? groupsShown.find((g) => folderKey(g) === selected) : null;
+      const changed = shownKey !== selected;
+      UI.update(detail, UI.signature([selected, task, group && [group.key, group.tasks], task && !matches(task), opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), history, data.projects, data.tasks_rev < 0]),
+        () => detail.replaceChildren(el("div", { class: "task-detail-inner" }, ...(task ? taskDetail(task) : group ? groupDetail(group) : emptyDetail()))),
+        { force: force || changed, editRoot: root });
+      if (changed) { detail.scrollTop = 0; shownKey = selected; }
+    }
+    function fact(label, value, cls = "", title = "") {
+      return el("div", { class: "task-fact" + (cls ? " " + cls : ""), title: title || null }, el("dt", {}, label), el("dd", {}, value));
+    }
+    const sub = (text) => text ? el("span", { class: "task-fact-sub" }, text) : null;
+    function person(a) {
+      const state = presence(a.agent);
+      return el("span", { class: "task-person" }, avatar(a.agent), el("span", { class: "task-person-name" }, a.agent),
+        el("span", { class: "task-person-role" }, a.role === "lead" ? "★ lead" : a.role === "reviewer" ? "✓ reviewer" : a.role),
+        el("span", { class: "task-presence pres-" + state, title: state }, el("span", { class: "dot" }), state));
+    }
+    function checklist(task, text, interactive = false) {
       const plan = markdown(text);
       let step = 0;
       for (const item of plan.querySelectorAll("li")) {
@@ -3058,49 +3546,104 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           onchange: interactive ? (event) => mutate("/step", { id: task.id, step: index, done: event.target.checked, expect_rev: task.rev }) : null }));
       }
       return plan;
-      }
-      const plan = checklist(task.notes, true); plan.classList.add("task-plan");
-      if (task.notes.trim()) node.append(el("h4", {}, "Plan"), plan);
-      else node.append(el("div", { class: "muted small task-empty-plan" }, "No plan yet. ", opts.canEdit() ? button("Add plan", () => edit(task)) : null));
-      if (task.notes.length > 1400) node.append(button("Show full plan", () => plan.classList.toggle("task-plan-full")));
-      if (task.plan_ref) node.append(el("div", { class: "task-spec" }, el("b", {}, "Spec "), el("span", { class: "mono", title: task.plan_ref }, task.plan_ref.split(/[\\/]/).pop()),
-        task.spec_bytes ? " · " + task.spec_bytes.toLocaleString() + " bytes" : "", button("Open", async () => {
-          const result = await opts.api("/api/tasks/" + task.id + "/plan");
-          UI.dialog({ title: "Spec · " + result.path.split(/[\\/]/).pop(), className: "dialog-wide", body: checklist(result.text) });
-        })));
-      if (task.spec_error) node.append(el("p", { class: "task-status-note" }, task.spec_error));
-      const coords = el("div", { class: "task-coordinators" }, ...task.coordinators.map((a) => {
-        const current = people.find((p) => p.name === a.agent), presence = current?.lifecycle === "active" || !current?.lifecycle ? current?.presence || "dormant" : "dormant";
-        return el("span", { class: "task-coordinator" }, icon(a.agent), a.agent, " · " + a.role + " · " + presence);
-      }));
-      if (task.thread_id) coords.append(button("Thread #" + task.thread_id, () => opts.openThread(task.thread_id)));
-      if (task.request_id) coords.append(button("Request #" + task.request_id, () => opts.openRequest(task.request_id)));
-      const history = el("details", { class: "task-history" }, el("summary", {}, "History · " + task.events.length), ...task.events.map((e) => el("p", {}, opts.stamp(e.ts) + " · " + e.actor + " · " + e.action)));
-      node.append(coords, el("div", { class: "task-tags" }, ...task.tags.map((t) => badge("#" + t))), el("p", { class: "muted small" }, "Created " + opts.stamp(task.created_at)), history);
-      if (opts.canEdit()) {
+    }
+    function taskDetail(task) {
+      const canEdit = opts.canEdit(), act = lastActivity(task), out = [];
+      const chip = canEdit ? button("● " + labels[task.status], (event) => UI.popmenu(event.currentTarget, statusItems(task)), "Change the state") : stateChip(task);
+      chip.classList.add("task-state", "task-" + task.status);
+      out.push(el("div", { class: "task-detail-topline" }, chip, badge("#" + task.id),
+        task.priority !== "normal" ? badge({ urgent: "!! urgent", high: "! high", low: "↓ low" }[task.priority], "task-priority priority-" + task.priority) : null,
+        task.project ? badge(task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : badge("No project", "task-unassigned"),
+        progress(task), task.archived_at ? badge("Archived") : null));
+      out.push(el("h3", { class: "task-detail-title" }, task.title));
+      if (task.id === pinned && !matches(task)) out.push(el("p", { class: "task-hidden-note" }, "Kept in view while selected; it no longer matches the current filters. ",
+        button("Clear filters", () => { Object.assign(prefs, defaults, { layout: prefs.layout }); search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); })));
+      if (summaryText(task)) out.push(el("p", { class: "task-summary-line task-detail-summary" }, summaryText(task)));
+      if (task.status_note) out.push(el("p", { class: "task-status-note" }, el("b", {}, task.status === "blocked" ? "Blocked: " : task.status === "done" ? "Outcome: " : "Note: "), task.status_note));
+      const since = task.status === "done" ? task.done_at && agoNode(task.done_at, true, "completed ") : task.status === "in_progress" ? task.started_at && agoNode(task.started_at, true, "started ") : null;
+      out.push(el("dl", { class: "task-facts" },
+        fact("Assigned to", task.coordinators.length ? task.coordinators.map(person) : [el("span", { class: "task-nobody" }, "Nobody"), canEdit ? button("Assign…", () => edit(task, true)) : null],
+          "task-fact-wide" + (task.coordinators.length ? "" : " task-fact-warn")),
+        fact("State", [el("span", { class: "task-state-pill task-" + task.status }, labels[task.status]), since ? el("span", { class: "task-fact-sub" }, since) : null]),
+        fact("Last activity", [agoNode(act.ts, true), sub([act.by, act.what].filter(Boolean).join(" · "))], "", opts.stamp(act.ts)),
+        fact("Project", [task.project || "No project", sub(task.project && !task.project_known ? "not a watched repository" : "")]),
+        fact("Priority", task.priority, task.priority === "urgent" || task.priority === "high" ? "task-fact-warn" : ""),
+        fact("Due", task.due ? [task.due, sub(task.flags.overdue ? "overdue" : task.flags.due_today ? "today" : "")] : "—", task.flags.overdue ? "task-fact-warn" : ""),
+        task.progress ? fact("Plan", task.progress.done + " of " + task.progress.total + " steps") : null,
+        fact("Created", [opts.stamp(task.created_at), sub("by " + task.created_by)]),
+        fact("Updated", [opts.stamp(task.updated_at), sub("by " + task.updated_by)])));
+      if (canEdit) {
         const actions = el("div", { class: "task-actions" });
         for (const value of task.status === "done" ? ["not_started"] : task.status === "not_started" ? ["in_progress"] : task.status === "blocked" ? ["in_progress", "done"] : ["blocked", "done"])
           actions.append(button({ not_started: "Reopen", in_progress: "Start", blocked: "Block…", done: "Complete" }[value], () => status(task, value)));
-        actions.append(button("Edit", () => edit(task)), button("⋯", (event) => UI.popmenu(event.currentTarget, [
-          { label: "Coordinators", action: () => edit(task, true) },
-          { label: "Message lead…", action: () => opts.messageLead?.(task) },
-          { label: task.archived_at ? "Unarchive" : "Archive", action: () => mutate("/archive", { id: task.id, archived: !task.archived_at }) },
-          { label: "Delete…", action: async () => { if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Delete this task and its history?", buttons: [{ label: "Cancel", value: false }, { label: "Delete", value: true, danger: true }] })) await mutate("/delete", { id: task.id }); } }
-        ]), "More task actions")); node.append(actions);
+        actions.append(button("Edit", () => edit(task)), button("⋯", (event) => UI.popmenu(event.currentTarget, taskActions(task)), "More task actions"));
+        out.push(actions);
       }
-      return UI.card("tasks", String(task.id), node, { title: task.title, compact: true, collapsed: true });
+      const plan = checklist(task, task.notes, true); plan.classList.add("task-plan", "task-plan-full");
+      if (task.notes.trim()) out.push(el("h4", {}, "Plan"), plan);
+      else out.push(el("div", { class: "muted small task-empty-plan" }, "No plan yet. ", canEdit ? button("Add plan", () => edit(task)) : null));
+      if (task.plan_ref) out.push(el("div", { class: "task-spec" }, el("b", {}, "Spec "), el("span", { class: "mono", title: task.plan_ref }, task.plan_ref.split(/[\\/]/).pop()),
+        task.spec_bytes ? " · " + task.spec_bytes.toLocaleString() + " bytes" : "", button("Open", async () => {
+          const result = await opts.api("/api/tasks/" + task.id + "/plan");
+          UI.dialog({ title: "Spec · " + result.path.split(/[\\/]/).pop(), className: "dialog-wide", body: checklist(task, result.text) });
+        })));
+      if (task.spec_error) out.push(el("p", { class: "task-status-note" }, task.spec_error));
+      const links = el("div", { class: "task-coordinators" });
+      if (task.thread_id) links.append(button("Thread #" + task.thread_id + (task.thread ? " · " + task.thread.count + " messages" : ""), () => opts.openThread(task.thread_id)));
+      if (task.request_id) links.append(button("Request #" + task.request_id, () => opts.openRequest(task.request_id)));
+      if (links.children.length) out.push(links);
+      if (task.tags.length) out.push(el("div", { class: "task-tags" }, ...task.tags.map((t) => badge("#" + t))));
+      const events = history?.id === task.id ? history.events : task.events;
+      const log = el("details", { class: "task-history", dataset: { stateKey: "history" } }, el("summary", {}, "History · " + events.length + (history?.id === task.id ? "" : events.length >= 10 ? "+" : "")),
+        ...events.map((e) => el("p", {}, opts.stamp(e.ts) + " · " + e.actor + " · " + describe(e))));
+      if (history?.id !== task.id && events.length >= 10) log.append(button("Show full history", async () => {
+        const result = await opts.api("/api/tasks/" + task.id);
+        history = { id: task.id, events: result.events || result.task?.events || [] }; drawDetail(true);
+      }));
+      out.push(log);
+      return out;
+    }
+    function groupDetail(group) {
+      const byProject = prefs.group === "project", known = byProject && data.projects.includes(group.key);
+      const people = [...new Set(group.tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
+      const latest = group.tasks.map((t) => ({ task: t, ...lastActivity(t) })).sort((a, b) => time(b.ts) - time(a.ts))[0];
+      const closed = isClosed(group), out = [];
+      out.push(el("div", { class: "task-detail-topline" },
+        el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.key)) : "task-" + group.key), "aria-hidden": "true" }),
+        badge(byProject ? (group.key === NONE ? "No project" : known ? "Watched repository" : "Not a watched repository") : "Status group")));
+      out.push(el("h3", { class: "task-detail-title" }, group.label));
+      out.push(el("dl", { class: "task-facts" },
+        ...order.map((s) => fact(labels[s], el("span", { class: "task-count-pill task-" + s }, String(group.tasks.filter((t) => t.status === s).length)))),
+        fact("Last activity", latest ? [agoNode(latest.ts, true), sub("#" + latest.task.id + " · " + [latest.by, latest.what].filter(Boolean).join(" · "))] : "—", "", latest ? opts.stamp(latest.ts) : ""),
+        fact("People", people.length ? people.map((name) => person({ agent: name, role: group.tasks.some((t) => t.coordinators.some((a) => a.agent === name && a.role === "lead")) ? "lead" : "helper" })) : "Nobody assigned", people.length ? "task-fact-wide" : "")));
+      const actions = el("div", { class: "task-actions" }, button(closed ? "Expand" : "Collapse", () => { toggle(group, !closed); drawDetail(true); }));
+      if (byProject && opts.canEdit()) { const create = button("+ Task here", () => edit(), "Add a task to " + group.label); create.classList.add("primary"); actions.prepend(create); }
+      out.push(actions);
+      out.push(el("h4", {}, group.tasks.length + (group.tasks.length === 1 ? " task" : " tasks") + " shown"));
+      out.push(el("div", { class: "task-overview" }, ...group.tasks.map((t) => {
+        const act = lastActivity(t);
+        return el("button", { class: "task-overview-item task-" + t.status, type: "button", title: summaryText(t),
+          onclick: () => { if (closed) toggle(group, false); choose("t:" + t.id, { focus: true }); } },
+          el("span", { class: "task-dot", "aria-hidden": "true" }), el("span", { class: "task-row-id" }, "#" + t.id), el("span", { class: "task-row-title" }, t.title),
+          el("span", { class: "task-state-pill task-" + t.status }, shortLabels[t.status]), el("span", { class: "task-assign-name" }, leadOf(t) || "unassigned"), agoNode(act.ts));
+      })));
+      return out;
+    }
+    function emptyDetail() {
+      if (data.tasks_rev < 0) return [el("p", { class: "muted task-detail-empty" }, "Loading tasks…")];
+      return [el("div", { class: "task-detail-empty" }, el("p", { class: "muted" }, data.tasks.length ? "Select a task or project to see its plan, coordinators and history." : "No tasks yet."),
+        data.tasks.length || !opts.canEdit() ? null : button("+ Task", () => edit(), "Add a task"))];
     }
     function open(id, coordinator) {
-      if (coordinator) { prefs.agent = coordinator; prefs.status = "open"; }
-      if (id) { focusedTask = Number(id); UI.store.set("locus.collapsed.tasks." + id, false); }
+      if (coordinator) { prefs.agent = coordinator; prefs.status = "open"; pinned = null; }
+      if (id) show(id);
       UI.store.set("locus.tasks.view", prefs); render(true);
-      if (id) list.querySelector('[data-task-id="' + Number(id) + '"]')?.scrollIntoView({ block: "nearest" });
     }
     return { load, render, open, focus: () => edit(), revision: () => data.tasks_rev,
       tasks: () => data.tasks.filter((t) => !t.archived_at),
       agentTasks: (name) => data.tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((a) => a.agent === name)) };
   }
-  window.LocusTasks = { mount, labels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText };
+  window.LocusTasks = { mount, labels, shortLabels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText, ago, describe, lastActivity, ageDays };
 })();
 </script>
 <script>/* ---- taskcards.js ---- */
@@ -3199,12 +3742,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
  * working, idle, away); links show the transport (HTTP solid, spool dashed)
  * and animate while messages are flowing; purple curves show who messaged
  * whom in the chosen time window; dotted lines tie agents to the repository
- * their working folder is in.
+ * their working folder is in (agent.repo names it when the data carries no
+ * folder paths, as in the phone snapshot).
  *
  * Pure renderer: AgentMap.render(container, data, handlers) draws from plain
  * data and never fetches. Optional data.labels {owner, ownerTitle, link,
  * linkTitle} replace the owner box's subtitle and the owner-to-hub link's text
- * (the phone page says "snapshot via GitHub" instead of "event stream"). Colors come from CSS classes in app.css, so both
+ * (the phone page says "snapshot via GitHub" instead of "event stream").
+ * Optional data.asOf (ms) is the moment the repository readings describe; a
+ * reading is stale when it was old at that moment (default: now). Colors come from CSS classes in app.css, so both
  * themes work and the page's CSP (no inline styles) holds.
  *
  * Pan and zoom: the SVG fills its container and shows a window (the viewBox)
@@ -3245,6 +3791,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const busy = !!(u && u.match === "session" && u.live_status === "busy");
     if (a.presence === "waiting") {
       return busy ? { key: "working", label: "working · inbox armed" } : { key: "waiting", label: "waiting for messages" };
+    }
+    if (a.presence === "doorbell") {
+      return busy ? { key: "working", label: "working · doorbell" } : { key: "waiting", label: "doorbell armed" };
     }
     if (busy || a.presence === "active") return { key: "working", label: "working" };
     if (a.presence === "idle") return { key: "idle", label: "idle" };
@@ -3514,6 +4063,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
     const rel = data.rel || ((t) => t);
     const now = data.now || Date.now();
+    const asOf = Number.isFinite(data.asOf) ? data.asOf : now;
     const windowMs = (data.windowMinutes || 60) * 60000;
     // The layout fills the container's width (at least 600 units; narrower screens start zoomed out to fit).
     const W = Math.max(600, Math.floor(container.clientWidth || 0));
@@ -3652,15 +4202,15 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       k++;
     }
 
-    // Agent -> repository (working folder inside the repo).
+    // Agent -> repository (working folder inside the repo, or the repo the data names for the agent).
     agents.forEach((a) => {
       const p = pos[a.name];
       repos.forEach((r) => {
-        if (!a.workdir || !inside(a.workdir, r.path)) return;
+        if (a.repo !== r.name && !(a.workdir && inside(a.workdir, r.path))) return;
         const q = pos["repo:" + r.name];
         const [x1, y1] = centerBottom(p), [x2, y2] = centerTop(q);
         gLinks.append(s("path", { class: "map-link repo", d: `M${x1},${y1} C${x1},${y1 + 40} ${x2},${y2 - 40} ${x2},${y2}` },
-          s("title", {}, a.name + " works in " + r.name + " (" + a.workdir + ")")));
+          s("title", {}, a.name + " works in " + r.name + (a.workdir ? " (" + a.workdir + ")" : ""))));
       });
     });
 
@@ -3742,11 +4292,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     repos.forEach((r) => {
       const p = pos["repo:" + r.name];
       const dirty = r.dirty ? r.dirty.total : null;
-      const age = r.checked_at ? (now - new Date(r.checked_at).getTime()) / 1000 : null;
+      const age = r.checked_at ? (asOf - new Date(r.checked_at).getTime()) / 1000 : null;
       const stale = age !== null && data.repoStaleAfter && age > data.repoStaleAfter;
       const cls = ["map-node repo", !r.ok ? "st-error" : stale ? "st-stale" : dirty ? "st-dirty" : "st-clean"].join(" ");
       const g = s("g", { class: cls },
-        s("title", {}, r.name + "\n" + r.path + (r.ok ? "\n" + (r.branch || "detached") + " @ " + (r.head_short || "?") +
+        s("title", {}, r.name + (r.path ? "\n" + r.path : "") + (r.ok ? "\n" + (r.branch || "detached") + " @ " + (r.head_short || "?") +
           "\n" + (dirty ? dirty + " changed files" : "clean") : "\n" + (r.error || "unavailable")) + (r.checked_at ? "\nchecked " + rel(r.checked_at) : "")),
         s("rect", { class: "box", x: p.x, y: p.y, width: p.w, height: p.h, rx: 8 }),
         s("text", { class: "t-title", x: p.x + 12, y: p.y + 20 }, fit(r.name, Math.floor((p.w - 20) / 7.4))),
@@ -3950,7 +4500,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
  *   connect({repo, token, passphrase})            -> {snapshot, etag, kid, keys}
  *   poll({repo, token, etag, keys})               -> {changed, snapshot?, etag, kid}
  *        snapshot: the live state + messages (all day files, newest first) + beat {at, next_by, every}
- *        + updated_at (the newer of the beat and the live state)
+ *        + updated_at (the newer of the beat and the live state); repos.as_of is when the repository
+ *        readings were last confirmed (see confirmRepos)
  *   send({repo, token, issue, keys, message})     -> {comment_id, url}
  *        message: {to, kind, subject, body, code, reply_to?}   (reply_to: a message id; threads the answer)
  *   remember({repo, token, keys}) · load() -> {repo, token, keys} | null · forget()
@@ -4166,7 +4717,25 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     for (const k of opened.keys()) if (!current.has(k.split(":")[2])) opened.delete(k);  // days that dropped off
     const messages = [].concat(...dayLists.map((d) => (d && Array.isArray(d.messages) ? d.messages : []))).sort((a, b) => b.id - a.id);
     const updated = beat && Date.parse(beat.at) > Date.parse(live.generated_at) ? beat.at : live.generated_at;
-    return Object.assign({}, live, { messages, beat: beat || null, updated_at: updated });
+    return Object.assign({}, live, { messages, beat: beat || null, updated_at: updated, repos: confirmRepos(live, beat) });
+  }
+
+  /** The hub re-reads the repositories before every publish but sends a new live file only when something
+   *  other than the reading times changed. A beat that still names this content (live_at) therefore
+   *  confirms the readings as of the beat: checked_at moves forward by the time between the content and
+   *  the beat, and as_of is the moment the readings describe (staleness is judged then, not now). */
+  function confirmRepos(live, beat) {
+    const repos = live && live.repos;
+    if (!repos || !Array.isArray(repos.repos)) return repos;
+    const born = Date.parse(live.generated_at);
+    if (!Number.isFinite(born)) return repos;
+    const at = beat && beat.live_at === live.generated_at ? Date.parse(beat.at) : NaN;
+    const lag = Number.isFinite(at) && at > born ? at - born : 0;
+    const shift = (r) => {
+      const t = Date.parse(r && r.checked_at);
+      return lag && Number.isFinite(t) ? Object.assign({}, r, { checked_at: new Date(t + lag).toISOString() }) : r;
+    };
+    return Object.assign({}, repos, { as_of: new Date(born + lag).toISOString(), repos: repos.repos.map(shift) });
   }
 
   async function connect({ repo, token, passphrase }) {
@@ -4252,7 +4821,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   const forget = () => { opened.clear(); return idb("readwrite", (s) => s.delete(KEY)); };
 
   globalThis.AgentHubPhone = {
-    connect, poll, send, remember, load, forget, PhoneError, taskMessage,
+    connect, poll, send, remember, load, forget, PhoneError, taskMessage, confirmRepos,
     _internals: { deriveKeys, open, seal, commentText, parseCommentText, b64, unb64 },
   };
 })();
@@ -4541,7 +5110,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       agents: s.agents, usage: (s.usage || {}).agents || {}, owner: s.owner || {}, ownerValid: !!(s.inbox || {}).enabled,
       hub: { live: hubOnTime(s), address: "Encrypted GitHub snapshot", detail: "Updated " + fmtTime(s.updated_at || s.generated_at) },
       labels: { owner: "you · this phone", ownerTitle: "This phone, reading the hub through GitHub", link: "snapshot via GitHub · " + clock(s.updated_at || s.generated_at), linkTitle: "Encrypted snapshot, updated " + clock(s.updated_at || s.generated_at) },
-      repos: list((s.repos || {}).repos), repoStaleAfter: (s.repos || {}).stale_after_seconds || 60,
+      repos: list((s.repos || {}).repos), repoStaleAfter: (s.repos || {}).stale_after_seconds || 60, asOf: reposAsOf(),
       messages: s.messages, rel: ago, now: Date.now(), windowMinutes: Number($("phoneMapWindow").value),
     }, { onAgent: filterAgent, onOwner: () => scopeToYou(true), onRepo: () => showView("repos", true) });
     for (const node of $("phoneMap").querySelectorAll(".map-node.agent")) {
@@ -4552,6 +5121,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
     $("phoneMapInfo").textContent = s.agents.length + " agents · " + info.pairs + " conversations in this window";
   }
+  /** When the hub last confirmed the repository readings (phonecore's repos.as_of); a reading is stale only if
+   *  it was already old then. The snapshot's own age shows in the header and on the map's hub box. */
+  function reposAsOf() {
+    const at = Date.parse(((state.snapshot && state.snapshot.repos) || {}).as_of);
+    return Number.isFinite(at) ? at : Date.now();
+  }
   function tracking(value, name) { return value && !value.error ? (name || "Tracking") + ": " + (value.ahead || 0) + " ahead, " + (value.behind || 0) + " behind" : ""; }
   function renderRepos() {
     return UI.update($("phoneRepos"), UI.signature(state.snapshot.repos, ["collected_age_seconds", "elapsed_ms"]), drawRepos);
@@ -4561,7 +5136,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     $("phoneRepos").replaceChildren(...repos.map((r) => {
       if (!r.ok) return el("article", { class: "phone-card" }, el("h3", {}, r.name), el("p", { class: "phone-meta" }, r.error || "Repository unavailable"));
       const dirty = r.dirty || {}, total = dirty.total || 0;
-      const stale = !Number.isFinite(Date.parse(r.checked_at)) || Date.now() - Date.parse(r.checked_at) > ((state.snapshot.repos || {}).stale_after_seconds || 60) * 1000;
+      const stale = !Number.isFinite(Date.parse(r.checked_at)) || reposAsOf() - Date.parse(r.checked_at) > ((state.snapshot.repos || {}).stale_after_seconds || 60) * 1000;
       return el("article", { class: "phone-card" }, el("div", { class: "phone-card-head" }, el("h3", {}, r.name), pill(total ? total + " changed" : "Clean"), stale ? pill("Stale reading") : null),
         el("p", { class: "mono" }, (r.detached ? "Detached HEAD" : r.branch || "No branch") + " · " + (r.head_short || "")),
         el("p", { class: "phone-meta" }, [tracking(r.vs_upstream, r.upstream), tracking(r.vs_base, r.base)].filter(Boolean).join(" · ") || "No tracking comparison"),
