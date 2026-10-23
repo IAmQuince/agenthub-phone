@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-7s6GVNYZiU4CDyod0eEa3Ob/26QaabG+NhQLQGM060s=' 'sha256-jR4RmYAfFIL3x8oRi8B9YFCgrVV3igV2favecN9D7TM=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-yWtO/A5jazzHXn1qn8DeUhmmImWWAwGiUGPoNqS/XQg=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-JLHUzJB/rApUKNakJu+/IXDOWP7adXJgS6HAgXOKWO8='; style-src 'sha256-kVaCuZvHgKBUle3BtoKVqZ0ehonwRrU5GDZp6pPX/E4='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tPWgJsBRIuB5ZTTImFsrYodHIE9Dr4E3OT797PFgTqc=' 'sha256-GVVj3FvkfQ1/BbcGxDd7TD5wBV+AvJWJsTz1rlVTeHo=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-yWtO/A5jazzHXn1qn8DeUhmmImWWAwGiUGPoNqS/XQg=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-IkjqmXxjMp7gTbxbhc7G2mLXZIZZRF/xCfoOQ+f36zg='; style-src 'sha256-eMZ5IAG55n/82CgxXSjfl4affbQiO9M25INPXlMjg5w='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -386,14 +386,26 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .ctab .ctab-x { border: 0; background: none; color: var(--faint); cursor: pointer; padding: 0 2px; border-radius: 3px; font-size: 13px; line-height: 1; }
 .ctab .ctab-x:hover { color: var(--bad); background: var(--bad-bg); }
 
-.rtabs { display: flex; gap: 2px; align-self: flex-end; }
+/* The tabs shrink (labels ellipsize; each tab's title has the full name) so the collapse button always fits. */
+.rtabs { display: flex; gap: 2px; align-self: flex-end; min-width: 0; }
 .rtabs [role="tab"] {
   border: 1px solid transparent; border-bottom: 0; border-radius: 6px 6px 0 0; padding: 4px 10px 5px; background: transparent;
   cursor: pointer; color: var(--muted); margin-bottom: -1px;
+  min-width: 2.6em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
 .rtabs [role="tab"]:hover { color: var(--text); }
 .rtabs [role="tab"][aria-selected="true"] { background: var(--panel); border-color: var(--border); color: var(--text); font-weight: 600; }
-.rpanels { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+.pane-head > [data-collapse] { flex: 0 0 auto; }
+.rtabs .tab-short { display: none; }
+.pane.right .pane-head { container: rhead / inline-size; }
+@container rhead (max-width: 300px) {
+  .rtabs [role="tab"] { padding-left: 6px; padding-right: 6px; }
+  .rtabs .tab-long { display: none; }
+  .rtabs .tab-short { display: inline; }
+}
+/* The panels scroll, not the pane body, so the header (and its collapse button) never scrolls out of view. */
+.pane.right .pane-body { overflow: hidden; }
+.rpanels { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: auto; }
 .rpanel { padding: 8px 10px 12px; flex: 0 0 auto; }
 /* The Tasks panel fills the pane so its tree and detail pane scroll on their own. */
 #panelTasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
@@ -513,6 +525,7 @@ body.compact .timeline { padding-top: 6px; }
 .repo-head { display: flex; align-items: center; gap: 6px; }
 .repo-head b { font-size: 13.5px; }
 .repo-path { color: var(--faint); font-size: 11px; overflow-wrap: anywhere; margin: 1px 0 1px; }
+.paths-hidden .repo-path { display: none; }  /* shortened, a repository's path is just its name */
 .repo-changed { color: var(--muted); font-size: 11px; margin-bottom: 5px; }
 .repo-fresh { font-size: 11px; color: var(--ok); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .repo-ms { font-size: 10.5px; color: var(--faint); white-space: nowrap; }
@@ -963,7 +976,7 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
   .topbar { flex-wrap: wrap; }
   .layout { display: block; }
   .pane { overflow: visible; }
-  .pane-body { overflow: visible; }
+  .pane-body, .pane.right .pane-body, .rpanels { overflow: visible; }
   .splitter { display: none; }
   .pane.left .pane-body, .rpanel { padding: 0 16px 10px; }
   .pane.collapsed .pane-rail { flex-direction: row; height: auto; padding: 8px 16px; justify-content: flex-start; }
@@ -1712,7 +1725,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-22T23:49:02Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-23T02:18:16Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2100,9 +2113,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
    * the pointer, "right"/"bottom" against it). axis is "x" (default; a
    * vertical bar) or "y", or a function returning either so one handle can
    * follow a layout that changes orientation; min may also be a function.
+   * collapse(closed), when given, folds the pane once a drag goes more than
+   * SNAP px below min and opens it again if the same drag comes back.
    * Keyboard: arrows (Shift = larger steps), Home/End; double-click resets.
    */
-  UI.splitter = function splitter(handle, { get, set, side, min, max, reset, enabled, axis = "x" }) {
+  const SNAP = 60;
+  UI.splitter = function splitter(handle, { get, set, side, min, max, reset, enabled, collapse, axis = "x" }) {
     const lo = () => (typeof min === "function" ? min() : min);
     const clamp = (w) => Math.max(lo(), Math.min(max(), Math.round(w)));
     const vertical = () => (typeof axis === "function" ? axis() : axis) === "y";
@@ -2123,9 +2139,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       document.body.classList.add("resizing");
       if (y) document.body.classList.add("resizing-y");
       handle.classList.add("dragging");
+      let closed = false;
       const move = (ev) => {
         const dx = (y ? ev.clientY : ev.clientX) - startX;
-        set(clamp(startW + dx * grows()), false);
+        const w = startW + dx * grows();
+        if (collapse && (w < lo() - SNAP) !== closed) { closed = !closed; collapse(closed); }
+        set(closed ? startW : clamp(w), false);  // a folded pane reopens at its size from before the drag
       };
       const up = () => {
         handle.removeEventListener("pointermove", move);
@@ -2322,6 +2341,127 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     return el("span", { class: "meter lvl-" + level + (opts.wide ? " wide" : ""), role: "meter", "aria-valuemin": "0", "aria-valuemax": "100",
       "aria-valuenow": known ? String(Math.round(p)) : null, "aria-label": opts.label || null, title: opts.title || null }, fill);
   };
+
+  // ------------------------------------------------------------ path privacy
+  /**
+   * Keeps absolute file paths, and with them the account name and folder
+   * layout of the computer, off the screen. mask(text) rewrites each one:
+   * inside a known root (roots([{name, path}]): watched repositories, the hub
+   * folder) as the root's name plus the path inside it; inside the user's
+   * home folder as ~ plus the rest; anything else at least two folders deep
+   * as … plus its last name. Relative paths and URLs are left alone.
+   *
+   * watch(root) masks the text, title and aria-label of everything rendered
+   * under root, now and later. reveal(true) restores the originals and stops;
+   * reveal(false) masks again. Form fields, script and style, and anything
+   * inside [data-paths="show"] are never changed, and the data behind the
+   * page (copy actions, exports) keeps the real paths.
+   */
+  UI.paths = (function () {
+    const STOP = '\\s\\\\/:*?"\'<>|`()[\\]{},;';            // ends a path in running text
+    const SEG = "[^" + STOP + "]+";
+    const INNER = SEG + "(?: " + SEG + "){0,3}";             // a folder name may hold spaces when more path follows
+    const SEP = "(?:\\\\{1,2}|/)";                           // \, \\ (as in JSON) or /
+    const TAIL = "(?:" + INNER + SEP + ")*(?:" + SEG + ")?";
+    const PTAIL = "(?:" + INNER + "/)*(?:" + SEG + ")?";
+    const FOUND = new RegExp([
+      "(?<!\\w)[A-Za-z]:" + SEP + TAIL,                                           // drive paths, also inside file:/// and \\?\ forms
+      "(?<![\\w\\\\/:])\\\\{2}" + SEG + "\\\\{1,2}" + SEG + "(?:" + SEP + TAIL + ")?", // \\server\share\...
+      "(?<![\\w.:/~-])(?:/mnt/[A-Za-z]|/[A-Za-z])?/(?:home|Users)/" + PTAIL,     // /home/name, /Users/name, /c/Users/name, /mnt/c/Users/name
+      "(?<![\\w.:/~-])/root(?![\\w.-])(?:/" + PTAIL + ")?",                     // /root
+    ].join("|"), "g");
+    const ENCODED = /\b[A-Za-z]--Users-[^\s\\/-]+/g;          // Claude's project folder names: C--Users-name-Documents-...
+    const HOME = /^(?:[a-z]:\/users\/[^/]+|\/(?:home|users)\/[^/]+|\/root)(?=\/|$)/;
+    let known = [];
+
+    /** Separators collapsed to "/", Git Bash and WSL drives as c:/, no trailing slash. */
+    const normal = (p) => String(p).replace(/[\\/]+/g, "/").replace(/^\/mnt\/([a-z])\//i, "$1:/").replace(/^\/([a-z])\/(?=users\/)/i, "$1:/").replace(/(.)\/$/, "$1");
+    function shorten(found) {
+      const trail = (found.match(/[.!]+$/) || [""])[0];
+      const path = normal(trail ? found.slice(0, -trail.length) : found), low = path.toLowerCase();
+      const sep = found.includes("\\") ? "\\" : "/";
+      const out = (head, rest) => head + rest.replace(/\//g, sep) + trail;
+      const root = known.find((r) => low === r.key || low.startsWith(r.key + "/"));
+      if (root) return out(root.name, path.slice(root.key.length));
+      const home = low.match(HOME);
+      if (home) return out("~", path.slice(home[0].length));
+      const parts = path.split("/").filter(Boolean);
+      return parts.length < 3 ? found : "…" + sep + parts[parts.length - 1] + trail;
+    }
+    function mask(text) {
+      const s = String(text ?? "");
+      return /[:\\]|\/(?:home|Users|root)\b|--Users-/.test(s) ? s.replace(FOUND, shorten).replace(ENCODED, "~") : s;
+    }
+    /** Known roots, longest first; true when they changed. */
+    function roots(list) {
+      const next = (list || []).filter((r) => r && r.name && r.path).map((r) => ({ name: String(r.name), key: normal(r.path).toLowerCase() }))
+        .filter((r, i, all) => r.key.length > 3 && all.findIndex((o) => o.key === r.key) === i).sort((a, b) => b.key.length - a.key.length);
+      if (JSON.stringify(next) === JSON.stringify(known)) return false;
+      known = next;
+      if (scope && !shown) { stop(); start(); }
+      return true;
+    }
+
+    // DOM: every node keeps its original text so reveal() needs no re-render.
+    const ATTRS = ["title", "aria-label"];
+    const LEAVE = "input,textarea,script,style,[contenteditable]:not([contenteditable=false]),[data-paths=show]";
+    let scope = null, shown = false, observer = null;
+    const left = (node) => { const e = node.nodeType === 1 ? node : node.parentElement; return !e || !!e.closest(LEAVE); };
+    function maskText(t) {
+      if (t._pathsShown !== undefined && t.data === t._pathsShown) return;  // our own write
+      const raw = t.data, out = mask(raw);
+      if (out === raw) { if (t._pathsShown !== undefined) t._pathsRaw = t._pathsShown = undefined; return; }
+      t._pathsRaw = raw; t._pathsShown = out; t.data = out;
+    }
+    function maskAttrs(e) {
+      for (const name of ATTRS) {
+        const value = e.getAttribute(name), kept = e._pathsAttrs && e._pathsAttrs[name];
+        if (!value || (kept && kept.shown === value)) continue;
+        const out = mask(value);
+        if (out === value) { if (kept) delete e._pathsAttrs[name]; continue; }
+        (e._pathsAttrs ||= {})[name] = { raw: value, shown: out };
+        e.setAttribute(name, out);
+      }
+    }
+    function walk(node, onText, onElement) {
+      if (node.nodeType === 3) { if (!left(node)) onText(node); return; }
+      if (node.nodeType !== 1 || left(node)) return;
+      const w = document.createTreeWalker(node, NodeFilter.SHOW_ELEMENT | NodeFilter.SHOW_TEXT, {
+        acceptNode: (n) => (n.nodeType === 1 && n.matches(LEAVE) ? NodeFilter.FILTER_REJECT : NodeFilter.FILTER_ACCEPT) });
+      for (let n = w.currentNode; n; n = w.nextNode()) n.nodeType === 3 ? onText(n) : onElement(n);
+    }
+    function start() {
+      walk(scope, maskText, maskAttrs);
+      observer ||= new MutationObserver((records) => {
+        for (const r of records) {
+          if (r.type === "childList") r.addedNodes.forEach((n) => walk(n, maskText, maskAttrs));
+          else if (!left(r.target)) r.type === "characterData" ? maskText(r.target) : maskAttrs(r.target);
+        }
+      });
+      observer.observe(scope, { childList: true, subtree: true, characterData: true, attributes: true, attributeFilter: ATTRS });
+      document.documentElement.classList.add("paths-hidden");
+    }
+    function stop() {
+      if (observer) { observer.disconnect(); observer.takeRecords(); }
+      walk(scope, (t) => {
+        if (t._pathsShown === undefined) return;
+        if (t.data === t._pathsShown) t.data = t._pathsRaw;
+        t._pathsRaw = t._pathsShown = undefined;
+      }, (e) => {
+        if (!e._pathsAttrs) return;
+        for (const [name, kept] of Object.entries(e._pathsAttrs)) if (e.getAttribute(name) === kept.shown) e.setAttribute(name, kept.raw);
+        e._pathsAttrs = undefined;
+      });
+      document.documentElement.classList.remove("paths-hidden");
+    }
+    function watch(root) { if (scope) return; scope = root; if (!shown) start(); }
+    function reveal(on) {
+      if (!!on === shown) return;
+      shown = !!on;
+      if (scope) shown ? stop() : start();
+    }
+    return { mask, roots, watch, reveal };
+  })();
 
   window.UI = UI;
 })();
@@ -5454,6 +5594,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   // Development only: builder must remove this whole block from phone.js.
   /* (development code removed by the builder) */
   async function start() {
+    UI.paths.watch(document.body);  // absolute paths in messages and tasks show shortened (repository paths never leave the computer)
     $("phoneConnectForm").addEventListener("submit", connect);
     $("phoneComposeForm").addEventListener("submit", send);
     $("phoneRefresh").addEventListener("click", () => refresh(true));
