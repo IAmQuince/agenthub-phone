@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-tPWgJsBRIuB5ZTTImFsrYodHIE9Dr4E3OT797PFgTqc=' 'sha256-GVVj3FvkfQ1/BbcGxDd7TD5wBV+AvJWJsTz1rlVTeHo=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-yWtO/A5jazzHXn1qn8DeUhmmImWWAwGiUGPoNqS/XQg=' 'sha256-VaASUyvgvlHJSDrgvGSWds5AtOeaYFlEoP19RsBT5+s=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-ngujaznKd6RqPc4aQPhRKhV1/45Qj0kQHMhn9uHlP+Q=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-IkjqmXxjMp7gTbxbhc7G2mLXZIZZRF/xCfoOQ+f36zg='; style-src 'sha256-eMZ5IAG55n/82CgxXSjfl4affbQiO9M25INPXlMjg5w='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KsK/rHx7x0wkhbGsq6Gq431Lt/J6b90xrur6obMEiSo=' 'sha256-2INHxx7XxtTDFt1We3oUdpngOSzEj6gmDLeZnYvA28w=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-II0sKDFV+8SM1AIxrTU+5RxATPCYwT3JFbQ7uZKaO4Y=' 'sha256-fITXQoB0AW+5V653sbnw6M5IDyrVuIuoLKoTMd12FwA=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-QESUtJ8rw+/4li1bZb8KMSxF0H3/+IxqySsGO3iJZKY=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-nWHYVPqje0ic7ZFM5SiApBDjSfIZ3RqYjB47NyW/YVQ='; style-src 'sha256-oUh3Bc0ZanruXxRD6gMdJ+Io5i6G46leUm9oD+l0GMQ='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -411,6 +411,33 @@ button, input, select, textarea { font: inherit; color: inherit; }
 #panelTasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 #tasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 .panel-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+.rtabs .rtab-n { background: var(--accent); color: #fff; border-radius: 9px; font-size: 10.5px; padding: 0 5px; margin-left: 4px; font-weight: 600; }
+.tab-drop-hint { align-self: center; padding: 4px 10px; border: 1px dashed var(--border-strong); border-radius: 6px; color: var(--faint); font-size: 12px; white-space: nowrap; }
+.side-empty { margin: 14px 12px; color: var(--muted); font-size: 12.5px; }
+
+/* Views placed in the other area (View → tab menu, or drag a tab onto the other tab bar). */
+.pane.center > .rpanel { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 10px 14px 14px; }
+.pane.center > #panelTasks { overflow: hidden; }
+.rpanels > .mapview, .rpanels > .logsview, .rpanels > .rulesview, .rpanels > .profilesview { flex: 1 1 auto; min-height: 0; }
+.rpanels > .mapview { min-height: 260px; }
+.rpanels > .rulesview { padding: 10px; }
+
+/* Drag to reorder (UI.reorder): tabs, panes' sections, Rules sections. */
+[data-drag-id] { -webkit-touch-callout: none; }
+.ctabs [data-drag-id], .rtabs [data-drag-id], .m-tabs [data-drag-id], .phone-tabs [data-drag-id] { -webkit-user-select: none; user-select: none; }
+/* The copy keeps the dragged item's classes, so its placement must win over theirs. */
+body > .drag-ghost, body > .drag-marker { position: fixed !important; pointer-events: none !important; margin: 0 !important; transform: none; }
+.drag-ghost {
+  position: fixed; z-index: 1000; pointer-events: none; margin: 0; opacity: .9; box-sizing: border-box;
+  background: var(--panel); color: var(--text); border: 1px solid var(--accent); border-radius: 6px; padding: 4px 10px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .28); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-height: 120px;
+}
+.drag-source { opacity: .35; }
+.drag-marker { position: fixed; z-index: 1001; pointer-events: none; width: 3px; background: var(--accent); border-radius: 2px; box-shadow: 0 0 0 2px var(--accent-bg); }
+.drag-marker.drag-marker-y { height: 3px; }
+body.reordering, body.reordering * { cursor: grabbing !important; -webkit-user-select: none !important; user-select: none !important; }
+.sect-head { cursor: grab; }
+.sect-head button { cursor: pointer; }
 
 /* -------------------------------------------------------------- filters */
 .filters {
@@ -772,6 +799,26 @@ button.m-card:active { background: var(--accent-bg); }
 .m-agent.st-working .m-state { color: var(--ok); }
 .m-agent.st-idle .m-state { color: var(--warn); }
 .m-status { margin: 3px 0; overflow-wrap: anywhere; }
+/* Agents as a grid of tiles (Grid | List); the top edge carries the state colour. */
+.m-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.m-tile { display: flex; flex-direction: column; gap: 4px; min-width: 0; text-align: left; font: inherit; color: var(--text); cursor: pointer;
+  background: var(--panel); border: 1px solid var(--border); border-top: 4px solid var(--faint); border-radius: 12px; padding: 9px 10px; box-shadow: var(--shadow); }
+.m-tile:active { background: var(--accent-bg); }
+.m-tile.st-waiting { border-top-color: var(--accent); }
+.m-tile.st-working { border-top-color: var(--ok); }
+.m-tile.st-idle { border-top-color: var(--warn); }
+.m-tile.st-away { border-top-style: dashed; opacity: 0.85; }
+.m-tile.st-waiting .m-state { color: var(--accent); }
+.m-tile.st-working .m-state { color: var(--ok); }
+.m-tile.st-idle .m-state { color: var(--warn); }
+.m-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.m-tile-top .m-state { margin: 0; font-size: 12px; text-align: right; }
+.m-tile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+.m-tile-meta, .m-tile-teams { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-width: 0; }
+.m-tile-teams:empty { display: none; }
+.m-team-chip { font-size: 11px; border-radius: 9px; padding: 1px 7px; background: var(--accent-bg); color: var(--accent); max-width: 100%; overflow-wrap: anywhere; }
+.m-tile-status { overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
+.m-tab.drag-source, .phone-tabs .drag-source { opacity: .35; }
 .m-meters { display: grid; grid-template-columns: 62px minmax(0, 1fr) auto; gap: 6px; align-items: center; margin-top: 6px; }
 .m-banner { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); }
 .m-filter { display: flex; gap: 6px; overflow-x: auto; margin-bottom: 10px; padding-bottom: 2px; }
@@ -853,13 +900,13 @@ body.how-page { overflow: auto; display: block; height: auto; min-height: 100%; 
 kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-strong); border-bottom-width: 2px; border-radius: 4px; padding: 0 5px; background: var(--panel-2); }
 
 /* Rules reference and shared charts. */
-.rulesview, .graphsview { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px; }
+.rulesview { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 14px; }
 .rules-toolbar, .rules-footer { display: flex; align-items: center; flex-wrap: wrap; gap: 8px; padding: 8px 0; }
 .rules-toolbar { position: sticky; top: -14px; background: var(--panel); z-index: 2; border-bottom: 1px solid var(--border); }
 .rules-toolbar h2 { font-size: 17px; margin: 4px auto 4px 0; }
 .rules-form { border: 0; padding: 0; margin: 0; min-width: 0; }
 .rules-section { margin-block: 12px; }
-.rules-section h3, .graph-card h3 { font-size: 15px; margin: 0 0 12px; }
+.graph-card h3 { font-size: 15px; margin: 0 0 12px; }
 .rules-section h4 { margin: 12px 0 8px; }
 .rules-agent { padding: 10px 0; border-bottom: 1px solid var(--border); }
 .rules-agent h4 { display: flex; align-items: center; gap: 8px; overflow-wrap: anywhere; }
@@ -867,11 +914,11 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-team th:first-child { width: 145px; }
 .rules-team td, .rules-team th { vertical-align: top; text-align: left; white-space: normal; padding: 8px; }
 .rules-team th .rules-check { font-weight: normal; }
-.rules-field { display: flex; flex-direction: column; gap: 5px; min-width: 0; margin-block: 6px; font-size: 12px; }
+.rules-field { display: flex; flex-direction: column; gap: 3px; min-width: 0; margin-block: 4px; font-size: 12px; }
 .rules-field input, .rules-field select, .rules-field textarea, .rules-map-row input { width: 100%; min-width: 0; }
-.rules-form input:not([type="checkbox"]):not([type="radio"]), .rules-form select, .rules-form textarea, .graphsview select {
+.rules-form input:not([type="checkbox"]):not([type="radio"]), .rules-form select, .rules-form textarea, .graph-tools select {
   background: var(--panel); color: var(--text); border: 1px solid var(--border-strong); border-radius: 4px;
-  padding: 6px 8px; font: inherit; min-height: 32px;
+  padding: 4px 7px; font: inherit; min-height: 28px;
 }
 .rules-form input:focus-visible, .rules-form select:focus-visible, .rules-form textarea:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
 .rules-field textarea { resize: vertical; }
@@ -894,12 +941,81 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-lane input[type="search"] { flex: 1; min-width: 180px; max-width: 360px; }
 /* Rules tab: sticky Save bar, jump links, collapsible sections */
 .rules-toolbar { position: sticky; top: 0; z-index: 5; background: var(--bg, #fff); padding: 6px 0; border-bottom: 1px solid var(--border, #d0d7de); }
-.rules-nav { display: flex; flex-wrap: wrap; gap: 4px 12px; margin: 8px 0; font-size: 13px; }
-.rules-nav a { text-decoration: none; }
-.rules-section > h3 { cursor: pointer; user-select: none; }
-.rules-section > h3::before { content: "▾ "; color: var(--muted, #6b7280); }
-.rules-section.collapsed > h3::before { content: "▸ "; }
+.rules-nav { display: flex; flex-wrap: wrap; gap: 4px 6px; margin: 8px 0; font-size: 12.5px; }
+.rules-nav a { text-decoration: none; padding: 1px 9px; border: 1px solid var(--border); border-radius: 11px; cursor: grab; }
+.rules-nav a:hover { border-color: var(--accent); }
 .rules-section.collapsed > .rules-section-body { display: none; }
+
+/* Rules: condensed, rearrangeable sections (drag a header, or ↑ ↓); small sections pair up when the tab is wide. */
+.rulesview { container: rules / inline-size; }
+.rules-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; align-items: start; }
+.rules-form > .rules-wide { grid-column: 1 / -1; }
+@container rules (max-width: 899px) { .rules-form { grid-template-columns: minmax(0, 1fr); } }
+.rules-form > .rules-section { margin: 0; padding: 7px 12px 9px; }
+.rules-section > .rules-head { display: flex; align-items: center; gap: 6px; margin: 0 0 6px; cursor: grab; text-transform: none; letter-spacing: 0; font-size: 12px; color: var(--text); user-select: none; }
+.rules-section.collapsed .rules-head { margin-bottom: 0; }
+.rules-grip { color: var(--faint); font-size: 12px; }
+.rules-title { border: 0; background: none; padding: 2px 0; font: inherit; font-size: 14px; font-weight: 600; color: var(--text); cursor: pointer; white-space: nowrap; }
+.rules-title::before { content: "▾ "; color: var(--muted); }
+.rules-section.collapsed .rules-title::before { content: "▸ "; }
+.rules-head-note { font-size: 11.5px; font-weight: normal; color: var(--faint); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
+.rules-move { font-size: 12px; padding: 0 4px; }
+.rules-move:disabled { opacity: .3; }
+.rules-section-body > .note:first-child { margin-top: 0; }
+.rules-choice { display: flex; gap: 4px; min-width: 0; }
+.rules-choice > select, .rules-choice > input { min-width: 0; flex: 1 1 auto; }
+/* Projects: one row each. */
+.rules-ptable { display: grid; grid-template-columns: minmax(140px, 1.1fr) minmax(150px, 1.3fr) minmax(96px, .6fr) minmax(150px, 2fr) auto; gap: 5px 8px; align-items: center; }
+.rules-phead, .rules-prow { display: contents; }
+.rules-phead > span, .rules-ahead > span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .04em; }
+.rules-pname { min-width: 0; display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 6px; }
+.rules-pname b { overflow-wrap: anywhere; }
+.rules-pname .note { flex-basis: 100%; margin: 0; }
+/* Teams: members, their role in the team and whom they report to, with the reporting lines beside. */
+.rules-team-card { border: 1px solid var(--border); border-radius: 6px; padding: 8px; margin: 6px 0; background: var(--panel-2); }
+.rules-team-head { display: grid; grid-template-columns: minmax(120px, 14em) minmax(0, 1fr) auto; gap: 6px; align-items: center; }
+.rules-team-head > input:first-child { font-weight: 600; }
+.rules-team-body { display: grid; grid-template-columns: minmax(0, 1fr) minmax(150px, 14em); gap: 10px; margin-top: 6px; align-items: start; }
+.rules-members { display: grid; gap: 4px; min-width: 0; }
+.rules-mrow { display: grid; grid-template-columns: minmax(110px, 12em) minmax(120px, 1.4fr) minmax(130px, 1fr) auto; gap: 6px; align-items: center; }
+.rules-mname { display: inline-flex; align-items: center; gap: 5px; min-width: 0; }
+.rules-mname b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rules-members > select { justify-self: start; max-width: 260px; }
+.rules-team-tree { font-size: 12px; border-left: 1px solid var(--border); padding-left: 10px; min-width: 0; }
+.rules-tree, .rules-tree ul { list-style: none; margin: 4px 0 0; padding-left: 0; }
+.rules-tree ul { padding-left: 12px; border-left: 1px dashed var(--border-strong); margin-left: 7px; }
+.rules-tree li { margin: 3px 0; overflow-wrap: anywhere; }
+.rules-tree li > b { margin-left: 4px; }
+.rules-tree .picon, .rules-mname .picon, .rules-aname .picon { vertical-align: middle; flex-shrink: 0; }
+.rules-team-badge { color: var(--accent); background: var(--accent-bg); }
+/* Agents: one compact row each; More opens notes, the running session and lifecycle. */
+.rules-defaults { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; margin: 2px 0 6px; }
+.rules-default { display: inline-flex; align-items: center; gap: 5px; }
+.rules-default .rules-choice select { max-width: 150px; }
+.rules-alist { display: grid; grid-template-columns: minmax(150px, 1.4fr) minmax(90px, 1fr) minmax(110px, 1fr) minmax(90px, .8fr) auto 24px; gap: 4px 8px; align-items: center; }
+.rules-ahead, .rules-arow { display: contents; }
+.rules-group { grid-column: 1 / -1; font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); padding: 8px 0 2px; border-bottom: 1px solid var(--border); }
+.rules-aname { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 5px; min-width: 0; }
+.rules-aname b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 100%; }
+.rules-aname .note { margin: 0; font-size: 11px; }
+.rules-flags { display: inline-flex; gap: 0 8px; flex-wrap: wrap; }
+.rules-flags .rules-check { margin: 0; white-space: nowrap; }
+.rules-more { justify-self: center; }
+.rules-amore { grid-column: 1 / -1; padding: 2px 0 8px 22px; border-bottom: 1px dashed var(--border); }
+.rules-arow.is-retired > *, .rules-arow.is-archived > * { opacity: .72; }
+.rules-lanes { margin-top: 8px; font-size: 12px; }
+.rules-lanes > summary { cursor: pointer; color: var(--muted); }
+@container rules (max-width: 640px) {
+  .rules-ptable { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rules-phead, .rules-ahead { display: none; }
+  .rules-pname, .rules-aname { grid-column: 1 / -1; padding-top: 6px; border-top: 1px solid var(--border); }
+  .rules-team-head, .rules-team-body { grid-template-columns: minmax(0, 1fr); }
+  .rules-mrow { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) auto; }
+  .rules-mname { grid-column: 1 / -1; }
+  .rules-team-tree { border-left: 0; padding-left: 0; }
+  .rules-alist { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+  .rules-more { justify-self: start; }
+}
 .rules-folder { display: flex; align-items: flex-end; gap: 6px; }
 .rules-folder > :first-child { flex: 1; min-width: 0; }
 /* Folder picker */
@@ -924,7 +1040,12 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-table-scroll { overflow-x: auto; }
 .graph-card { margin-block: 12px; min-width: 0; }
 .graph-card h4 { margin: 12px 0 0; }
-.graph-entry { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+/* Usage graphs: one card in the Usage panel; the charts follow its width. */
+.graph-panel > .fold-head > .graph-show { margin-left: auto; font-size: 12px; font-weight: normal; display: inline-flex; align-items: center; gap: 4px; }
+.graph-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin: 4px 0 6px; font-size: 12px; }
+.graph-tools select { min-height: 26px; padding: 2px 6px; }
+.usage-graphs .graph-card { margin-block: 8px; padding: 8px; }
+.usage-graphs .graph-card h3 { font-size: 13px; margin-bottom: 6px; }
 .agent-chart { width: 100%; min-width: 0; }
 .agent-chart svg { display: block; width: 100%; height: auto; overflow: visible; }
 .chart-interactive { border-radius: 4px; }
@@ -943,7 +1064,7 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .chart-colour-4 { --chart-colour: var(--k-report); } .chart-colour-5 { --chart-colour: var(--bad); }
 .history-messages th, .history-messages td { white-space: normal; min-width: 85px; }
 @media (max-width: 760px) {
-  .rulesview, .graphsview { max-height: 80vh; padding: 12px; }
+  .rulesview { max-height: 80vh; padding: 12px; }
   .rules-map-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .rules-map-row:has(input[type="text"] + input[type="text"]) { grid-template-columns: minmax(0, 1fr); }
   .rules-team, .rules-team tbody, .rules-team tr, .rules-team th, .rules-team td { display: block; width: 100%; }
@@ -982,6 +1103,8 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
   .pane.collapsed .pane-rail { flex-direction: row; height: auto; padding: 8px 16px; justify-content: flex-start; }
   .rail-label { writing-mode: horizontal-tb; transform: none !important; }
   .center { min-height: 80vh; }
+  .rpanels > .mapview { height: 70vh; }
+  .pane.center > .rpanel { padding: 10px 16px; }
   .timeline { max-height: 70vh; padding: 10px 16px; }
   .filters, .compose, .compose-bar, .filter-chips { padding-left: 16px; padding-right: 16px; }
   .policy-labels { float: none; margin: 0 0 3px; display: flex; }
@@ -1319,6 +1442,17 @@ button.task-badge { cursor: pointer; }
 .task-cell { min-width: 0; display: flex; align-items: center; gap: 4px; overflow: hidden; white-space: nowrap; }
 .task-cell-name { gap: 5px; }
 .task-row[aria-level="2"] .task-cell-name { padding-left: 16px; }
+/* Sub-folders nest up to four levels inside a project. */
+.task-row[aria-level="3"] .task-cell-name { padding-left: 32px; }
+.task-row[aria-level="4"] .task-cell-name { padding-left: 48px; }
+.task-row[aria-level="5"] .task-cell-name { padding-left: 64px; }
+.task-row[aria-level="6"] .task-cell-name { padding-left: 80px; }
+.task-row-empty[data-depth="3"] .task-cell-name { padding-left: 56px; }
+.task-row-empty[data-depth="4"] .task-cell-name { padding-left: 72px; }
+.task-row-empty[data-depth="5"] .task-cell-name { padding-left: 88px; }
+.task-row-empty[data-depth="6"] .task-cell-name { padding-left: 104px; }
+.task-subfolder .task-row-title { font-weight: 500; }
+.task-subfolder .task-folder-glyph { opacity: .8; }
 .task-twisty { flex: 0 0 12px; width: 12px; text-align: center; color: var(--muted); font-size: 10px; cursor: pointer; }
 .task-leaf .task-twisty { cursor: default; }
 .task-row-title { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; }
@@ -1617,6 +1751,23 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 #phoneTaskPreview { display: block; overflow-wrap: anywhere; }
 .phone-page .dialog { width: min(95vw, 620px); }
 .phone-page .dialog-foot { flex-wrap: wrap; }
+/* Agents as a grid of tiles (Grid | List); the top edge carries the state colour. */
+.phone-view-switch { display: flex; gap: 6px; margin-bottom: 10px; }
+.phone-view-switch .phone-chip[aria-pressed="true"] { border-color: var(--accent); background: var(--accent-bg); color: var(--accent); font-weight: 600; }
+.phone-agent-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.phone-tile { display: flex; flex-direction: column; align-items: stretch; gap: 5px; min-width: 0; padding: 10px; text-align: left; font: inherit; color: var(--text); cursor: pointer;
+  border: 1px solid var(--border); border-top: 4px solid var(--muted); border-radius: var(--phone-radius); background: var(--panel); box-shadow: var(--shadow); }
+.phone-tile:active { background: var(--accent-bg); }
+.phone-tile.st-working { border-top-color: var(--ok); }
+.phone-tile.st-waiting, .phone-tile.st-doorbell { border-top-color: var(--accent); }
+.phone-tile.st-idle { border-top-color: var(--warn); }
+.phone-tile.st-away { border-top-style: dashed; }
+.phone-tile-top { display: flex; align-items: center; justify-content: space-between; gap: 6px; }
+.phone-tile-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; }
+.phone-tile-meta, .phone-tile-teams { display: flex; flex-wrap: wrap; gap: 4px; align-items: center; min-width: 0; }
+.phone-tile-teams:empty { display: none; }
+.phone-team-chip { font-size: 11px; border-radius: 9px; padding: 1px 7px; background: var(--accent-bg); color: var(--accent); max-width: 100%; overflow-wrap: anywhere; }
+.phone-tile-status { font-size: 12.5px; color: var(--muted); overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow-wrap: anywhere; }
 </style>
 </head>
 <body class="phone-page">
@@ -1631,6 +1782,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         <summary aria-label="Phone settings">•••</summary>
         <div class="phone-menu-content">
           <p class="muted">To add an icon, use your browser’s <b>Add to Home screen</b> menu.</p>
+          <p class="muted">Press and hold a tab at the bottom, then drag it, to change their order.</p>
+          <button id="phoneResetTabs" type="button" class="btn">Reset tab order</button>
           <button id="phoneForget" type="button" class="btn danger">Forget this phone</button>
         </div>
       </details>
@@ -1716,7 +1869,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </main>
   <nav id="phoneTabs" class="phone-tabs" role="tablist" aria-label="Hub views" hidden>
     <button id="tab-tasks" type="button" role="tab" data-view="tasks" aria-controls="view-tasks" aria-selected="false" tabindex="-1"><span aria-hidden="true">▣</span>Tasks</button>
-    <button id="tab-timeline" type="button" role="tab" data-view="timeline" aria-controls="view-timeline" aria-selected="true"><span aria-hidden="true">☰</span>Timeline</button>
+    <button id="tab-timeline" type="button" role="tab" data-view="timeline" aria-controls="view-timeline" aria-selected="true"><span aria-hidden="true">☰</span>Messages</button>
     <button id="tab-agents" type="button" role="tab" data-view="agents" aria-controls="view-agents" aria-selected="false" tabindex="-1"><span aria-hidden="true">●</span>Agents</button>
     <button id="tab-map" type="button" role="tab" data-view="map" aria-controls="view-map" aria-selected="false" tabindex="-1"><span aria-hidden="true">◇</span>Map</button>
     <button id="tab-repos" type="button" role="tab" data-view="repos" aria-controls="view-repos" aria-selected="false" tabindex="-1"><span aria-hidden="true">⎇</span>Repos</button>
@@ -1725,7 +1878,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-23T02:18:16Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-23T05:01:56Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -2173,6 +2326,150 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (w !== null) { e.preventDefault(); set(clamp(w), true); }
     });
     return { clamp };
+  };
+
+  // ----------------------------------------------------------------- reorder
+  /**
+   * Drag to reorder, driven by pointer events so a mouse, a pen and touch all work.
+   * containers: elements whose direct children carrying data-drag-id can move; an item may
+   * move between the containers of one call. A mouse drag starts after a 5 px move; touch
+   * and pen start after a 350 ms press-and-hold, so a swipe still scrolls. A floating copy
+   * follows the pointer and a bar marks the drop point; Escape cancels, and the click that
+   * ends a drag is swallowed.
+   * onMove({ id, from, to, index }) applies a move; index counts the target's draggable
+   * items without the dragged one. accepts(id, from, to) may refuse a container. handle
+   * (a selector) limits where a drag may start. axis: "x" (a row), "y" (a column) or
+   * "grid" (rows that wrap), or a function of the container returning one of those.
+   */
+  const HOLD_MS = 350, MOUSE_SLOP = 5, TOUCH_SLOP = 8;
+  UI.reorder = function reorder(containers, { onMove, accepts, handle, axis = "x" } = {}) {
+    const list = [...containers].filter(Boolean);
+    const up = (node, test) => { for (let n = node; n && n.nodeType === 1; n = n.parentElement) if (test(n)) return n; return null; };
+    const draggable = (n) => !!(n.dataset && n.dataset.dragId !== undefined);
+    const itemOf = (node) => up(node, (n) => draggable(n) && list.includes(n.parentElement));
+    const items = (box, skip) => [...box.children].filter((n) => draggable(n) && n !== skip);
+    const axisOf = (box) => (typeof axis === "function" ? axis(box) : axis);
+    const rectOf = (n) => (n.getBoundingClientRect ? n.getBoundingClientRect() : { left: 0, top: 0, right: 0, bottom: 0, width: 0, height: 0 });
+    let drag = null;
+    const block = (e) => { e.preventDefault(); };
+    function cleanup() {
+      if (!drag) return;
+      clearTimeout(drag.timer);
+      drag.ghost?.remove(); drag.marker?.remove();
+      drag.item.classList.remove("drag-source");
+      document.body.classList.remove("reordering");
+      document.removeEventListener("pointermove", move, true);
+      document.removeEventListener("pointerup", end, true);
+      document.removeEventListener("pointercancel", cleanup, true);
+      document.removeEventListener("keydown", key, true);
+      document.removeEventListener("contextmenu", block, true);
+      drag = null;
+    }
+    function begin() {
+      const d = drag, rect = rectOf(d.item);
+      d.active = true; d.dx = d.x - rect.left; d.dy = d.y - rect.top;
+      d.ghost = d.item.cloneNode ? d.item.cloneNode(true) : UI.el("div");
+      d.ghost.classList.add("drag-ghost"); d.ghost.removeAttribute?.("id"); d.ghost.setAttribute("aria-hidden", "true");
+      if (d.ghost.style) d.ghost.style.width = rect.width + "px";
+      d.marker = UI.el("div", { class: "drag-marker", "aria-hidden": "true" });
+      document.body.append(d.ghost, d.marker);
+      d.item.classList.add("drag-source");
+      document.body.classList.add("reordering");
+      document.addEventListener("contextmenu", block, true);
+      if (d.touch) try { navigator.vibrate?.(10); } catch (_) { /* optional */ }
+      track(d.x, d.y);
+    }
+    /** The container under the pointer and the index the item would take there. */
+    function target(x, y) {
+      const hit = document.elementFromPoint ? document.elementFromPoint(x, y) : null;
+      const box = up(hit, (n) => list.includes(n)) || list.find((b) => { const r = rectOf(b); return r.width && x >= r.left && x <= r.right && y >= r.top && y <= r.bottom; });
+      if (!box || (accepts && !accepts(drag.id, drag.from, box))) return null;
+      const kids = items(box, drag.item), mode = axisOf(box);
+      let index = kids.length;
+      for (let i = 0; i < kids.length; i++) {
+        const r = rectOf(kids[i]);
+        const before = mode === "y" ? y < r.top + r.height / 2 : mode === "grid" ? y < r.top || (y <= r.bottom && x < r.left + r.width / 2) : x < r.left + r.width / 2;
+        if (before) { index = i; break; }
+      }
+      return { box, index, kids, mode };
+    }
+    function track(x, y) {
+      const d = drag;
+      if (d.ghost.style) { d.ghost.style.left = (x - d.dx) + "px"; d.ghost.style.top = (y - d.dy) + "px"; }
+      const t = target(x, y);
+      d.to = t;
+      d.marker.hidden = !t;
+      if (!t) return;
+      const after = !t.kids[t.index], ref = t.kids[t.index] || t.kids[t.index - 1], bar = t.mode !== "y";
+      const r = rectOf(ref || t.box);
+      d.marker.classList.toggle("drag-marker-y", !bar);
+      if (d.marker.style) {
+        if (bar) Object.assign(d.marker.style, { left: ((after && ref ? r.right : r.left) - 1) + "px", top: r.top + "px", height: Math.max(16, r.height) + "px", width: "" });
+        else Object.assign(d.marker.style, { top: ((after && ref ? r.bottom : r.top) - 1) + "px", left: r.left + "px", width: Math.max(16, r.width) + "px", height: "" });
+      }
+      // A strip that overflows scrolls when the pointer nears its edge.
+      if (bar && t.box.scrollWidth > t.box.clientWidth) {
+        const b = rectOf(t.box);
+        if (x < b.left + 24) t.box.scrollLeft -= 12; else if (x > b.right - 24) t.box.scrollLeft += 12;
+      }
+    }
+    function move(e) {
+      const d = drag;
+      if (!d || e.pointerId !== d.pointer) return;
+      const far = Math.hypot(e.clientX - d.x, e.clientY - d.y);
+      if (!d.active) {
+        if (d.touch) { if (far > TOUCH_SLOP) cleanup(); return; }  // a swipe: let it scroll
+        if (far < MOUSE_SLOP) return;
+        begin();
+      }
+      e.preventDefault();
+      track(e.clientX, e.clientY);
+    }
+    function end(e) {
+      const d = drag;
+      if (!d || e.pointerId !== d.pointer) return;
+      if (!d.active) { cleanup(); return; }
+      e.preventDefault();
+      const to = d.to, id = d.id, from = d.from, origin = [...from.children].filter(draggable).indexOf(d.item);
+      cleanup();
+      const swallow = (ev) => { ev.preventDefault(); ev.stopPropagation(); };
+      document.addEventListener("click", swallow, true);
+      setTimeout(() => document.removeEventListener("click", swallow, true), 0);
+      if (to && !(to.box === from && to.index === origin)) onMove?.({ id, from, to: to.box, index: to.index });
+    }
+    function key(e) { if (e.key === "Escape" && drag) { e.preventDefault(); e.stopPropagation(); cleanup(); } }
+    for (const box of list) {
+      box.addEventListener("pointerdown", (e) => {
+        if (drag || (e.button !== undefined && e.button !== 0)) return;
+        const item = itemOf(e.target);
+        if (!item || (handle && !up(e.target, (n) => n.matches?.(handle)))) return;
+        if (up(e.target, (n) => n !== item && item.contains(n) && n.matches?.("input,select,textarea"))) return;
+        const touch = e.pointerType === "touch" || e.pointerType === "pen";
+        drag = { item, id: item.dataset.dragId, from: box, x: e.clientX, y: e.clientY, pointer: e.pointerId, touch, active: false, to: null };
+        if (touch) drag.timer = setTimeout(() => { if (drag && !drag.active) begin(); }, HOLD_MS);
+        document.addEventListener("pointermove", move, true);
+        document.addEventListener("pointerup", end, true);
+        document.addEventListener("pointercancel", cleanup, true);
+        document.addEventListener("keydown", key, true);
+      });
+      // A held touch drag must not scroll the page underneath it.
+      box.addEventListener("touchmove", (e) => { if (drag && drag.active && e.cancelable) e.preventDefault(); }, { passive: false });
+      // Links and images would start the browser's own drag, which cancels this one.
+      box.addEventListener("dragstart", (e) => { if (itemOf(e.target) && !up(e.target, (n) => n.getAttribute?.("draggable") === "true")) e.preventDefault(); });
+    }
+    return { cancel: cleanup, dragging: () => !!(drag && drag.active) };
+  };
+
+  /** The saved order of known ids; unknown or repeated saved ids drop, and an id the save lacks
+   *  goes after the last of the ids that precede it by default (or first). */
+  UI.ordered = function ordered(defaults, saved) {
+    const known = new Set(defaults), out = (Array.isArray(saved) ? saved : []).filter((id, i, a) => known.has(id) && a.indexOf(id) === i);
+    defaults.forEach((id, i) => {
+      if (out.includes(id)) return;
+      const at = Math.max(-1, ...defaults.slice(0, i).map((x) => out.indexOf(x)));
+      out.splice(at + 1, 0, id);
+    });
+    return out;
   };
 
   // ------------------------------------------------- collapsible sections
@@ -3131,6 +3428,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const d = new Date(t);
     return long ? d.toLocaleDateString() : d.toLocaleDateString(undefined, { month: "short", day: "numeric" });
   }
+  /** "LED › firmware › battery": a project and the folder inside it (null: unchanged and unknown). */
+  function where(project, folder) {
+    const parts = [];
+    if (project !== null && project !== undefined) parts.push(project || "No project");
+    if (folder) parts.push(...String(folder).split("/"));
+    return parts.join(" › ") || "the top level";
+  }
+  const crumb = (task) => where(task.project, task.folder);
   /** Plain-language account of one task event. */
   function describe(e) {
     const d = e?.detail || {}, keys = Object.keys(d);
@@ -3138,7 +3443,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       case "created": return "created the task";
       case "status": return "set " + (labels[d.status?.new] || "the state") + (d.status_note?.new ? ": " + d.status_note.new : "");
       case "note": return "noted: " + (d.status_note?.new || "cleared the note");
-      case "edited": return keys.length === 1 && keys[0] === "project" ? "moved it to " + (d.project.new || "No project")
+      case "edited": return keys.length && keys.every((k) => k === "project" || k === "folder")
+        ? "moved it to " + where(d.project ? d.project.new : null, d.folder ? d.folder.new : null)
         : "edited the " + keys.map((k) => ({ notes: "plan", plan_ref: "spec file", status_note: "note", thread_id: "thread", request_id: "request" }[k] || k)).join(", ");
       case "step": return (d.done ? "checked" : "unchecked") + " plan step " + d.step;
       case "added": return "added " + d.agent + " as " + d.role;
@@ -3167,6 +3473,10 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, profiles = [], loading = null, rerun = false, conflicted = false;
     // pinned keeps the selected task in the list after it stops matching the filters, until the owner changes them.
     let selected = UI.store.get("locus.tasks.selected", ""), pinned = null, reveal = null, rows = [], groupsShown = [], dragging = null, shownKey = null, history = null;
+    // Every project, folder and status group drawn, by its selection key; and each group's row.
+    let nodes = new Map(), groupRows = new Map();
+    /** Folders arrived with the server (a hub that predates them sends no folders list). */
+    const hasFolders = () => Array.isArray(data.folders);
     const folders = UI.store.get("locus.tasks.folders", {});
     const sizes = Object.assign({ w: 0, h: 0 }, UI.store.get("locus.tasks.split", {}));
     const count = el("p", { class: "muted small task-count", hidden: true });
@@ -3277,6 +3587,16 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       })();
       return loading;
     }
+    async function folderAction(payload) {
+      if (!opts.canEdit()) return null;
+      try {
+        const result = await opts.api("/api/tasks/folders", { body: { agent: "owner", ...payload }, owner: true });
+        await load(); return result;
+      } catch (error) {
+        UI.toast(error.status === 404 ? "Restart the hub to use task folders; the running server predates them." : error.message, { kind: "error" });
+        return null;
+      }
+    }
     async function mutate(path, payload) {
       conflicted = false;
       if (!opts.canEdit()) return null;
@@ -3303,23 +3623,95 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       return mutate("/update", { id: task.id, expect_rev: task.rev, status: value, ...(note === undefined ? {} : { status_note: note }) });
     }
     const projectNames = () => [...new Set([...data.projects, ...data.tasks.map((t) => t.project).filter(Boolean)])].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base" }));
-    function moveTask(task, project) {
-      if ((task.project || "") === project) return null;
-      delete folders["project:" + (project || NONE)]; UI.store.set("locus.tasks.folders", folders);
-      return mutate("/update", { id: task.id, expect_rev: task.rev, project });
+    const folderNames = (project) => [...new Set([...(data.folders || []).filter((f) => f.project === (project || "")).map((f) => f.path),
+      ...data.tasks.filter((t) => (t.project || "") === (project || "") && t.folder).map((t) => t.folder)])].sort((a, b) => a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+    const cleanFolder = (value) => String(value || "").split(/[\\/]+/).map((s) => s.trim()).filter(Boolean).join("/");
+    /** Open a project's folder and the folders down to path, so a moved task stays in sight. */
+    function openPath(project, path) {
+      const key = project || NONE, parts = cleanFolder(path).split("/").filter(Boolean);
+      delete folders["project:" + key];
+      parts.forEach((_, i) => delete folders["project:" + key + "/" + parts.slice(0, i + 1).join("/")]);
+      UI.store.set("locus.tasks.folders", folders);
     }
+    function moveTask(task, project, folder = "") {
+      folder = hasFolders() ? cleanFolder(folder) : "";
+      if ((task.project || "") === project && (task.folder || "") === folder) return null;
+      openPath(project, folder);
+      return mutate("/update", { id: task.id, expect_rev: task.rev, project, ...(hasFolders() ? { folder } : {}) });
+    }
+    /** A folder dropped on a project or folder moves there, keeping its own name. */
+    function moveFolder(node, project, parent) {
+      const to = (parent ? parent + "/" : "") + node.label;
+      if (node.project === project && node.path === to) return null;
+      return renameFolder(node, project, to);
+    }
+    /** Rename or move a folder, then keep it selected at its new place. */
+    async function renameFolder(node, project, path) {
+      openPath(project, path);
+      const result = await folderAction({ action: "rename", project: node.project, path: node.path, to_project: project, to_path: path });
+      if (result && selected === folderKey(node)) { selected = "g:project:" + (project || NONE) + "/" + path; UI.store.set("locus.tasks.selected", selected); render(true); }
+      return result;
+    }
+    /** Project and folder fields with suggestions; the folder list follows the project typed. */
+    function placeFields(project, folder) {
+      const id = "task-place-" + (++placeId);
+      const projectInput = el("input", { value: project || "", list: id + "-p", maxlength: 64, placeholder: "No project", "aria-label": "Project" });
+      const folderInput = el("input", { value: folder || "", list: id + "-f", maxlength: 120, placeholder: "Top level", "aria-label": "Folder" });
+      const folderList = el("datalist", { id: id + "-f" });
+      const suggest = () => folderList.replaceChildren(...folderNames(projectInput.value.trim()).map((f) => el("option", { value: f })));
+      projectInput.addEventListener("input", suggest); suggest();
+      return { projectInput, folderInput, nodes: [el("datalist", { id: id + "-p" }, projectNames().map((p) => el("option", { value: p }))), folderList] };
+    }
+    let placeId = 0;
     async function moveDialog(task) {
       if (!opts.canEdit()) return;
-      const input = el("input", { value: task.project, list: "task-move-options", maxlength: 64, placeholder: "No project", "aria-label": "Project" });
-      const form = el("div", { class: "task-editor" }, el("label", {}, "Project", input), el("datalist", { id: "task-move-options" }, projectNames().map((p) => el("option", { value: p }))),
-        el("span", { class: "muted small" }, "Leave it empty for no project. A new name starts a new project."));
+      const place = placeFields(task.project, task.folder);
+      const form = el("div", { class: "task-editor" }, el("label", {}, "Project", place.projectInput),
+        hasFolders() ? el("label", {}, "Folder", place.folderInput) : null, ...place.nodes,
+        el("span", { class: "muted small" }, "Leave the project empty for no project; a new name starts a new project." +
+          (hasFolders() ? " Folders nest with /, such as firmware/battery; leave it empty for the project's top level." : "")));
       if (await UI.dialog({ title: "Move task #" + task.id, body: form, initialFocus: "input", buttons: [{ label: "Cancel", value: false }, { label: "Move", value: true, primary: true }] }))
-        return moveTask(task, input.value.trim());
+        return moveTask(task, place.projectInput.value.trim(), place.folderInput.value);
+    }
+    async function folderDialog(node, mode) {
+      if (!opts.canEdit()) return;
+      const rename = mode === "rename";
+      const place = placeFields(node.project, rename ? node.path : "");
+      const name = el("input", { maxlength: 48, placeholder: "Folder name", "aria-label": "Folder name" });
+      const form = el("div", { class: "task-editor" }, ...(rename
+        ? [el("label", {}, "Project", place.projectInput), el("label", {}, "Folder path", place.folderInput), ...place.nodes,
+          el("span", { class: "muted small" }, "Change the last name to rename it, or the path or project to move it with everything inside.")]
+        : [el("label", {}, "Name", name), el("span", { class: "muted small" }, "In " + where(node.project, node.path) + ". Use / to make nested folders at once.")]));
+      const ok = await UI.dialog({ title: rename ? "Rename or move folder" : "New folder", body: form, initialFocus: "input", buttons: [{ label: "Cancel", value: false },
+        { label: rename ? "Save" : "Create", value: true, primary: true, validate: () => (rename ? cleanFolder(place.folderInput.value) : cleanFolder(name.value)) ? null : "Enter a folder name." }] });
+      if (!ok) return;
+      if (rename) {
+        const project = place.projectInput.value.trim(), path = cleanFolder(place.folderInput.value);
+        if (project === node.project && path === node.path) return;
+        return renameFolder(node, project, path);
+      }
+      const path = (node.path ? node.path + "/" : "") + cleanFolder(name.value);
+      openPath(node.project, path);
+      const result = await folderAction({ action: "create", project: node.project, path });
+      if (result) { selected = "g:project:" + (node.project || NONE) + "/" + path; UI.store.set("locus.tasks.selected", selected); render(true); }
+      return result;
+    }
+    /** Tasks in a folder or below it, whatever the filters show (archived ones included). */
+    const holding = (node) => data.tasks.filter((t) => (t.project || "") === node.project && t.folder && (t.folder === node.path || t.folder.startsWith(node.path + "/")));
+    async function deleteFolder(node) {
+      if (holding(node).length) { UI.toast("Move or delete the " + holding(node).length + " tasks in this folder first."); return; }
+      if (await UI.dialog({ title: "Delete folder " + node.label + "?", body: "Delete the empty folder " + where(node.project, node.path) + (node.children.length ? " and its empty sub-folders" : "") + "?",
+        buttons: [{ label: "Cancel", value: false }, { label: "Delete", value: true, danger: true }] })) {
+        if (selected === folderKey(node)) selected = folderKey(node.parent || node);
+        return folderAction({ action: "delete", project: node.project, path: node.path });
+      }
     }
     async function edit(task, agentsOnly = false) {
       if (!opts.canEdit()) return;
-      const folder = !task && prefs.group === "project" && selected.startsWith("g:project:") ? selected.slice(10) : null;
-      const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", project: folder !== null ? (folder === NONE ? "" : folder) : prefs.project === NONE ? "" : prefs.project, tags: [], coordinators: [] };
+      // A new task lands in the project or folder selected in the tree.
+      const here = !task && prefs.group === "project" ? nodes.get(selected) || (selected.startsWith("t:") ? taskNode(Number(selected.slice(2))) : null) : null;
+      const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", tags: [], coordinators: [],
+        project: here ? here.project : prefs.project === NONE ? "" : prefs.project, folder: here ? here.path : "" };
       const form = el("div", { class: "task-editor" }), fields = {};
       const field = (key, label, node) => { fields[key] = node; node.setAttribute("aria-label", label); node.id = "task-edit-" + key; form.append(el("label", { for: node.id }, label, node)); };
       if (!agentsOnly) {
@@ -3347,9 +3739,10 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       form.append(el("div", { class: "task-assignment-field" }, el("span", {}, "Assign to"), picker));
       if (!agentsOnly) {
         field("priority", "Priority", segment(priorities.map((p) => [p, p]), values.priority, "Task priority"));
-        const projectId = "task-project-options";
-        field("project", "Project", el("input", { value: values.project, list: projectId, maxlength: 64 }));
-        form.append(el("datalist", { id: projectId }, projectNames().map((p) => el("option", { value: p }))));
+        const place = placeFields(values.project, values.folder);
+        field("project", "Project", place.projectInput);
+        if (hasFolders()) field("folder", "Folder", place.folderInput);
+        form.append(...place.nodes);
         const more = el("details", { class: "task-editor-more" }, el("summary", {}, "More"));
         for (const [key, label, type] of [["due", "Due date", "date"], ["tags", "Tags", "text"], ["thread_id", "Thread #", "text"], ["request_id", "Request #", "number"]]) {
           const input = el("input", { type, id: "task-edit-" + key, "aria-label": label, value: key === "tags" ? values.tags.join(", ") : values[key] || "" });
@@ -3367,6 +3760,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           const payload = Object.fromEntries(Object.entries(fields).map(([key, node]) => [key, node.value]));
           payload.tags = payload.tags.split(",").map((t) => t.trim()).filter(Boolean);
           payload.plan_ref = payload.plan_ref.trim() || null; payload.thread_id ||= null; payload.request_id = payload.request_id ? Number(payload.request_id) : null; payload.due ||= null;
+          if ("folder" in payload) { payload.folder = cleanFolder(payload.folder); openPath(payload.project.trim(), payload.folder); }
           result = await mutate(task ? "/update" : "", { ...payload, ...(task ? { id: task.id, expect_rev: task.rev } : { coordinators }) });
           if (!result) { if (conflicted) return; continue; }
         }
@@ -3390,7 +3784,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (prefs.agent === "~none" && t.coordinators.length) return false;
         if (prefs.agent && !prefs.agent.startsWith("~") && !t.coordinators.some((a) => a.agent === prefs.agent)) return false;
         if (prefs.flag && !t.flags[prefs.flag]) return false;
-        return !prefs.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
+        return !prefs.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.folder || "", t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
       }).sort((a, b) => prefs.sort === "recent" ? time(lastActivity(b).ts) - time(lastActivity(a).ts) : prefs.sort === "newest" ? b.id - a.id :
         prefs.sort === "title" ? a.title.localeCompare(b.title, undefined, { sensitivity: "base", numeric: true }) :
         prefs.sort === "assignee" ? (leadOf(a) || "~").localeCompare(leadOf(b) || "~") || smart(a, b) :
@@ -3400,15 +3794,58 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const groupKey = (task) => prefs.group === "status" ? task.status : prefs.group === "project" ? task.project || NONE : "";
     const folderKey = (group) => "g:" + prefs.group + ":" + group.key;
     const isClosed = (group) => prefs.group !== "none" && !!folders[prefs.group + ":" + group.key];
+    const byName = (a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base", numeric: true });
+    /** The tree: status groups, or projects holding folders (sub-folders first, by name) and their tasks.
+     *  Each node: { kind, key, label, project, path, tasks (its own), children, all (everything below), depth, parent }. */
     function groups(tasks) {
-      if (prefs.group === "none") return [{ key: "", label: "", tasks }];
-      const map = new Map(), byStatus = prefs.group === "status";
-      const ensure = (key) => { if (!map.has(key)) map.set(key, { key, label: byStatus ? labels[key] : key === NONE ? "No project" : key, tasks: [] }); return map.get(key); };
-      if (!byStatus && prefs.empty) for (const p of data.projects) if (!prefs.project || prefs.project === p) ensure(p);
-      for (const task of tasks) ensure(groupKey(task)).tasks.push(task);
-      return [...map.values()].sort((a, b) => byStatus ? order.indexOf(a.key) - order.indexOf(b.key)
+      nodes = new Map();
+      if (prefs.group === "none") return [{ kind: "flat", key: "", label: "", project: "", path: "", tasks, children: [], all: tasks, depth: 0 }];
+      const byStatus = prefs.group === "status", tops = new Map();
+      const node = (kind, key, label, project, path, parent) => {
+        const made = { kind, key, label, project, path, tasks: [], children: [], all: [], depth: parent ? parent.depth + 1 : 0, parent };
+        if (parent) parent.children.push(made);
+        nodes.set(folderKey(made), made);
+        return made;
+      };
+      const top = (key) => {
+        if (!tops.has(key)) tops.set(key, node(byStatus ? "status" : "project", key, byStatus ? labels[key] : key === NONE ? "No project" : key, key === NONE ? "" : key, "", null));
+        return tops.get(key);
+      };
+      const folderOf = (project, path) => {
+        let at = top(project || NONE);
+        if (byStatus || !hasFolders() || !path) return at;
+        const parts = path.split("/");
+        for (let i = 0; i < parts.length; i++) {
+          const sub = parts.slice(0, i + 1).join("/"), key = (project || NONE) + "/" + sub;
+          at = at.children.find((c) => c.key === key) || node("folder", key, parts[i], project || "", sub, at);
+        }
+        return at;
+      };
+      if (!byStatus && prefs.empty) for (const p of data.projects) if (!prefs.project || prefs.project === p) top(p);
+      for (const task of tasks) {
+        const home = byStatus ? top(task.status) : folderOf(task.project, task.folder);
+        home.tasks.push(task);
+        for (let n = home; n; n = n.parent) n.all.push(task);
+      }
+      // Folders with no task at all (made ahead, or emptied) stay visible so they can be filled.
+      if (!byStatus && hasFolders()) for (const f of data.folders) {
+        if (prefs.project && (f.project || NONE) !== prefs.project) continue;
+        const known = tops.has(f.project || NONE);
+        if (known && (prefs.empty || !holding({ project: f.project, path: f.path }).length)) folderOf(f.project, f.path);
+        else if (!known && !holding({ project: f.project, path: f.path }).length && f.explicit) folderOf(f.project, f.path);
+      }
+      const sortTree = (n) => { n.children.sort(byName); n.children.forEach(sortTree); };
+      const list = [...tops.values()].sort((a, b) => byStatus ? order.indexOf(a.key) - order.indexOf(b.key)
         : (a.key === NONE) - (b.key === NONE) || a.key.localeCompare(b.key, undefined, { sensitivity: "base", numeric: true }));
+      list.forEach(sortTree);
+      return list;
     }
+    /** The group a task sits in, in the current tree. */
+    function taskNode(id) {
+      const row = rows.find((r) => r.task && r.task.id === id);
+      return row ? row.group : null;
+    }
+    const allNodes = (list) => list.flatMap((n) => [n, ...allNodes(n.children)]);
     function presence(name) {
       const current = opts.agents().find((p) => p.name === name);
       return current?.lifecycle === "active" || !current?.lifecycle ? current?.presence || "dormant" : "dormant";
@@ -3441,10 +3878,10 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       layout();
       resolve();
       const tasks = filtered(), list = groups(tasks);
-      groupsShown = list;
+      groupsShown = allNodes(list);
       count.hidden = tasks.length === active.length; count.textContent = tasks.length + " of " + active.length + " shown";
       const selection = opts.filters();
-      UI.update(body, UI.signature([list.map((g) => [g.key, g.tasks]), prefs.group, data.projects, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), [selection.thread, selection.agent], pinned, data.tasks_rev < 0]),
+      UI.update(body, UI.signature([groupsShown.map((g) => [g.key, g.tasks]), prefs.group, data.projects, data.folders || null, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), [selection.thread, selection.agent], pinned, data.tasks_rev < 0]),
         () => drawTree(list), { force, editRoot: root });
       if (reveal !== null) showRow(reveal);
       if (!rows.some((r) => r.key === selected)) selected = rows.find((r) => r.task)?.key || rows[0]?.key || "";
@@ -3466,36 +3903,45 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           prefs.sort === sort ? el("span", { class: "task-col-sorted", "aria-hidden": "true" }, "▾") : null)));
     }
     function drawTree(list) {
-      rows = []; body.replaceChildren();
-      for (const group of list) {
+      rows = []; groupRows = new Map(); body.replaceChildren();
+      const visit = (group, ancestors) => {
         let folder = null;
-        if (prefs.group !== "none") { folder = folderRow(group); body.append(folder); rows.push({ key: folder.dataset.key, node: folder, group }); }
+        if (prefs.group !== "none") {
+          folder = folderRow(group); folder.hidden = ancestors.some(isClosed); body.append(folder);
+          groupRows.set(group, folder);
+          rows.push({ key: folder.dataset.key, node: folder, group, ancestors });
+        }
+        const inner = folder ? [...ancestors, group] : ancestors;
+        for (const child of group.children) visit(child, inner);
         for (const task of group.tasks) {
-          const row = taskRow(task, group, folder ? 2 : 1);
-          row.hidden = isClosed(group); body.append(row);
-          rows.push({ key: row.dataset.key, node: row, group, task, folder });
+          const row = taskRow(task, group, folder ? group.depth + 2 : 1);
+          row.hidden = inner.some(isClosed); body.append(row);
+          rows.push({ key: row.dataset.key, node: row, group, task, folder, ancestors: inner });
         }
-        if (folder && !group.tasks.length) {
-          const empty = el("div", { class: "task-row task-row-empty", role: "presentation" }, el("span", { class: "task-cell task-cell-name muted small" }, "No matching tasks"));
-          empty.hidden = isClosed(group); body.append(empty); rows.push({ key: "", node: empty, group, empty: true, folder });
+        if (folder && !group.all.length && !group.children.length) {
+          const empty = el("div", { class: "task-row task-row-empty", role: "presentation", dataset: { depth: String(group.depth + 2) } },
+            el("span", { class: "task-cell task-cell-name muted small" }, group.kind === "folder" && !holding(group).length ? "Empty folder" : "No matching tasks"));
+          empty.hidden = inner.some(isClosed); body.append(empty); rows.push({ key: "", node: empty, group, empty: true, folder, ancestors: inner });
         }
-      }
+      };
+      for (const group of list) visit(group, []);
       if (!rows.length) body.append(el("p", { class: "muted task-tree-empty" }, data.tasks_rev < 0 ? "Loading tasks…" : data.tasks.length ? "No tasks match these filters." : "No tasks yet."));
     }
     function folderRow(group) {
-      const key = folderKey(group), closed = isClosed(group), byProject = prefs.group === "project";
-      const known = byProject && data.projects.includes(group.key);
-      const counts = order.map((s) => [s, group.tasks.filter((t) => t.status === s).length]).filter(([, n]) => n);
-      const people = [...new Set(group.tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
-      const latest = group.tasks.map(lastActivity).sort((a, b) => time(b.ts) - time(a.ts))[0];
-      const glyph = el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.key)) : "task-" + group.key), "aria-hidden": "true" });
-      const row = el("div", { class: "task-row task-folder" + (byProject && group.key !== NONE && !known ? " task-folder-unknown" : ""), role: "treeitem", "aria-level": "1",
-        "aria-expanded": String(!closed), "aria-label": group.label + ", " + group.tasks.length + (group.tasks.length === 1 ? " task" : " tasks"), tabindex: "-1",
-        title: byProject ? (group.key === NONE ? "Tasks without a project" : known ? group.key + " · watched repository" : group.key + " · not a watched repository") : labels[group.key] + " tasks",
-        dataset: { key, stateKey: key } },
+      const key = folderKey(group), closed = isClosed(group), byProject = prefs.group === "project", sub = group.kind === "folder";
+      const known = byProject && data.projects.includes(group.project);
+      const counts = order.map((s) => [s, group.all.filter((t) => t.status === s).length]).filter(([, n]) => n);
+      const people = [...new Set(group.all.flatMap((t) => t.coordinators.map((a) => a.agent)))];
+      const latest = group.all.map(lastActivity).sort((a, b) => time(b.ts) - time(a.ts))[0];
+      const glyph = el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.project || group.key)) : "task-" + group.key), "aria-hidden": "true" });
+      const row = el("div", { class: "task-row task-folder" + (sub ? " task-subfolder" : "") + (byProject && !sub && group.key !== NONE && !known ? " task-folder-unknown" : ""), role: "treeitem",
+        "aria-level": String(group.depth + 1), "aria-expanded": String(!closed), tabindex: "-1",
+        "aria-label": group.label + ", " + group.all.length + (group.all.length === 1 ? " task" : " tasks") + (sub ? ", folder in " + where(group.project, group.path.split("/").slice(0, -1).join("/")) : ""),
+        title: sub ? where(group.project, group.path) + " · folder" : byProject ? (group.key === NONE ? "Tasks without a project" : known ? group.key + " · watched repository" : group.key + " · not a watched repository") : labels[group.key] + " tasks",
+        draggable: sub && opts.canEdit() && hasFolders() ? "true" : null, dataset: { key, stateKey: key, depth: String(group.depth + 1) } },
         el("span", { class: "task-cell task-cell-name" },
           el("span", { class: "task-twisty", "aria-hidden": "true", onclick: (event) => { event.stopPropagation(); toggle(group); } }, closed ? "▸" : "▾"),
-          glyph, el("span", { class: "task-row-title" }, group.label), el("span", { class: "task-row-count" }, String(group.tasks.length))),
+          glyph, el("span", { class: "task-row-title" }, group.label), el("span", { class: "task-row-count" }, String(group.all.length))),
         el("span", { class: "task-cell task-cell-state", title: counts.map(([s, n]) => n + " " + labels[s].toLowerCase()).join(" · ") },
           counts.map(([s, n]) => el("span", { class: "task-count-pill task-" + s }, String(n)))),
         el("span", { class: "task-cell task-cell-assign", title: people.join("\n") }, people.slice(0, 3).map(avatar), people.length > 3 ? el("span", { class: "task-more" }, "+" + (people.length - 3)) : null),
@@ -3510,7 +3956,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           (task.archived_at ? " task-archived" : "") + (task.id === pinned && !matches(task) ? " task-unmatched" : ""),
         role: "treeitem", "aria-level": String(level), tabindex: "-1", draggable: prefs.group === "project" && opts.canEdit() ? "true" : null,
         "aria-label": "#" + task.id + " " + task.title + ", " + labels[task.status] + ", " + (lead ? "assigned to " + lead : "unassigned"),
-        title: task.title + (summaryText(task) ? "\n" + summaryText(task) : ""), dataset: { key, stateKey: key, taskId: String(task.id) } },
+        title: task.title + (summaryText(task) ? "\n" + summaryText(task) : "") + (prefs.group !== "project" || task.folder ? "\n" + crumb(task) : ""),
+        dataset: { key, stateKey: key, taskId: String(task.id), depth: String(level) } },
         el("span", { class: "task-cell task-cell-name" }, el("span", { class: "task-twisty", "aria-hidden": "true" }), el("span", { class: "task-dot", "aria-hidden": "true" }),
           el("span", { class: "task-row-id" }, "#" + task.id), el("span", { class: "task-row-title" }, task.title),
           task.priority !== "normal" ? mark({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority, task.priority + " priority") : null,
@@ -3533,25 +3980,32 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (!info.task) row.addEventListener("dblclick", () => toggle(info.group));
       row.addEventListener("contextmenu", (event) => { event.preventDefault(); choose(info.key, { focus: true }); rowMenu(row, info); });
       if (prefs.group !== "project" || !opts.canEdit()) return;
-      const target = info.group.key === NONE ? "" : info.group.key;
+      // Drop targets are projects and folders; a task row stands for the folder it is in.
+      const place = info.group, project = place.project, path = place.path;
       const clear = () => { for (const r of rows) r.node.classList.remove("task-drop"); };
-      if (info.task) {
-        row.addEventListener("dragstart", (event) => {
-          dragging = info.task; row.classList.add("task-dragging");
-          if (event.dataTransfer) { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", "#" + info.task.id + " " + info.task.title); }
-        });
-        row.addEventListener("dragend", () => { dragging = null; row.classList.remove("task-dragging"); clear(); });
-      }
-      const accepts = () => !!dragging && (dragging.project || "") !== target;
+      const drag = (item) => (event) => {
+        dragging = item; row.classList.add("task-dragging");
+        if (event.dataTransfer) { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", item.task ? "#" + item.task.id + " " + item.task.title : where(item.folder.project, item.folder.path)); }
+      };
+      if (info.task) row.addEventListener("dragstart", drag({ task: info.task }));
+      else if (place.kind === "folder" && hasFolders()) row.addEventListener("dragstart", drag({ folder: place }));
+      row.addEventListener("dragend", () => { dragging = null; row.classList.remove("task-dragging"); clear(); });
+      const accepts = () => {
+        if (!dragging) return false;
+        if (dragging.task) return (dragging.task.project || "") !== project || (hasFolders() && (dragging.task.folder || "") !== path);
+        const f = dragging.folder, parent = f.path.split("/").slice(0, -1).join("/");
+        if (f.project === project && (path === f.path || path.startsWith(f.path + "/"))) return false;  // not into itself
+        return !(f.project === project && parent === path);
+      };
       row.addEventListener("dragover", (event) => {
         if (!accepts()) return;
         event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
-        clear(); rows.find((r) => !r.task && !r.empty && r.group === info.group)?.node.classList.add("task-drop");
+        clear(); groupRows.get(place)?.classList.add("task-drop");
       });
       row.addEventListener("drop", (event) => {
         if (!accepts()) return;
-        event.preventDefault(); const task = dragging; dragging = null; clear();
-        return moveTask(task, target);
+        event.preventDefault(); const item = dragging; dragging = null; clear();
+        return item.task ? moveTask(item.task, project, path) : moveFolder(item.folder, project, path);
       });
     }
     // ------------------------------------------------------- tree behaviour
@@ -3561,7 +4015,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (r.empty) continue;
         const on = r.key === selected;
         r.node.setAttribute("aria-selected", String(on)); r.node.tabIndex = -1;
-        if (on) focusable = r.node.hidden ? r.folder : r.node;
+        if (on) focusable = r.node.hidden ? [...(r.ancestors || [])].reverse().map((g) => groupRows.get(g)).find((n) => n && !n.hidden) : r.node;
       }
       focusable ||= rows.find((r) => !r.empty && !r.node.hidden)?.node;
       if (focusable) focusable.tabIndex = 0;
@@ -3580,12 +4034,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (closed) folders[id] = true; else delete folders[id];
       UI.store.set("locus.tasks.folders", folders);
       for (const r of rows) {
-        if (r.group !== group) continue;
-        if (r.task || r.empty) { r.node.hidden = closed; continue; }
-        r.node.setAttribute("aria-expanded", String(!closed));
-        const twisty = r.node.querySelector(".task-twisty"); if (twisty) twisty.textContent = closed ? "▸" : "▾";
+        if (!r.task && !r.empty && r.group === group) {
+          r.node.setAttribute("aria-expanded", String(!closed));
+          const twisty = r.node.querySelector(".task-twisty"); if (twisty) twisty.textContent = closed ? "▸" : "▾";
+        }
+        r.node.hidden = (r.ancestors || []).some(isClosed);
       }
-      if (closed && rows.some((r) => r.task && r.group === group && r.key === selected)) choose(folderKey(group), { focus: true });
+      // A selection that just went out of sight moves to the folder that hid it.
+      if (closed && rows.some((r) => r.key === selected && r.node.hidden && (r.ancestors || []).includes(group))) choose(folderKey(group), { focus: true });
       syncSelection();
     }
     function foldAll(closed) { for (const group of groupsShown) toggle(group, closed); }
@@ -3598,11 +4054,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const task = data.tasks.find((t) => t.id === id);
       if (!task) return;
       reveal = null;
-      if (prefs.group !== "none" && folders[prefs.group + ":" + groupKey(task)]) {
-        const group = groupsShown.find((g) => g.key === groupKey(task));
-        if (group) toggle(group, false);
-      }
-      rows.find((r) => r.key === "t:" + id)?.node.scrollIntoView?.({ block: "nearest" });
+      const row = rows.find((r) => r.key === "t:" + id);
+      for (const group of row?.ancestors || []) if (isClosed(group)) toggle(group, false);
+      row?.node.scrollIntoView?.({ block: "nearest" });
     }
     function keydown(event) {
       const visible = rows.filter((r) => !r.empty && !r.node.hidden);
@@ -3618,11 +4072,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       else if (event.key === "ArrowRight" && !current.task) {
         event.preventDefault();
         if (isClosed(current.group)) toggle(current.group, false);
-        else if (visible[at + 1]?.task && visible[at + 1].group === current.group) go(visible[at + 1]);
+        else if (visible[at + 1] && (visible[at + 1].ancestors || []).includes(current.group)) go(visible[at + 1]);
       } else if (event.key === "ArrowLeft") {
         event.preventDefault();
+        const parent = (current.ancestors || []).at(-1), up = parent && rows.find((r) => !r.task && !r.empty && r.group === parent);
         if (!current.task && !isClosed(current.group)) toggle(current.group, true);
-        else if (current.task && current.folder) go(rows.find((r) => r.node === current.folder));
+        else if (up) go(up);
       } else if ((event.key === "Enter" || event.key === " ") && !current.task) { event.preventDefault(); toggle(current.group); }
       else if (event.key === "Enter" && current.task) { event.preventDefault(); detail.focus(); }
       else if (event.key === "F2" && current.task) { event.preventDefault(); edit(current.task); }
@@ -3635,7 +4090,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     function taskActions(task) {
       return [
         { label: "Coordinators", action: () => edit(task, true) },
-        { label: "Move to project…", action: () => moveDialog(task) },
+        { label: hasFolders() ? "Move to project or folder…" : "Move to project…", action: () => moveDialog(task) },
         { label: "Message lead…", action: () => opts.messageLead?.(task) },
         { label: task.archived_at ? "Unarchive" : "Archive", action: () => mutate("/archive", { id: task.id, archived: !task.archived_at }) },
         { label: "Delete…", action: async () => { if (await UI.dialog({ title: "Delete task #" + task.id + "?", body: "Delete this task and its history?", buttons: [{ label: "Cancel", value: false }, { label: "Delete", value: true, danger: true }] })) await mutate("/delete", { id: task.id }); } }
@@ -3649,17 +4104,27 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (items.length) UI.popmenu(anchor, items);
         return;
       }
-      const closed = isClosed(info.group);
-      UI.popmenu(anchor, [{ label: closed ? "Expand" : "Collapse", action: () => toggle(info.group, !closed) },
-        ...(prefs.group === "project" && canEdit ? [{ label: "New task in " + info.group.label + "…", action: () => edit() }] : [])]);
+      UI.popmenu(anchor, groupActions(info.group));
+    }
+    /** Expand or collapse, and (by project, for the owner) new task, new folder, rename or move, delete. */
+    function groupActions(group, detailPane = false) {
+      const closed = isClosed(group), canEdit = opts.canEdit() && prefs.group === "project", folder = group.kind === "folder";
+      const full = folder && holding(group).length;
+      return [
+        ...(detailPane ? [] : [{ label: closed ? "Expand" : "Collapse", action: () => toggle(group, !closed) }]),
+        ...(canEdit ? [{ label: "New task in " + group.label + "…", action: () => { choose(folderKey(group)); return edit(); } }] : []),
+        ...(canEdit && hasFolders() && group.depth < 4 ? [{ label: "New folder…", action: () => folderDialog(group, "create") }] : []),
+        ...(canEdit && hasFolders() && folder ? [{ label: "Rename or move…", action: () => folderDialog(group, "rename") },
+          { label: full ? "Delete folder (holds " + full + " task" + (full === 1 ? ")" : "s)") : "Delete folder…", disabled: !!full, action: () => deleteFolder(group) }] : []),
+      ];
     }
     // ----------------------------------------------------------- detail pane
     function drawDetail(force = false) {
       const id = selected.startsWith("t:") ? Number(selected.slice(2)) : null;
       const task = id ? data.tasks.find((t) => t.id === id) : null;
-      const group = !task && selected.startsWith("g:") ? groupsShown.find((g) => folderKey(g) === selected) : null;
+      const group = !task && selected.startsWith("g:") ? nodes.get(selected) || null : null;
       const changed = shownKey !== selected;
-      UI.update(detail, UI.signature([selected, task, group && [group.key, group.tasks], task && !matches(task), opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), history, data.projects, data.tasks_rev < 0]),
+      UI.update(detail, UI.signature([selected, task, group && [group.key, group.all, group.children.map((c) => c.key)], task && !matches(task), opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), history, data.projects, data.folders || null, data.tasks_rev < 0]),
         () => detail.replaceChildren(el("div", { class: "task-detail-inner" }, ...(task ? taskDetail(task) : group ? groupDetail(group) : emptyDetail()))),
         { force: force || changed, editRoot: root });
       if (changed) { detail.scrollTop = 0; shownKey = selected; }
@@ -3693,7 +4158,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       chip.classList.add("task-state", "task-" + task.status);
       out.push(el("div", { class: "task-detail-topline" }, chip, badge("#" + task.id),
         task.priority !== "normal" ? badge({ urgent: "!! urgent", high: "! high", low: "↓ low" }[task.priority], "task-priority priority-" + task.priority) : null,
-        task.project ? badge(task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : badge("No project", "task-unassigned"),
+        task.project ? badge(task.folder ? crumb(task) : task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : badge(task.folder ? crumb(task) : "No project", "task-unassigned"),
         progress(task), task.archived_at ? badge("Archived") : null));
       out.push(el("h3", { class: "task-detail-title" }, task.title));
       if (task.id === pinned && !matches(task)) out.push(el("p", { class: "task-hidden-note" }, "Kept in view while selected; it no longer matches the current filters. ",
@@ -3706,7 +4171,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           "task-fact-wide" + (task.coordinators.length ? "" : " task-fact-warn")),
         fact("State", [el("span", { class: "task-state-pill task-" + task.status }, labels[task.status]), since ? el("span", { class: "task-fact-sub" }, since) : null]),
         fact("Last activity", [agoNode(act.ts, true), sub([act.by, act.what].filter(Boolean).join(" · "))], "", opts.stamp(act.ts)),
-        fact("Project", [task.project || "No project", sub(task.project && !task.project_known ? "not a watched repository" : "")]),
+        fact(task.folder ? "Project › folder" : "Project", [task.folder ? crumb(task) : task.project || "No project", sub(task.project && !task.project_known ? "not a watched repository" : "")]),
         fact("Priority", task.priority, task.priority === "urgent" || task.priority === "high" ? "task-fact-warn" : ""),
         fact("Due", task.due ? [task.due, sub(task.flags.overdue ? "overdue" : task.flags.due_today ? "today" : "")] : "—", task.flags.overdue ? "task-fact-warn" : ""),
         task.progress ? fact("Plan", task.progress.done + " of " + task.progress.total + " steps") : null,
@@ -3744,26 +4209,32 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       return out;
     }
     function groupDetail(group) {
-      const byProject = prefs.group === "project", known = byProject && data.projects.includes(group.key);
-      const people = [...new Set(group.tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
-      const latest = group.tasks.map((t) => ({ task: t, ...lastActivity(t) })).sort((a, b) => time(b.ts) - time(a.ts))[0];
+      const byProject = prefs.group === "project", folder = group.kind === "folder", known = byProject && data.projects.includes(group.project);
+      const tasks = group.all;
+      const people = [...new Set(tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
+      const latest = tasks.map((t) => ({ task: t, ...lastActivity(t) })).sort((a, b) => time(b.ts) - time(a.ts))[0];
       const closed = isClosed(group), out = [];
       out.push(el("div", { class: "task-detail-topline" },
-        el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.key)) : "task-" + group.key), "aria-hidden": "true" }),
-        badge(byProject ? (group.key === NONE ? "No project" : known ? "Watched repository" : "Not a watched repository") : "Status group")));
+        el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.project || group.key)) : "task-" + group.key), "aria-hidden": "true" }),
+        badge(folder ? "Folder in " + where(group.project, group.path.split("/").slice(0, -1).join("/")) : byProject ? (group.key === NONE ? "No project" : known ? "Watched repository" : "Not a watched repository") : "Status group")));
       out.push(el("h3", { class: "task-detail-title" }, group.label));
       out.push(el("dl", { class: "task-facts" },
-        ...order.map((s) => fact(labels[s], el("span", { class: "task-count-pill task-" + s }, String(group.tasks.filter((t) => t.status === s).length)))),
+        ...order.map((s) => fact(labels[s], el("span", { class: "task-count-pill task-" + s }, String(tasks.filter((t) => t.status === s).length)))),
         fact("Last activity", latest ? [agoNode(latest.ts, true), sub("#" + latest.task.id + " · " + [latest.by, latest.what].filter(Boolean).join(" · "))] : "—", "", latest ? opts.stamp(latest.ts) : ""),
-        fact("People", people.length ? people.map((name) => person({ agent: name, role: group.tasks.some((t) => t.coordinators.some((a) => a.agent === name && a.role === "lead")) ? "lead" : "helper" })) : "Nobody assigned", people.length ? "task-fact-wide" : "")));
-      const actions = el("div", { class: "task-actions" }, button(closed ? "Expand" : "Collapse", () => { toggle(group, !closed); drawDetail(true); }));
-      if (byProject && opts.canEdit()) { const create = button("+ Task here", () => edit(), "Add a task to " + group.label); create.classList.add("primary"); actions.prepend(create); }
+        group.children.length ? fact("Folders", group.children.map((c) => c.label).join(", "), "task-fact-wide") : null,
+        fact("People", people.length ? people.map((name) => person({ agent: name, role: tasks.some((t) => t.coordinators.some((a) => a.agent === name && a.role === "lead")) ? "lead" : "helper" })) : "Nobody assigned", people.length ? "task-fact-wide" : "")));
+      const actions = el("div", { class: "task-actions" });
+      if (byProject && opts.canEdit()) {
+        const create = button("+ Task here", () => edit(), "Add a task to " + group.label); create.classList.add("primary"); actions.append(create);
+        for (const item of groupActions(group, true).slice(1)) { const b = button(item.label, item.action); b.disabled = !!item.disabled; actions.append(b); }
+      }
+      actions.append(button(closed ? "Expand" : "Collapse", () => { toggle(group, !closed); drawDetail(true); }));
       out.push(actions);
-      out.push(el("h4", {}, group.tasks.length + (group.tasks.length === 1 ? " task" : " tasks") + " shown"));
-      out.push(el("div", { class: "task-overview" }, ...group.tasks.map((t) => {
+      out.push(el("h4", {}, tasks.length + (tasks.length === 1 ? " task" : " tasks") + " shown" + (group.children.length ? " here and in its folders" : "")));
+      out.push(el("div", { class: "task-overview" }, ...tasks.map((t) => {
         const act = lastActivity(t);
-        return el("button", { class: "task-overview-item task-" + t.status, type: "button", title: summaryText(t),
-          onclick: () => { if (closed) toggle(group, false); choose("t:" + t.id, { focus: true }); } },
+        return el("button", { class: "task-overview-item task-" + t.status, type: "button", title: [summaryText(t), t.folder ? crumb(t) : ""].filter(Boolean).join("\n"),
+          onclick: () => { reveal = t.id; render(); choose("t:" + t.id, { focus: true }); } },
           el("span", { class: "task-dot", "aria-hidden": "true" }), el("span", { class: "task-row-id" }, "#" + t.id), el("span", { class: "task-row-title" }, t.title),
           el("span", { class: "task-state-pill task-" + t.status }, shortLabels[t.status]), el("span", { class: "task-assign-name" }, leadOf(t) || "unassigned"), agoNode(act.ts));
       })));
@@ -3783,7 +4254,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       tasks: () => data.tasks.filter((t) => !t.archived_at),
       agentTasks: (name) => data.tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((a) => a.agent === name)) };
   }
-  window.LocusTasks = { mount, labels, shortLabels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText, ago, describe, lastActivity, ageDays };
+  window.LocusTasks = { mount, labels, shortLabels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText, ago, describe, lastActivity, ageDays, where };
 })();
 </script>
 <script>/* ---- taskcards.js ---- */
@@ -3820,7 +4291,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     };
     async function detail(task) {
       const body = el("div", { class: T.classes(task) }, T.stateChip(task),
-        task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) }, task.project) : null,
+        task.project || task.folder ? el("span", { class: "task-badge " + T.projectClass(task.project) }, T.where(task.project, task.folder)) : null,
         coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
         task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
         T.markdown(task.notes), el("p", { class: "muted small" }, "Updated " + new Date(task.updated_at).toLocaleString()),
@@ -3861,7 +4332,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
             active ? el("span", {class:"task-live-dot task-pulse",title:"A coordinator is active"}) : null, T.stateChip(task),
             task.created_by === "owner" ? icon("owner") : null, title,
             task.priority !== "normal" ? el("span", { class: "task-badge task-priority priority-" + task.priority }, {urgent:"!!",high:"!",low:"↓"}[task.priority]) : null,
-            task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) + (task.project_known ? "" : " task-project-unknown") }, task.project) : null,
+            task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) + (task.project_known ? "" : " task-project-unknown"), title: T.where(task.project, task.folder) }, task.folder ? T.where(task.project, task.folder) : task.project) : null,
             task.due && !task.flags?.overdue && !task.flags?.due_today ? el("span",{class:"task-badge"},"due "+task.due) : null,
             ...Object.entries(task.flags || {}).filter(([, v]) => v).map(([k]) => el("span", { class: "task-badge task-" + k }, k.replace(/_/g, " ")))),
             task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
@@ -4519,7 +4990,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const points = all.filter((p) => !hidden.has(p.name));
       host.classList.add("agent-chart");
       if (!all.length) { host.replaceChildren(el("p", { class: "note" }, opts.empty || "No readings in this window.")); return; }
-      const W = Math.max(280, host.clientWidth || 600), H = 205, L = 43, R = 18, T = 18, B = 39;
+      const W = Math.max(240, host.clientWidth || 600), H = 205, L = 43, R = 18, T = 18, B = 39;
       const min = number(opts.minX) ? opts.minX : Math.min(...all.map((p) => p.x));
       const max = Math.max(min + 1, number(opts.maxX) ? opts.maxX : Math.max(...all.map((p) => p.x)));
       const top = opts.maxY || 100;
@@ -4601,7 +5072,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const draw = () => {
       host.classList.add("agent-chart");
       if (!buckets.length) { host.replaceChildren(el("p", { class: "note" }, "No attribution readings in this window.")); return; }
-      const W = Math.max(280, host.clientWidth || 600), H = 195, L = 43, B = 34, T = 15;
+      const W = Math.max(240, host.clientWidth || 600), H = 195, L = 43, B = 34, T = 15;
       const sums = buckets.map((b) => Object.entries(b.by_agent || {}).reduce((sum, [n, v]) => sum + (!hidden.has(n) && number(v) ? Math.max(0, v) : 0), 0));
       const max = Math.max(1, ...sums);
       const starts = buckets.map((b) => Date.parse(b.start)), ends = buckets.map((b) => Date.parse(b.end));
@@ -5149,20 +5620,44 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (state.view === "map") renderMap();
     $("phoneRefresh").disabled = false;
   }
+  const agentsView = () => (UI.store.get("locus.phone.agents.view", "grid") === "list" ? "list" : "grid");
+  /** Team roles from the snapshot's rules: "Team · role → whom it reports to". */
+  function teamChips(snap, name) {
+    return Object.entries(snap?.rules?.teams || {}).flatMap(([team, t]) => list(t.members).filter((m) => m.agent === name).map((m) =>
+      el("span", { class: "phone-team-chip", title: "Team " + team }, team + (m.role ? " · " + m.role : "") + (m.reports_to ? " → " + m.reports_to : ""))));
+  }
   function renderAgents() {
-    return UI.update($("phoneAgents"), UI.signature([state.snapshot.agents, state.snapshot.usage, state.snapshot.rules, state.snapshot.icons]), drawAgents);
+    return UI.update($("phoneAgents"), UI.signature([state.snapshot.agents, state.snapshot.usage, state.snapshot.rules, state.snapshot.icons, agentsView()]), drawAgents);
   }
   function drawAgents() {
     const snapshot = state.snapshot, usage = snapshot.usage || {};
     const rank = { waiting: 0, doorbell: 0, working: 1, active: 1, idle: 2, away: 3 };
     const agentState = (a) => AgentMap.agentState(a, (usage.agents || {})[a.name]);
     const agents = [...snapshot.agents].sort((a, b) => rank[agentState(a).key] - rank[agentState(b).key] || a.name.localeCompare(b.name));
-    $("phoneAgents").replaceChildren(...agents.map((a) => {
+    const view = agentsView();
+    const switcher = el("div", { class: "phone-filter-row phone-view-switch", role: "group", "aria-label": "Agent view" }, ...[["grid", "Grid"], ["list", "List"]].map(([value, label]) =>
+      el("button", { class: "phone-chip", type: "button", "aria-pressed": String(view === value), onclick: () => { UI.store.set("locus.phone.agents.view", value); renderAgents(); } }, label)));
+    if (view === "grid") {
+      $("phoneAgents").replaceChildren(switcher, el("div", { class: "phone-agent-grid" }, agents.map((a) => {
+        const status = agentState(a), lead = leadOf(snapshot, a.name), role = snapshot.rules?.roles?.[a.name];
+        return el("button", { class: "phone-tile st-" + status.key, type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) },
+          el("span", { class: "phone-tile-top" }, window.PixelIcon?.img(a.name, { size: 32 }) || null, el("span", { class: "phone-state st-" + status.key }, status.label)),
+          el("b", { class: "phone-tile-name" }, a.name),
+          el("span", { class: "phone-tile-meta" }, pill(a.kind), lead !== undefined ? el("span", { class: "phone-pill lead-badge" }, lead ? "lead · " + lead : "lead") : null, role ? el("span", { class: "phone-hint" }, role) : null),
+          el("span", { class: "phone-tile-teams" }, teamChips(snapshot, a.name)),
+          el("span", { class: "phone-tile-status" }, a.status || "No status set"),
+          el("span", { class: "phone-meta" }, (a.unread || 0) + " unread · seen ", ageNode(a.last_seen)));
+      })));
+      if (!agents.length) $("phoneAgents").append(empty("No agents registered yet."));
+      return;
+    }
+    $("phoneAgents").replaceChildren(switcher, ...agents.map((a) => {
       const u = (usage.agents || {})[a.name] || {}, context = u.context || {};
       const status = AgentMap.agentState(a, u);
       const card = el("article", { class: "phone-card phone-agent st-" + status.key },
         el("div", { class: "phone-card-head repo-head" }, el("h3", { title: snapshot.rules?.roles?.[a.name] || "" }, el("button", { class: "phone-agent-open", type: "button", "aria-label": "View messages for " + a.name, onclick: () => filterAgent(a.name) }, icon(a.name), a.name)), leadOf(snapshot, a.name) !== undefined ? el("span", { class: "phone-pill lead-badge", title: snapshot.rules?.roles?.[a.name] || "Project lead" }, leadOf(snapshot, a.name) ? "lead · " + leadOf(snapshot, a.name) : "lead") : null, pill(a.kind), el("span", { class: "phone-state st-" + status.key }, status.label)),
         el("p", { class: "phone-agent-status" }, a.status || "No status set"),
+        teamChips(snapshot, a.name).length ? el("p", { class: "phone-tile-teams" }, teamChips(snapshot, a.name)) : null,
         el("p", { class: "phone-meta" }, "Seen ", ageNode(a.last_seen), " · " + (a.unread || 0) + " unread · " + (a.unacked || 0) + " unacked"),
         a.workdir ? el("p", { class: "phone-meta mono", title: a.workdir }, a.workdir.replace(/[\\/]+$/, "").split(/[\\/]/).pop() || a.workdir) : null,
         metric("Context", context.used_percent),
@@ -5587,7 +6082,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     } catch (err) {
       if (epoch === state.epoch) {
         if (["AUTH", "BAD_KEY", "KEY_CHANGED"].includes(err && err.code)) await handleError(err);
-        else notice("phoneSendError", errorText(err) + " Delivery is not confirmed; check the timeline before retrying.", "error");
+        else notice("phoneSendError", errorText(err) + " Delivery is not confirmed; check Messages before retrying.", "error");
       }
     } finally { message.code = ""; state.sending = false; $("phoneSend").textContent = "Send encrypted message"; if (state.snapshot) renderCompose(); }
   }
@@ -5604,10 +6099,23 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (decision) { await disconnect(); state.fixture = false; $("setupRepo").value = ""; $("setupRepo").focus(); }
     });
     const tabs = [...$("phoneTabs").querySelectorAll("[data-view]")];
-    tabs.forEach((tab, index) => {
+    // The tabs keep the order this phone saved; press and hold a tab, then drag it, to change it.
+    const orderTabs = () => {
+      const byView = new Map(tabs.map((t) => [t.dataset.view, t]));
+      for (const view of UI.ordered(tabs.map((t) => t.dataset.view), UI.store.get("locus.phone.tabs", null))) $("phoneTabs").append(byView.get(view));
+    };
+    for (const tab of tabs) tab.dataset.dragId = tab.dataset.view;
+    orderTabs();
+    UI.reorder([$("phoneTabs")], { axis: "x", onMove: ({ id, index }) => {
+      const nav = $("phoneTabs"), tab = tabs.find((t) => t.dataset.view === id), rest = [...nav.children].filter((n) => n.dataset.dragId !== undefined && n !== tab);
+      nav.insertBefore(tab, rest[index] || null);
+      UI.store.set("locus.phone.tabs", [...nav.children].filter((n) => n.dataset.dragId !== undefined).map((n) => n.dataset.dragId));
+    } });
+    $("phoneResetTabs").addEventListener("click", () => { UI.store.set("locus.phone.tabs", null); orderTabs(); $("phoneMenu").open = false; UI.toast("Tab order reset"); });
+    tabs.forEach((tab) => {
       tab.addEventListener("click", () => showView(tab.dataset.view));
       tab.addEventListener("keydown", (event) => {
-        const visible = tabs.filter((item) => !item.hidden), index = visible.indexOf(tab);
+        const visible = [...$("phoneTabs").querySelectorAll("[data-view]")].filter((item) => !item.hidden), index = visible.indexOf(tab);
         let target = null;
         if (event.key === "ArrowRight") target = (index + 1) % visible.length;
         else if (event.key === "ArrowLeft") target = (index - 1 + visible.length) % visible.length;
