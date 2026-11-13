@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-KsK/rHx7x0wkhbGsq6Gq431Lt/J6b90xrur6obMEiSo=' 'sha256-2INHxx7XxtTDFt1We3oUdpngOSzEj6gmDLeZnYvA28w=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-HKagPQunZjj9IYhiC2kztEyhwuIUNOtt+J0UtfMmmrI=' 'sha256-II0sKDFV+8SM1AIxrTU+5RxATPCYwT3JFbQ7uZKaO4Y=' 'sha256-fITXQoB0AW+5V653sbnw6M5IDyrVuIuoLKoTMd12FwA=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-QESUtJ8rw+/4li1bZb8KMSxF0H3/+IxqySsGO3iJZKY=' 'sha256-163Mvf+vtBaTetDlYklt6BlVKFckJSU9yhtQPJPrp2A=' 'sha256-nWHYVPqje0ic7ZFM5SiApBDjSfIZ3RqYjB47NyW/YVQ='; style-src 'sha256-oUh3Bc0ZanruXxRD6gMdJ+Io5i6G46leUm9oD+l0GMQ='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'sha256-opJzzwm/w7wk7JMbgNZLkguGwg0fLYGUyBeVTj2wkKg=' 'sha256-nltQvvgwai4TaB82B+MFMJqXNkIxL8a001jcYaezHik=' 'sha256-Mxvs9MVlLrC92JyXldWHEPAas8THbGfM9KlyDOH9v7o=' 'sha256-zBYd/oX2TwuyvDqRb1qEg2KY4PKP/x07jNCveSp82fg=' 'sha256-5IurVsGu+nlRbmZue67qr+fD6FrWv6ot6z2Ji5Ag99U=' 'sha256-m+erfAR+BLJ1MWY/D6szSHtOrdPvlm8EjL/f5SlYTWs=' 'sha256-JbLroiLu+eBEquSCGDqAj9CF9RXlmhwQolQ+fPnv+E0=' 'sha256-QESUtJ8rw+/4li1bZb8KMSxF0H3/+IxqySsGO3iJZKY=' 'sha256-NAKTtXPpeu0rVxi7fvKsd7BJiH7ZzcQghJx0cXVw02k=' 'sha256-r62zCC8DI9I/ak9cRYk1HHoi6Q1dWpxUDwTDo+LBYQA='; style-src 'sha256-2dCeriYAS4Ezl0scxFacjyWiVnWpoGdig8UVDnasyEA='; connect-src https://api.github.com; img-src data:; font-src 'none'; manifest-src 'none'; base-uri 'none'; form-action 'none'">
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light dark">
@@ -327,6 +327,22 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .owner-card .btn { margin-top: 4px; }
 .agent-top { display: flex; align-items: center; gap: 6px; min-width: 0; }
 .agent-top b { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Keep identity and metadata in the fold header, including when collapsed. */
+.agent.fold-card > .agent-top {
+  display: grid;
+  grid-template-columns: auto auto auto minmax(0, 1fr);
+}
+.agent-top .agent-name {
+  min-width: 0; white-space: normal; overflow-wrap: anywhere;
+  overflow: visible; text-overflow: clip;
+}
+.agent-meta {
+  grid-column: 1 / -1; display: flex; flex-wrap: wrap;
+  align-items: center; gap: 4px 10px; min-width: 0;
+}
+.agent-meta > * { flex: 0 0 auto; max-width: 100%; }
+.agent-meta .lead-badge { white-space: normal; overflow-wrap: anywhere; }
+.agent-meta .agent-profile-link { margin-left: 0; }
 .agent-status { margin-top: 2px; color: var(--text); overflow-wrap: anywhere; }
 .agent-status.empty { color: var(--faint); }
 .agent-sub { color: var(--faint); font-size: 11.5px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -398,7 +414,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .pane-head > [data-collapse] { flex: 0 0 auto; }
 .rtabs .tab-short { display: none; }
 .pane.right .pane-head { container: rhead / inline-size; }
-@container rhead (max-width: 300px) {
+@container rhead (max-width: 420px) {
   .rtabs [role="tab"] { padding-left: 6px; padding-right: 6px; }
   .rtabs .tab-long { display: none; }
   .rtabs .tab-short { display: inline; }
@@ -408,8 +424,9 @@ button, input, select, textarea { font: inherit; color: inherit; }
 .rpanels { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; overflow: auto; }
 .rpanel { padding: 8px 10px 12px; flex: 0 0 auto; }
 /* The Tasks panel fills the pane so its tree and detail pane scroll on their own. */
-#panelTasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+#panelTasks, #panelActive { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
 #tasks { flex: 1 1 auto; min-height: 0; display: flex; flex-direction: column; }
+#active { flex: 1 1 auto; min-height: 0; overflow: auto; }
 .panel-tools { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; flex-wrap: wrap; }
 .rtabs .rtab-n { background: var(--accent); color: #fff; border-radius: 9px; font-size: 10.5px; padding: 0 5px; margin-left: 4px; font-weight: 600; }
 .tab-drop-hint { align-self: center; padding: 4px 10px; border: 1px dashed var(--border-strong); border-radius: 6px; color: var(--faint); font-size: 12px; white-space: nowrap; }
@@ -417,7 +434,7 @@ button, input, select, textarea { font: inherit; color: inherit; }
 
 /* Views placed in the other area (View → tab menu, or drag a tab onto the other tab bar). */
 .pane.center > .rpanel { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 10px 14px 14px; }
-.pane.center > #panelTasks { overflow: hidden; }
+.pane.center > #panelTasks, .pane.center > #panelActive { overflow: hidden; }
 .rpanels > .mapview, .rpanels > .logsview, .rpanels > .rulesview, .rpanels > .profilesview { flex: 1 1 auto; min-height: 0; }
 .rpanels > .mapview { min-height: 260px; }
 .rpanels > .rulesview { padding: 10px; }
@@ -449,6 +466,8 @@ body.reordering, body.reordering * { cursor: grabbing !important; -webkit-user-s
 }
 .filters input[type="search"] { flex: 0 1 200px; }
 .filters input:disabled { opacity: 0.6; }
+.message-follow { display: inline-flex; align-items: center; gap: 5px; white-space: nowrap; cursor: pointer; }
+.filters .message-follow input { margin: 0; padding: 0; accent-color: var(--accent); }
 input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px solid var(--accent); outline-offset: -1px; }
 .filter-chips { display: flex; gap: 5px; flex-wrap: wrap; padding: 5px 12px; border-bottom: 1px solid var(--border); background: var(--panel); flex: 0 0 auto; }
 .fchip { display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--accent); background: var(--accent-bg); color: var(--accent); border-radius: 12px; padding: 0 4px 0 9px; font-size: 11.5px; cursor: pointer; }
@@ -464,6 +483,7 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px s
 .day-sep:first-child { margin-top: 2px; }
 
 .msg {
+  content-visibility: auto; contain-intrinsic-size: auto 180px;
   background: var(--panel); border: 1px solid var(--border); border-left: 3px solid var(--border-strong);
   border-radius: 6px; padding: 6px 10px 8px; margin-bottom: 7px; box-shadow: var(--shadow);
 }
@@ -471,7 +491,8 @@ input:focus, select:focus, textarea:focus, button:focus-visible { outline: 2px s
 .msg.auth-hub { border-left-color: var(--hub); background: var(--panel-2); }
 .msg.to-owner { border-left-color: var(--accent); }
 .msg.fresh { animation: fresh 2.4s ease-out; }
-.msg:target, .msg.flash { outline: 2px solid var(--accent); }
+.msg:target, .msg.flash { outline: 2px solid var(--accent); content-visibility: visible; }
+.msg.collapsed { contain-intrinsic-size: auto 44px; content-visibility: visible; }
 @keyframes fresh { from { background: var(--fresh); } to { background: var(--panel); } }
 
 .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12px; color: var(--muted); }
@@ -964,6 +985,8 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .rules-section-body > .note:first-child { margin-top: 0; }
 .rules-choice { display: flex; gap: 4px; min-width: 0; }
 .rules-choice > select, .rules-choice > input { min-width: 0; flex: 1 1 auto; }
+.rules-rigor-modes { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr)); gap: 10px; margin-bottom: 10px; }
+.rules-rigor-mode { min-width: 0; display: grid; gap: 6px; border: 1px solid var(--border); }
 /* Projects: one row each. */
 .rules-ptable { display: grid; grid-template-columns: minmax(140px, 1.1fr) minmax(150px, 1.3fr) minmax(96px, .6fr) minmax(150px, 2fr) auto; gap: 5px 8px; align-items: center; }
 .rules-phead, .rules-prow { display: contents; }
@@ -1140,6 +1163,35 @@ kbd { font-family: inherit; font-size: 11.5px; border: 1px solid var(--border-st
 .unread.not-listening-count { color: var(--warn); }
 .pres-doorbell .dot { background: var(--accent); box-shadow: 0 0 0 3px var(--accent-bg); }
 
+/* Room shapes are the same generated geometry used on the sticks. */
+.room-entry { display: flex; align-items: center; gap: 5px; margin: 3px 0; min-width: 0; }
+.room-entry > button:first-child { flex: 1; min-width: 0; text-align: left; overflow: hidden; text-overflow: ellipsis; }
+.room-symbol { display: inline-block; width: 16px; height: 16px; vertical-align: middle; background: var(--room-colour, var(--accent)); mask-size: contain; mask-repeat: no-repeat; image-rendering: pixelated; }
+.room-s00 { mask-image: url("/symbols/room-s00.svg"); }
+.room-s01 { mask-image: url("/symbols/room-s01.svg"); }
+.room-s02 { mask-image: url("/symbols/room-s02.svg"); }
+.room-s03 { mask-image: url("/symbols/room-s03.svg"); }
+.room-s04 { mask-image: url("/symbols/room-s04.svg"); }
+.room-s05 { mask-image: url("/symbols/room-s05.svg"); }
+.room-s06 { mask-image: url("/symbols/room-s06.svg"); }
+.room-s07 { mask-image: url("/symbols/room-s07.svg"); }
+.room-s08 { mask-image: url("/symbols/room-s08.svg"); }
+.room-s09 { mask-image: url("/symbols/room-s09.svg"); }
+.room-s10 { mask-image: url("/symbols/room-s10.svg"); }
+.room-s11 { mask-image: url("/symbols/room-s11.svg"); }
+.room-s12 { mask-image: url("/symbols/room-s12.svg"); }
+.room-s13 { mask-image: url("/symbols/room-s13.svg"); }
+.room-s14 { mask-image: url("/symbols/room-s14.svg"); }
+.room-s15 { mask-image: url("/symbols/room-s15.svg"); }
+.room-c0 { --room-colour: #00ffff; }
+.room-c1 { --room-colour: #4da7ff; }
+.room-c2 { --room-colour: #00ff00; }
+.room-c3 { --room-colour: #ffa500; }
+.room-c4 { --room-colour: #ff0000; }
+.room-c5 { --room-colour: #b5a7ff; }
+.room-c6 { --room-colour: #00beA5; }
+.room-c7 { --room-colour: #e7fbff; }
+
 /* ---- pixelicon.css ---- */
 /* Locus pixel icons: the small identifier tiles, and the owner's icon editor
  * (inspired by RetroWeb's Pixel Icon Generator). Icons sit on the same dark
@@ -1308,6 +1360,13 @@ button.task-badge { cursor: pointer; }
 .task-history p { font-size: 11px; color: var(--muted); overflow-wrap: anywhere; }
 .task-editor { display: grid; gap: 8px; min-width: 0; }
 .task-editor > label { display: grid; gap: 4px; }
+.task-editor .task-segment { flex-wrap: wrap; }
+.task-rigor { color: var(--rigor-color, var(--muted)); background: var(--rigor-bg, var(--panel-2)); }
+.task-badge.task-rigor[class*=" rigor-"] { border-color: var(--rigor-color); }
+.task-badge.task-rigor.rigor-inherited { border-style: dashed; }
+.task-rigor-rules { margin: 10px 0; font-size: 12px; }
+.task-rigor-rules > summary { cursor: pointer; }
+.task-rigor-rules p { white-space: pre-wrap; overflow-wrap: anywhere; }
 .task-editor input:not([type="checkbox"]), .task-editor textarea, .task-editor select { width: 100%; min-width: 0; }
 .task-coordinator-pick { display: flex; gap: 8px; align-items: center; justify-content: space-between; }
 .task-coordinator-pick label { display: flex; align-items: center; gap: 4px; min-width: 0; overflow-wrap: anywhere; }
@@ -1342,22 +1401,24 @@ button.task-badge { cursor: pointer; }
 .task-tool-row { display: flex; align-items: center; gap: 5px; min-width: 0; height: 26px; }
 .task-tool-row > input { flex: 1 1 0; width: 0; min-width: 40px; height: 26px; }
 .task-tool-row > button { flex: 0 0 auto; height: 26px; padding: 3px 7px; white-space: nowrap; }
-.task-tools-compact .task-state-filters { display: flex; flex-wrap: nowrap; gap: 0; overflow: hidden; min-width: 0; width: 100%; height: 26px; }
-.task-tools-compact .task-filter { font-size: 11px; line-height: 18px; padding: 1px 4px; white-space: nowrap; border-radius: 0; border-right-width: 0; flex: 1 1 auto; min-width: 0; }
-.task-label-short { display: none; }
-@container (max-width: 420px) {
-  .task-label-full { display: none; }
-  .task-label-short { display: inline; }
-  .task-tools-compact .task-filter { font-size: 10px; padding: 1px 3px; }
-}
-.task-tools-compact .task-filter:first-child { border-radius: 4px 0 0 4px; }
-.task-tools-compact .task-filter:last-child { border-radius: 0 4px 4px 0; border-right-width: 1px; }
+/* One filter (rooms.md RD-23): its button names the choice and count; long names shorten before the search box does. */
+.task-tool-row > .task-choice { flex: 0 1 auto; min-width: 0; max-width: 45%; overflow: hidden; text-overflow: ellipsis; }
 .task-zero { opacity: .6; }
 .task-filter[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 -2px var(--accent); opacity: 1; }
-.task-filter-form { display: grid; gap: 10px; padding: 7px; width: 250px; max-width: 100%; }
-.task-filter-form > label, .task-editor-more > label { display: grid; gap: 4px; font-size: 12px; }
-.task-filter-form select { width: 100%; }
-.task-filter-form .task-check { display: flex; }
+.task-editor-more > label { display: grid; gap: 4px; font-size: 12px; }
+/* Done (RD-22): where the task lived, who closed it and the closure note, then Restore in the State column. */
+.task-done-meta { flex: 1 1 0; min-width: 0; margin-left: 6px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--muted); font-size: 11px; }
+.task-restore { height: 20px; padding: 0 8px; font-size: 11px; line-height: 18px; }
+/* Tidy (rooms.md 8): one checkbox per candidate, its reason under the name. */
+.task-tidy { display: grid; gap: 6px; max-height: min(60vh, 560px); overflow: auto; }
+.task-tidy-head { margin: 8px 0 2px; font-size: 12px; }
+.task-tidy-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
+.task-tidy-item { display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: center; padding: 4px 6px; border: 1px solid var(--border); border-radius: 4px; }
+.task-tidy-item > label { display: flex; gap: 6px; align-items: center; min-width: 0; }
+.task-tidy-item input[type="checkbox"] { flex: 0 0 auto; width: auto; min-width: 0; margin: 0; }
+.task-tidy-title { flex: 1 1 auto; min-width: 0; text-align: left; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-tidy-why { grid-column: 1; padding-left: 22px; overflow-wrap: anywhere; }
+.task-tidy-item > .btn { grid-column: 2; grid-row: 1 / span 2; }
 .task-segment { display: flex; flex-wrap: wrap; }
 .task-segment > button { flex: 1 1 auto; font-size: 12px; }
 .task-count { margin: 2px 0 6px; }
@@ -1419,22 +1480,87 @@ button.task-badge { cursor: pointer; }
 .task-split:hover::after, .task-split.dragging::after, .task-split:focus-visible::after { background: var(--accent); }
 
 .task-tree { container: tasktree / inline-size; display: flex; flex-direction: column; min-width: 0; min-height: 0; }
-.task-tree-head, .task-row { display: grid; grid-template-columns: minmax(0, 1fr) 84px 128px 48px; column-gap: 6px; align-items: center; padding: 0 8px 0 4px; }
+.task-activity-filter[aria-pressed="true"] { outline: 2px solid var(--accent); outline-offset: 1px; }
+.task-activity-badge, .task-mark.task-activity-badge { flex: 0 0 auto; color: var(--task-blue); background: var(--task-blue-bg); border-color: var(--task-blue); white-space: nowrap; font-size: 10px; line-height: 14px; padding: 0 5px; border-radius: 8px; }
+.task-row.task-active-now { box-shadow: inset 3px 0 var(--task-blue); }
+.task-leaf.task-active-now .task-dot { background: var(--task-blue); box-shadow: 0 0 0 2px var(--task-blue-bg); }
+.task-activity-detail { margin: 8px 0; border-left: 3px solid var(--task-blue); background: var(--task-blue-bg); padding: 7px 10px; font-size: 12px; }
+.task-activity-detail p { margin: 4px 0; overflow-wrap: anywhere; }
+/* Active is a full-height view, sharing activity data with the Tasks tree. */
+.active-dashboard { min-width: 0; padding-right: 3px; overflow-wrap: anywhere; font-size: 12px; }
+.active-heading { padding: 4px 2px 10px; }
+.active-heading h2 { margin: 0 0 7px; font-size: 17px; color: var(--text); }
+.active-counts, .active-card-meta, .active-agent-head, .active-assignees, .active-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.active-counts { margin: 0 0 6px; }
+.active-meta, .active-source, .active-explainer { color: var(--muted); font-size: 11px; line-height: 1.5; margin: 5px 0 0; }
+.active-cards { display: grid; gap: 12px; }
+.active-task, .active-unlinked { min-width: 0; border: 1px solid var(--border); border-radius: 7px; padding: 12px; background: var(--panel); }
+.active-task { border-top: 3px solid var(--task-color); }
+.active-task h3 { margin: 9px 0; font-size: 14px; }
+.active-task-title.btn { padding: 0; border: 0; background: transparent; color: var(--text); text-align: left; white-space: normal; overflow-wrap: anywhere; font-size: inherit; font-weight: 600; line-height: 1.45; }
+.active-task-title.btn:hover { color: var(--accent); text-decoration: underline; }
+.active-summary, .active-note, .active-status { margin: 7px 0; line-height: 1.5; white-space: pre-wrap; }
+.active-note { padding: 8px; background: var(--panel-2); border-radius: 4px; }
+.active-task.task-blocked .active-note { color: var(--task-red); }
+.active-facts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin: 12px 0; }
+.active-facts dt { color: var(--muted); font-size: 10.5px; margin-bottom: 4px; }
+.active-facts dd { margin: 0; line-height: 1.5; }
+.active-facts .task-progress { max-width: 100%; flex-wrap: wrap; }
+.active-fact-detail { display: block; color: var(--muted); font-size: 11px; }
+.active-workers { border-top: 1px solid var(--border); }
+.active-agent { padding: 10px 0; }
+.active-agent + .active-agent { border-top: 1px solid var(--border); }
+.active-agent-head b { min-width: 0; overflow-wrap: anywhere; }
+.active-source { font-size: 10.5px; }
+.active-history { border-top: 1px solid var(--border); padding-top: 8px; margin-bottom: 10px; }
+.active-history summary { cursor: pointer; color: var(--muted); }
+.active-history ol { margin: 8px 0; padding-left: 20px; }
+.active-history li { margin: 7px 0; }
+.active-history p { margin: 0 0 3px; }
+.active-history .active-age { color: var(--muted); font-size: 11px; }
+.active-unlinked h3, .active-empty h3 { margin: 0 0 6px; font-size: 13px; }
+.active-empty { padding: 16px 10px; background: var(--panel-2); border-radius: 6px; line-height: 1.5; }
+.active-explainer { margin: 14px 2px 4px; }
+.task-tree-head, .task-row { display: grid; grid-template-columns: var(--task-hide-name, var(--task-col-name, minmax(0, 1fr))) var(--task-hide-state, var(--task-col-state, 84px)) var(--task-hide-rigor, var(--task-col-rigor, 108px)) var(--task-hide-assign, var(--task-col-assign, 128px)) var(--task-hide-updated, var(--task-col-updated, 48px)); column-gap: 6px; align-items: center; padding: 0 8px 0 4px; }
+/* Keep grid positions stable when a column is hidden, including folder rows. */
+.task-col-wrap { min-width: 0; position: relative; height: 100%; }
+.task-col-wrap .task-col { width: 100%; height: 100%; }
+.task-col-resize { position: absolute; right: -3px; top: 0; bottom: 0; width: 8px; z-index: 2; cursor: col-resize; touch-action: none; }
+.task-col-resize:focus-visible { outline: 2px solid var(--accent); }
+.task-col-wrap-name, .task-cell-name { grid-column: 1; }
+.task-col-wrap-state, .task-cell-state { grid-column: 2; }
+.task-col-wrap-rigor, .task-cell-rigor { grid-column: 3; }
+.task-col-wrap-assign, .task-cell-assign { grid-column: 4; }
+.task-col-wrap-updated, .task-cell-updated { grid-column: 5; }
+.task-tree.task-hide-state { --task-hide-state: 0px; }
+.task-hide-state .task-col-wrap-state, .task-hide-state .task-cell-state { display: none; }
+.task-tree.task-hide-rigor { --task-hide-rigor: 0px; }
+.task-hide-rigor .task-col-wrap-rigor, .task-hide-rigor .task-cell-rigor { display: none; }
+.task-tree.task-hide-assign { --task-hide-assign: 0px; }
+.task-hide-assign .task-col-wrap-assign, .task-hide-assign .task-cell-assign { display: none; }
+.task-tree.task-hide-updated { --task-hide-updated: 0px; }
+.task-hide-updated .task-col-wrap-updated, .task-hide-updated .task-cell-updated { display: none; }
 .task-tree-head { flex: 0 0 auto; border-bottom: 1px solid var(--border); background: var(--panel-2); min-height: 24px; }
 .task-col { border: 0; border-right: 1px solid var(--border); background: transparent; color: var(--muted); font-size: 11px; text-align: left; padding: 3px 4px; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
-.task-col:last-child { border-right: 0; text-align: right; }
+.task-col-updated { border-right: 0; text-align: right; }
 .task-col:hover { color: var(--text); background: var(--panel); }
 .task-col[aria-pressed="true"] { color: var(--text); font-weight: 600; }
 .task-col-sorted { margin-left: 3px; color: var(--accent); }
 .task-tree-body { flex: 1 1 auto; min-height: 0; overflow: auto; padding: 2px 0 6px; }
 .task-tree-empty { padding: 10px 12px; margin: 0; }
-.task-row { min-height: 24px; border-left: 3px solid transparent; cursor: default; user-select: none; font-size: 12px; }
+.task-row { min-height: 24px; border-left: 3px solid transparent; cursor: default; user-select: none; font-size: 12px; content-visibility: auto; contain-intrinsic-size: auto 24px; }
+.task-row:focus-within, .task-row[aria-selected="true"], .task-row.task-drop, .task-row.task-dragging { content-visibility: visible; }
 .task-row:hover { background: var(--panel-2); }
 .task-row[aria-selected="true"] { background: var(--accent-bg); border-left-color: var(--accent); }
 .task-row:focus { outline: none; }
 .task-row:focus-visible { outline: 1px dotted var(--accent); outline-offset: -1px; }
 .task-row.task-linked { box-shadow: inset 0 0 0 1px var(--accent); }
 .task-row.task-drop { background: var(--accent-bg); box-shadow: inset 0 0 0 2px var(--accent); }
+.task-row.task-drop-before, .task-row.task-drop-after { content-visibility: visible; }
+.task-row.task-drop-before { box-shadow: inset 0 3px var(--accent); }
+.task-row.task-drop-after { box-shadow: inset 0 -3px var(--accent); }
+.task-folder[draggable="true"] .task-folder-glyph { cursor: grab; }
+.task-folder.task-dragging { cursor: grabbing; }
 .task-row.task-dragging { opacity: .5; }
 .task-row.task-unmatched { opacity: .7; font-style: italic; }
 .task-row-empty { min-height: 20px; }
@@ -1476,28 +1602,33 @@ button.task-badge { cursor: pointer; }
 .task-not_started.task-state-pill { border-color: var(--task-color); background: transparent; }
 .task-pill-short { display: none; }
 .task-count-pill { font-size: 10.5px; line-height: 15px; padding: 0 5px; border-radius: 8px; color: var(--task-color); background: var(--task-bg); font-variant-numeric: tabular-nums; }
-.task-cell-assign img + img, .task-cell-assign .task-initial + .task-initial { margin-left: -4px; }
+.task-folder .task-cell-assign img + img, .task-folder .task-cell-assign .task-initial + .task-initial { margin-left: -4px; }
+.task-leaf .task-cell-assign { flex-wrap: wrap; padding: 4px 0; }
+.task-assignee-icon { display: inline-flex; flex: 0 0 16px; width: 16px; height: 16px; }
 .task-assign-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
 .task-nobody { color: var(--muted); font-style: italic; }
 .task-more { color: var(--muted); font-size: 10.5px; flex: 0 0 auto; }
 .task-initial { flex: 0 0 16px; width: 16px; height: 16px; border-radius: 3px; background: var(--panel-2); border: 1px solid var(--border); font-size: 9.5px; line-height: 14px; text-align: center; color: var(--muted); }
 .task-cell-updated { justify-content: flex-end; color: var(--muted); font-variant-numeric: tabular-nums; font-size: 11px; }
+@container tasktree (max-width: 640px) {
+  .task-tree-head, .task-row { grid-template-columns: var(--task-hide-name, var(--task-col-name, minmax(0, 1fr))) var(--task-hide-state, var(--task-col-state, 84px)) var(--task-hide-rigor, var(--task-col-rigor, 42px)) var(--task-hide-assign, var(--task-col-assign, 128px)) var(--task-hide-updated, var(--task-col-updated, 48px)); }
+  .task-cell-rigor .rigor-name { display: none; }
+}
 @container tasktree (max-width: 520px) {
-  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 54px 92px 38px; column-gap: 4px; }
+  .task-tree-head, .task-row { grid-template-columns: var(--task-hide-name, var(--task-col-name, minmax(0, 1fr))) var(--task-hide-state, var(--task-col-state, 54px)) var(--task-hide-rigor, var(--task-col-rigor, 42px)) var(--task-hide-assign, var(--task-col-assign, 92px)) var(--task-hide-updated, var(--task-col-updated, 38px)); column-gap: 4px; }
   .task-pill-full { display: none; }
   .task-pill-short { display: inline; }
   .task-row-id { display: none; }
 }
 @container tasktree (max-width: 400px) {
-  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 50px 38px 32px; }
+  .task-tree-head, .task-row { grid-template-columns: var(--task-hide-name, var(--task-col-name, minmax(0, 1fr))) var(--task-hide-state, var(--task-col-state, 50px)) var(--task-hide-rigor, var(--task-col-rigor, 30px)) var(--task-hide-assign, var(--task-col-assign, 38px)) var(--task-hide-updated, var(--task-col-updated, 32px)); }
+  .task-cell-rigor .rigor-caret { display: none; }
   .task-assign-name { display: none; }
   .task-cell-assign.task-nobody::before { content: "—"; }
   .task-mark.task-step-mark, .task-mark.task-archived-mark { display: none; }
   .task-state-pill { padding: 0 4px; }
 }
 @container tasktree (max-width: 290px) {
-  .task-tree-head, .task-row { grid-template-columns: minmax(0, 1fr) 38px 32px; }
-  .task-cell-state, .task-col-state { display: none; }
 }
 
 .task-detail { container: taskdetail / inline-size; min-width: 0; min-height: 0; overflow: auto; background: var(--panel); }
@@ -1543,6 +1674,74 @@ button.task-badge { cursor: pointer; }
 @media (max-width: 760px) {
   .task-workspace { flex: none; height: 78vh; }
 }
+
+/* Rigor modes: a four-step meter and a color per mode (Sprint 1 ... Long 4).
+   Streamlined, the default, stays neutral so departures from it stand out;
+   an inherited mode has a dashed outline, a task's own choice a solid one. */
+:root { --rigor-sprint: #12606a; --rigor-sprint-bg: #e5f5f7; --rigor-long: #623d94; --rigor-long-bg: #f1eafa; }
+:root[data-theme="dark"] { --rigor-sprint: #9ddddf; --rigor-sprint-bg: #143337; --rigor-long: #d5b8ff; --rigor-long-bg: #30233f; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) { --rigor-sprint: #9ddddf; --rigor-sprint-bg: #143337; --rigor-long: #d5b8ff; --rigor-long-bg: #30233f; }
+}
+.rigor-sprint { --rigor-color: var(--rigor-sprint); --rigor-bg: var(--rigor-sprint-bg); }
+.rigor-streamlined { --rigor-color: var(--task-slate); --rigor-bg: var(--task-slate-bg); }
+.rigor-standard { --rigor-color: var(--task-amber); --rigor-bg: var(--task-amber-bg); }
+.rigor-long { --rigor-color: var(--rigor-long); --rigor-bg: var(--rigor-long-bg); }
+.rigor-meter { display: inline-flex; align-items: flex-end; gap: 1px; height: 10px; flex: 0 0 auto; }
+.rigor-meter > i { display: block; width: 3px; border-radius: 1px; background: currentColor; opacity: .22; }
+.rigor-meter > i:nth-child(1) { height: 4px; }
+.rigor-meter > i:nth-child(2) { height: 6px; }
+.rigor-meter > i:nth-child(3) { height: 8px; }
+.rigor-meter > i:nth-child(4) { height: 10px; }
+.rigor-meter > i.on { background: var(--rigor-color, currentColor); opacity: 1; }
+.task-cell-rigor { overflow: visible; }
+.task-rigor-pick { position: relative; display: inline-flex; align-items: center; gap: 4px; max-width: 100%; min-width: 0; height: 18px; padding: 0 5px;
+  border: 1px solid var(--rigor-color); border-radius: 9px; color: var(--rigor-color); background: var(--rigor-bg); font-size: 10.5px; line-height: 16px; white-space: nowrap; }
+.task-rigor-pick.rigor-inherited { border-style: dashed; background: transparent; }
+.task-rigor-pick.rigor-editable { cursor: pointer; }
+.task-rigor-pick.rigor-editable:hover { box-shadow: 0 0 0 1px var(--rigor-color); }
+.task-rigor-pick:focus-within { outline: 2px solid var(--accent); outline-offset: 1px; }
+.task-rigor-project { opacity: .7; }
+.rigor-name { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+.rigor-caret { flex: 0 0 auto; margin-left: auto; font-size: 8px; opacity: .75; }
+/* The native dropdown lies over the meter and label, so it keeps the platform list, keys and screen-reader support. */
+.rigor-select { position: absolute; inset: 0; width: 100%; height: 100%; margin: 0; padding: 0; border: 0; opacity: 0; cursor: pointer; font: inherit; }
+.rigor-select option { color: var(--text); background: var(--panel); }
+.task-fact-rigor .task-rigor-pick { height: 22px; padding: 0 8px; font-size: 12px; }
+.task-rigor-count { display: inline-flex; align-items: center; gap: 5px; color: var(--rigor-color); font-variant-numeric: tabular-nums; }
+.task-rigor-floor-head { margin: 8px 0 2px; font-weight: 600; }
+.task-rigor-floor { margin: 2px 0 6px; padding-left: 18px; }
+.task-rigor-rules .btn { margin-top: 4px; }
+
+/* Rigor guide (Help, Tasks and Rules menus). */
+.rigor-dialog.dialog { width: min(860px, calc(100vw - 24px)); }
+.rigor-dialog .dialog-body { max-height: 74vh; }
+.rigor-guide { font-size: 12.5px; line-height: 1.5; min-width: 0; overflow-wrap: anywhere; }
+.rigor-guide code { white-space: nowrap; }
+.rigor-guide h3 { margin: 16px 0 6px; font-size: 13px; }
+.rigor-guide h3:first-of-type { margin-top: 10px; }
+.rigor-guide ul, .rigor-guide ol { margin: 4px 0 8px; padding-left: 22px; }
+.rigor-cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(320px, 100%), 1fr)); gap: 10px; }
+.rigor-card { min-width: 0; border: 1px solid var(--border); border-top: 3px solid var(--rigor-color); border-radius: 6px; padding: 8px 10px; background: var(--panel); }
+.rigor-card h4 { display: flex; align-items: center; gap: 7px; margin: 0 0 6px; font-size: 13px; color: var(--rigor-color); }
+.rigor-card p { margin: 3px 0; }
+.rigor-default { margin-left: auto; padding: 0 6px; border: 1px solid currentColor; border-radius: 8px; font-size: 10px; font-weight: 500; }
+.rigor-rules { display: grid; gap: 3px; margin: 8px 0 0; padding-top: 6px; border-top: 1px solid var(--border); font-size: 11.5px; }
+.rigor-rules > div { display: grid; grid-template-columns: minmax(90px, 36%) minmax(0, 1fr); gap: 8px; }
+.rigor-rules dt { color: var(--muted); }
+.rigor-rules dd { margin: 0; }
+.rigor-score-wrap { overflow-x: auto; }
+.rigor-score { width: 100%; border-collapse: collapse; font-size: 11.5px; }
+.rigor-score th, .rigor-score td { border: 1px solid var(--border); padding: 4px 6px; text-align: left; vertical-align: top; }
+.rigor-score thead th { background: var(--panel-2); }
+.rigor-bands { display: flex; flex-wrap: wrap; gap: 6px; }
+.rigor-change { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr)); gap: 4px 14px; }
+.rigor-change h4 { margin: 8px 0 2px; font-size: 12px; }
+/* Phones (L6): search and the one filter share a row; the filter keeps its full label. */
+.task-tools-phone { display: flex; gap: 6px; align-items: center; flex-wrap: nowrap; }
+.task-tools-phone > input[type="search"] { flex: 1 1 auto; min-width: 0; }
+.task-tools-phone > .task-choice { flex: 0 0 auto; max-width: 52%; }
+.task-closed-note { color: var(--muted); }
 
 /* ---- phone/phone.css ---- */
 /* Phone-only overrides. Keep the shared desktop page and map styles intact. */
@@ -1819,6 +2018,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
           <button id="filterAll" type="button" class="phone-chip" aria-pressed="true">All</button>
           <button id="filterToYou" type="button" class="phone-chip" aria-pressed="false">To you</button>
           <label class="phone-agent-filter"><span class="phone-sr-only">Agent</span><select id="filterAgent"><option value="">Any agent</option></select></label>
+          <label class="phone-agent-filter" id="filterRoomWrap" hidden><span class="phone-sr-only">Room</span><select id="filterRoom"><option value="">All rooms</option></select></label>
         </div>
         <label class="phone-search"><span class="phone-sr-only">Search messages</span><input id="filterText" type="search" placeholder="Search messages"></label>
         <details id="phoneMoreFilters" class="phone-more-filters">
@@ -1849,6 +2049,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         <form id="phoneComposeForm" class="phone-card">
           <fieldset id="phoneComposeFields">
             <div class="phone-field-pair"><label>To<select id="composeTo" required></select></label><label>Kind<select id="composeKind" required></select></label></div>
+            <label id="composeRoomWrap" hidden>Room<select id="composeRoom"><option value="">No room (as before)</option></select></label>
             <label id="composeToolWrap" hidden>For<select id="composeTool"><option value="">Any agent</option><option value="claude">Claude</option><option value="codex">Codex</option></select></label>
             <p id="composeRequestHint" class="phone-hint" hidden>New conversation: queued in this project for its lead, or the next chat that joins there. Nothing is launched. The subject is its title.</p>
             <label for="composeSubject">Subject <span class="muted">(optional)</span></label><input id="composeSubject" type="text" maxlength="200">
@@ -1878,7 +2079,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   </nav>
   <dialog id="dialog" class="dialog"></dialog>
   <div id="toasts" class="toasts" aria-live="polite"></div>
-  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-10-23T05:01:56Z"};</script>
+  <script>window.AgentHubPhoneBuild = {"hub_version": "0.2.0", "built_at": "2026-11-13T02:26:01Z"};</script>
 <script>/* ---- ui.js ---- */
 /* Locus page primitives: elements, storage, toasts, busy buttons,
  * menus, splitters, collapsible sections, tab sets, dialogs and downloads.
@@ -1924,11 +2125,36 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     set(k, v) { UI.store.setRaw(k, v === null || v === undefined ? null : JSON.stringify(v)); },
   };
 
+  // Opt-in User Timing, with bounded aggregate counters for owner diagnostics.
+  const perfEnabled = /(?:^|[?&])perf=1(?:&|$)/.test(window.location?.search || "") || UI.store.get("locus.perf", false) === true;
+  const perfStats = new Map();
+  let perfId = 0;
+  UI.perf = (name, fn) => {
+    if (!perfEnabled) return fn();
+    const mark = "locus:" + name, start = mark + ":" + (++perfId);
+    performance.mark(start);
+    try { return fn(); }
+    finally {
+      const measure = performance.measure(mark, start);
+      const row = perfStats.get(name) || { count: 0, total_ms: 0, max_ms: 0 };
+      row.count++; row.total_ms += measure.duration; row.max_ms = Math.max(row.max_ms, measure.duration);
+      perfStats.set(name, row);
+      performance.clearMarks(start); performance.clearMeasures(mark);
+    }
+  };
+  window.LocusPerf = {
+    enabled: perfEnabled,
+    reset: () => perfStats.clear(),
+    read: () => ({ timings: Object.fromEntries([...perfStats].map(([name, row]) => [name, { ...row, mean_ms: row.total_ms / row.count }])),
+      elements: document.querySelectorAll("*").length, messages: document.querySelectorAll("#timeline > .msg").length,
+      task_rows: document.querySelectorAll(".task-row").length }),
+  };
+
   // ------------------------------------------------------- stable refreshes
   const rendered = new WeakMap();
   const deferred = new Map();
   UI.invalidate = (root) => { rendered.delete(root); deferred.delete(root); };
-  const editable = (node) => !!node && node.matches("input:not([type=button]):not([type=submit]),textarea,select,[contenteditable=true]");
+  const editable = (node) => !!node && node.matches("input:not([type=button]):not([type=submit]):not([type=checkbox]):not([type=radio]),textarea,select,[contenteditable=true]");
   UI.isEditing = (root = document) => editable(document.activeElement) && root.contains(document.activeElement);
 
   /** Compare data, ignoring only explicitly named volatile fields. */
@@ -1939,34 +2165,89 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     return JSON.stringify(sort(value));
   };
 
-  function stateKey(node, root) {
-    if (node === root) return ":root";
-    if (node.id) return "id:" + node.id;
-    for (const attr of ["data-state-key", "data-message-id", "data-repo", "data-chart-id", "data-chart-key", "data-tab", "data-rule-field", "aria-label", "name"]) {
-      const value = node.getAttribute(attr);
-      if (value) return stateKey(node.parentElement, root) + "/" + attr + ":" + value;
-    }
-    if (!node.parentElement || !root.contains(node.parentElement)) return ":outside";
-    const same = [...node.parentElement.children].filter((n) => n.tagName === node.tagName);
-    const label = node.tagName === "DETAILS" ? node.querySelector("summary")?.textContent : "";
-    return stateKey(node.parentElement, root) + "/" + node.tagName + ":" + (label || same.indexOf(node));
+  function stateKeys(root) {
+    const keys = new Map([[root, ":root"]]), siblings = new Map();
+    return function key(node) {
+      if (keys.has(node)) return keys.get(node);
+      let value = node.id ? "id:" + node.id : null;
+      for (const attr of ["data-state-key", "data-message-id", "data-repo", "data-chart-id", "data-chart-key", "data-tab", "data-rule-field", "aria-label", "name"]) {
+        if (value) break;
+        const label = node.getAttribute(attr);
+        if (label) value = key(node.parentElement) + "/" + attr + ":" + label;
+      }
+      if (!value) {
+        const parent = node.parentElement;
+        if (!parent || !root.contains(parent)) return ":outside";
+        if (!siblings.has(parent)) {
+          const counts = new Map(), indices = new Map();
+          for (const child of parent.children) {
+            const index = counts.get(child.tagName) || 0;
+            indices.set(child, index); counts.set(child.tagName, index + 1);
+          }
+          siblings.set(parent, indices);
+        }
+        const label = node.tagName === "DETAILS" ? node.querySelector("summary")?.textContent : "";
+        value = key(parent) + "/" + node.tagName + ":" + (label || siblings.get(parent).get(node));
+      }
+      keys.set(node, value);
+      return value;
+    };
   }
 
+  const scrollSelector = "[data-scroll-state],textarea,pre,.table-wrap,.tbl,.pane-body,.rpanels,.rpanel,.timeline,.map-canvas,.loglist,.loglines,.dialog-body,.rulesview,.profilesview,.task-plan,.task-assignment-list,.task-tree-body,.task-detail,.ui-popmenu,.menu-pop,.rules-table-scroll,.fs-list,.fs-found,.m-main,.m-filter,.ctabs,.rtabs,.tabs,.tabbar";
+  const scrollPositions = new WeakMap();
+  const viewport = { x: window.scrollX || 0, y: window.scrollY || 0 };
+  const scrollContainer = (node) => node === document.body || node === document.documentElement || node.matches(scrollSelector);
+  const scrollPosition = (node) => node === document.body || node === document.documentElement
+    ? { top: viewport.y, left: viewport.x } : scrollPositions.get(node) || { top: node.scrollTop || 0, left: node.scrollLeft || 0 };
+  // Native scroll events keep offsets current without layout reads during a
+  // subsequent tab switch. Explicit data-scroll-state supports new containers.
+  document.addEventListener("scroll", (event) => {
+    const node = event.target;
+    if (node === document) { viewport.x = window.scrollX || 0; viewport.y = window.scrollY || 0; }
+    else if (node) scrollPositions.set(node, { top: node.scrollTop || 0, left: node.scrollLeft || 0 });
+  }, { capture: true, passive: true });
+  document.addEventListener("DOMContentLoaded", () => {
+    for (const node of document.querySelectorAll(scrollSelector)) scrollPositions.set(node, { top: 0, left: 0 });
+  });
+  UI.isHidden = (root) => {
+    for (let node = root; node; node = node.parentElement) {
+      if (node.hidden) return true;
+      if (node.matches(".pane-body,.sect-body,.rules-section-body") && node.parentElement?.classList.contains("collapsed")) return true;
+    }
+    return false;
+  };
   UI.capture = function capture(root) {
-    const nodes = [root, ...root.querySelectorAll("*")];
-    const scroll = nodes.filter((n) => n.scrollTop || n.scrollLeft).map((n) => ({ key: stateKey(n, root), top: n.scrollTop, left: n.scrollLeft }));
+    if (UI.isHidden(root)) return null;
+    const key = stateKeys(root);
+    const containers = [...root.querySelectorAll(scrollSelector)];
+    if (scrollContainer(root)) containers.unshift(root);
+    const scroll = containers.filter((node) => !UI.isHidden(node)).map((node) => ({ node, key: key(node), ...scrollPosition(node) }));
     const ancestors = [];
-    for (let n = root.parentElement; n; n = n.parentElement) ancestors.push({ node: n, top: n.scrollTop, left: n.scrollLeft });
+    for (let n = root.parentElement; n; n = n.parentElement) if (scrollContainer(n)) ancestors.push({ node: n, ...scrollPosition(n) });
     const active = document.activeElement;
-    const focus = active && root.contains(active) ? { key: stateKey(active, root), start: active.selectionStart, end: active.selectionEnd, direction: active.selectionDirection } : null;
-    const open = nodes.filter((n) => n.tagName === "DETAILS" || n.matches(".fold-card,.rules-section")).map((n) => ({ key: stateKey(n, root), details: n.tagName === "DETAILS", open: n.open, collapsed: n.classList.contains("collapsed") }));
-    return { scroll, ancestors, focus, open, x: window.scrollX, y: window.scrollY };
+    const focus = active && root.contains(active) ? { node: active, key: key(active), start: active.selectionStart, end: active.selectionEnd, direction: active.selectionDirection } : null;
+    const foldNodes = [...root.querySelectorAll("details,.fold-card,.rules-section")];
+    if (root.matches("details,.fold-card,.rules-section")) foldNodes.unshift(root);
+    const open = foldNodes.map((n) => ({ node: n, key: key(n), details: n.tagName === "DETAILS", open: n.open, collapsed: n.classList.contains("collapsed") }));
+    return { scroll, ancestors, focus, open, x: viewport.x, y: viewport.y };
   };
 
   UI.restore = function restore(root, snapshot) {
-    const nodes = new Map([root, ...root.querySelectorAll("*")].map((n) => [stateKey(n, root), n]));
+    if (!snapshot) return;
+    // Retained message/row nodes need no whole-tree key index. Rebuilt views
+    // resolve only when necessary, with parent keys/sibling indices memoized.
+    let nodes;
+    const find = (saved) => {
+      if (saved.node && root.contains(saved.node)) return saved.node;
+      if (!nodes) {
+        const key = stateKeys(root);
+        nodes = new Map([root, ...root.querySelectorAll("*")].map((n) => [key(n), n]));
+      }
+      return nodes.get(saved.key);
+    };
     for (const saved of snapshot.open) {
-      const node = nodes.get(saved.key); if (!node) continue;
+      const node = find(saved); if (!node) continue;
       if (saved.details) node.open = saved.open;
       else {
         node.classList.toggle("collapsed", saved.collapsed);
@@ -1975,39 +2256,47 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         const body = node.querySelector(".fold-body"); if (body) body.hidden = saved.collapsed;
       }
     }
-    const saved = snapshot.focus, focus = saved && nodes.get(saved.key);
+    const saved = snapshot.focus, focus = saved && find(saved);
     if (focus && !focus.disabled) {
       focus.focus({ preventScroll: true });
       if (typeof saved.start === "number" && typeof focus.setSelectionRange === "function") {
         try { focus.setSelectionRange(saved.start, saved.end, saved.direction || "none"); } catch (_) { /* non-text input */ }
       }
     }
-    for (const s of snapshot.scroll) { const node = nodes.get(s.key); if (node) { node.scrollTop = s.top; node.scrollLeft = s.left; } }
+    for (const s of snapshot.scroll) { const node = find(s); if (node) { node.scrollTop = s.top; node.scrollLeft = s.left; } }
     for (const s of snapshot.ancestors) { s.node.scrollTop = s.top; s.node.scrollLeft = s.left; }
     window.scrollTo(snapshot.x, snapshot.y);
+    viewport.x = snapshot.x; viewport.y = snapshot.y;
   };
 
   /** A background render never replaces an active editor or a dirty draft. */
   UI.update = function update(root, signature, draw, opts = {}) {
     if (!root) return false;
-    if (opts.force !== true && (UI.isEditing(opts.editRoot || document) || (opts.blocked && opts.blocked()))) {
+    if (UI.isHidden(root)) {
+      deferred.set(root, () => UI.update(root, signature, draw, opts));
+      return false;
+    }
+    if (opts.force !== true && opts.interactive !== true && (UI.isEditing(opts.editRoot || document) || (opts.blocked && opts.blocked()))) {
       deferred.set(root, () => UI.update(root, signature, draw, opts));
       return false;
     }
     deferred.delete(root);
     if (opts.force !== true && rendered.get(root) === signature) return false;
-    const snapshot = UI.capture(root);
+    const name = root.id || root.dataset.stateKey || "view";
+    const snapshot = UI.perf("capture:" + name, () => UI.capture(root));
     rendered.delete(root); // a partial or failed draw must never look current
-    try { draw(); } finally { UI.restore(root, snapshot); }
+    try { UI.perf("draw:" + name, draw); }
+    finally { UI.perf("restore:" + name, () => UI.restore(root, snapshot)); }
     if (opts.afterRestore) opts.afterRestore();
     rendered.set(root, signature);
     return true;
   };
-  document.addEventListener("focusout", () => setTimeout(() => {
+  UI.flushVisible = () => {
     for (const [root, retry] of deferred) {
-      if (!root.isConnected) deferred.delete(root); else retry();
+      if (!root.isConnected) deferred.delete(root); else if (!UI.isHidden(root)) retry();
     }
-  }, 0));
+  };
+  document.addEventListener("focusout", () => setTimeout(UI.flushVisible, 0));
 
   /** Keep a complete card's actions/content, with an accessible persistent fold. */
   let foldId = 0;
@@ -2226,6 +2515,17 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 
   // --------------------------------------------------------------- splitters
   let activePopover = null;
+  // Room symbols (rooms.md 3, RD-1): the stick's 8x8 geometry as row bitmaps, drawn as a data: SVG image so pages
+  // without the /symbols routes (the single-file GitHub phone page) show the same shapes and colours.
+  const ROOM_SHAPES = { s00: "183c7eff6666667e", s01: "1818ff7e3c7e6600", s02: "3c7ec3c3c3c37e3c", s03: "183c7effff7e3c18", s04: "ffffc3c3c3c3ffff", s05: "18183c3c7e7effff", s06: "66ffffff7e3c1800", s07: "0e1c387e1c387000", s08: "0f3f73cedc7060c0", s09: "247effdbff7e2400", s10: "3c70e0c0c0e0703c", s11: "995a3cffff3c5a99", s12: "c0fec3fec0c0c0c0", s13: "0066ffcc0066ffcc", s14: "1818997e7e991818", s15: "e7e7e70000e7e7e7" };
+  const ROOM_COLOURS = { c0: "#00ffff", c1: "#4da7ff", c2: "#00ff00", c3: "#ffa500", c4: "#ff0000", c5: "#b5a7ff", c6: "#00bea5", c7: "#e7fbff" };
+  UI.roomSymbol = function roomSymbol(symbol, colour, size = 14) {
+    const shape = ROOM_SHAPES[symbol] || ROOM_SHAPES.s00, fill = ROOM_COLOURS[colour] || ROOM_COLOURS.c0;
+    let rects = "";
+    for (let y = 0; y < 8; y++) { const row = parseInt(shape.slice(y * 2, y * 2 + 2), 16); for (let x = 0; x < 8; x++) if (row & (128 >> x)) rects += '<rect x="' + x + '" y="' + y + '" width="1" height="1"/>'; }
+    const svg = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 8 8" fill="' + fill + '" shape-rendering="crispEdges">' + rects + "</svg>";
+    return el("img", { class: "room-symbol-img", src: "data:image/svg+xml;utf8," + encodeURIComponent(svg), width: String(size), height: String(size), alt: "", "aria-hidden": "true" });
+  };
   UI.popmenu = function popmenu(anchor, items) {
     activePopover?.();
     const pop = el("div", { class: "ui-popmenu menu-pop", role: items.some((i) => i.node) ? "dialog" : "menu" });
@@ -3119,16 +3419,17 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const key = paletteSig + "|" + grid;
     let url = urls.get(key);
     if (url) return url;
-    const c = document.createElement("canvas");
-    c.width = c.height = SIZE;
-    const ctx = c.getContext("2d");
+    // Icons need no canvas readback/PNG encoding on the main thread. Group
+    // exact 1x1 cells into palette paths; the editor's painting canvas remains.
+    const paths = new Map();
     for (let i = 0; i < CELLS; i++) {
       const p = palette[HEX.indexOf(grid[i])];
       if (!p || !p.hex) continue;
-      ctx.fillStyle = p.hex;
-      ctx.fillRect(i % SIZE, Math.floor(i / SIZE), 1, 1);
+      paths.set(p.hex, (paths.get(p.hex) || "") + `M${i % SIZE} ${Math.floor(i / SIZE)}h1v1h-1z`);
     }
-    url = c.toDataURL("image/png");
+    const escape = (text) => String(text).replace(/&/g, "&amp;").replace(/"/g, "&quot;").replace(/</g, "&lt;");
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 16 16" shape-rendering="crispEdges">${[...paths].map(([fill, d]) => `<path fill="${escape(fill)}" d="${d}"/>`).join("")}</svg>`;
+    url = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     if (urls.size > 500) urls.clear();
     urls.set(key, url);
     return url;
@@ -3451,6 +3752,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       case "joined": return "joined as " + d.role;
       case "removed": return "removed " + d.agent;
       case "left": return "left the task";
+      case "rigor": return d.to ? "set rigor to " + (RIGOR_NAMES[d.to] || d.to) : "set rigor to inherit (" + (RIGOR_NAMES[d.effective] || d.effective || "default") + ")";
       default: return e?.action || "updated the task";
     }
   }
@@ -3464,13 +3766,297 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   const leadOf = (task) => (task.coordinators.find((a) => a.role === "lead") || task.coordinators[0])?.agent || "";
 
-  function mount(root, opts) {
-    const defaults = { status: "open", project: "", agent: "", group: "project", sort: "smart", text: "", flag: "", archived: false, empty: false, layout: "auto", v: 2 };
-    const saved = UI.store.get("locus.tasks.view", {});
+  // ---------------------------------------------------------------- rigor
+  // Fixed guide from SOP-RIG-01; hub/rigor.py holds the same JSON (tests/test_rigor_guide.py).
+  // Labels, summaries and working rules come live from Rules and may differ from these names.
+  const RIGOR_GUIDE = /* rigor-guide:begin */{
+    "source": "SOP-RIG-01 Revision B (2026-10-31)",
+    "intro": "Rigor is how much testing, review, evidence and escalation a piece of work gets. It is the sum of seven separate choices, set per task by the risk of the code being changed, not by the project as a whole. Every mode keeps the floor.",
+    "dimensions": ["Tests per task", "Full suites", "Independent review", "Evidence", "Ask the lead first", "Gates", "Owner visuals"],
+    "modes": {
+      "sprint": {"use": "Well-understood, reversible work under time pressure.", "examples": "Interface work with a fallback, ports of reviewed code, documentation.", "score": "0-3"},
+      "streamlined": {"use": "Normal feature work. The default for new tasks.", "examples": "New views, menus, client-side features.", "score": "4-5"},
+      "standard": {"use": "Code whose mistakes spread.", "examples": "Shared data models, protocols, permissions, file access, rendering text from other sources.", "score": "6-7"},
+      "long": {"use": "First-of-kind work, anything after an escaped defect, release candidates, safety-adjacent work.", "examples": "The opening phase of a new plan, a release gate, firmware-adjacent tools.", "score": "8-10"}
+    },
+    "floor": [
+      "The protected-code guard (freeze) check runs before every commit wherever protected code exists.",
+      "Anything shared between computers, versions or stored data gets an old/new compatibility test.",
+      "Anything that renders text from another source gets a hostile-input test.",
+      "Test fixtures that share ports or files run one at a time.",
+      "Every merge to a service line passes a gate review by someone who did not build it.",
+      "Hardware actions and live-service restarts need the owner's go in that computer's own session."
+    ],
+    "floor_categories": "A frozen surface, who may do what, a stored or published data format, or anything the owner would see behave differently.",
+    "score_questions": [
+      {"name": "Blast radius", "points": ["One view or file", "One computer's behaviour", "Shared data, protocol or another computer"]},
+      {"name": "Reversibility", "points": ["Revert the commit", "Revert plus a restart", "Persistent data or published state must be repaired"]},
+      {"name": "Visibility", "points": ["Internal only", "Visible but cosmetic", "Changes what the owner relies on"]},
+      {"name": "Novelty", "points": ["Port of reviewed code", "New code on known patterns", "New design or new data model"]},
+      {"name": "Track record", "points": ["Clean last two gates", "Minor gate findings", "A defect escaped a gate"]}
+    ],
+    "override": "Work that touches a frozen surface, permission rules or a stored or published data format starts at Standard or higher, whatever its score.",
+    "raise_when": ["a defect escapes a gate or reaches a release;", "a test becomes flaky or a result cannot be explained;", "a new builder joins, or work moves to a new area;", "the work nears a release or touches the floor categories."],
+    "lower_when": [
+      "an area passes two gates in a row with no findings;",
+      "the work is a mechanical port of reviewed code, or cosmetic;",
+      "verification time clearly exceeds the risk it covers;",
+      "the owner asks for pace, and the floor stays intact."
+    ],
+    "authority": "Anyone who may edit a task may raise its mode. Only the owner may lower a task's effective mode, including by clearing its own choice or moving it to a project with a lower mode. The mode is guidance the agent follows; the hub enforces only the lowering check.",
+    "choosing": "When you create a task, score it (0-2 points per question), apply the override, and pass --rigor with the result. If the result is lower than the mode the task would inherit (Streamlined unless its project says otherwise), keep the inherited mode and recommend the lower one in the summary; only the owner can lower it."
+  }/* rigor-guide:end */;
+  const RIGOR_IDS = ["sprint", "streamlined", "standard", "long"];
+  const RIGOR_NAMES = { sprint: "Sprint", streamlined: "Streamlined", standard: "Standard", long: "Long" };
+  const rigorId = (id) => RIGOR_IDS.includes(id) ? id : "streamlined";
+  /** Four steps filled to the mode's level (Sprint 1 ... Long 4), colored by mode in CSS. */
+  const rigorMeter = (id) => el("span", { class: "rigor-meter", "aria-hidden": "true" },
+    RIGOR_IDS.map((_, i) => el("i", { class: i <= RIGOR_IDS.indexOf(rigorId(id)) ? "on" : "" })));
+  /** A task's effective mode as a colored badge (phone cards). */
+  const rigorBadge = (task) => {
+    const id = rigorId(task.rigor_effective), label = task.rigor_mode?.label || RIGOR_NAMES[id];
+    return el("span", { class: "task-badge task-rigor rigor-" + id + (task.rigor_source === "task" ? "" : " rigor-inherited"), title: "Rigor: " + label }, rigorMeter(id), label);
+  };
+  /** The rigor guide: the four modes with their live texts, the floor, how to choose and who may change it. */
+  function rigorGuide(modes = {}, defaults = {}) {
+    const g = RIGOR_GUIDE, label = (id) => modes?.[id]?.label || RIGOR_NAMES[id], hubDefault = rigorId(defaults?.default);
+    const list = (items, ordered = false) => el(ordered ? "ol" : "ul", {}, items.map((item) => el("li", {}, item)));
+    const flags = (text) => text.split(/(--rigor)/).map((part) => part === "--rigor" ? el("code", {}, part) : part);
+    const cards = RIGOR_IDS.map((id, i) => {
+      const text = modes?.[id] || {}, fixed = g.modes[id];
+      const rules = String(text.rules || "").split("\n").filter((line) => line.trim()).map((line) => {
+        const at = line.indexOf(":");
+        return at > 0 ? el("div", {}, el("dt", {}, line.slice(0, at)), el("dd", {}, line.slice(at + 1).trim())) : el("div", {}, el("dd", {}, line));
+      });
+      return el("section", { class: "rigor-card rigor-" + id },
+        el("h4", {}, rigorMeter(id), el("span", {}, (i + 1) + " · " + label(id)), id === hubDefault ? el("span", { class: "rigor-default" }, "hub default") : null),
+        // The editable summary is the owner's "use it for"; the SOP text stands in when it is empty.
+        el("p", {}, el("b", {}, "Use it for: "), text.summary || fixed.use), el("p", {}, el("b", {}, "Examples: "), fixed.examples),
+        el("p", {}, el("b", {}, "Starting score: "), fixed.score.replace("-", "–")),
+        rules.length ? el("dl", { class: "rigor-rules" }, rules) : null);
+    });
+    const score = el("table", { class: "rigor-score" },
+      el("thead", {}, el("tr", {}, el("th", {}, "Question"), el("th", {}, "0 points"), el("th", {}, "1 point"), el("th", {}, "2 points"))),
+      el("tbody", {}, g.score_questions.map((q) => el("tr", {}, el("th", {}, q.name), q.points.map((text) => el("td", {}, text))))));
+    const bands = el("p", { class: "rigor-bands" }, RIGOR_IDS.map((id) => el("span", { class: "task-badge task-rigor rigor-" + id }, rigorMeter(id), g.modes[id].score.replace("-", "–") + " " + label(id))));
+    const owners = Object.entries(defaults?.projects || {}).filter(([, id]) => RIGOR_IDS.includes(id));
+    return el("div", { class: "rigor-guide" },
+      el("p", {}, g.intro),
+      el("p", { class: "muted small" }, "Inheritance: a task's own choice, else its project's mode (Rules → Rigor), else the hub default (" + label(hubDefault) + ")." +
+        (owners.length ? " Projects set now: " + owners.map(([name, id]) => name + " " + label(id)).join(", ") + "." : "")),
+      el("h3", {}, "The four modes"), el("div", { class: "rigor-cards" }, cards),
+      el("h3", {}, "The floor (every mode)"), list(g.floor, true),
+      el("p", {}, el("b", {}, "Floor categories, which always go to the lead first: "), g.floor_categories),
+      el("h3", {}, "Choosing a mode"), el("p", {}, "Score the work on five questions, 0–2 points each; the total gives the starting mode."),
+      el("div", { class: "rigor-score-wrap" }, score), bands, el("p", {}, el("b", {}, "Override: "), g.override),
+      el("div", { class: "rigor-change" }, el("div", {}, el("h4", {}, "Raise it when"), list(g.raise_when)), el("div", {}, el("h4", {}, "Lower it when"), list(g.lower_when))),
+      el("h3", {}, "Who may change it"), el("p", {}, g.authority),
+      el("p", {}, "In the Tasks panel, the Rigor column's dropdown sets a task's mode; Inherit follows its project or the hub default. A task's right-click menu (Shift+F10) offers the same choices."),
+      el("h3", {}, "How agents choose"), el("p", {}, flags(g.choosing)),
+      el("p", {}, "Agents print this guide with ", el("code", {}, "locus.py rigor"), "; ", el("code", {}, "task show"), " and ", el("code", {}, "task start"), " print a task's working rules and the floor."),
+      el("p", { class: "muted small" }, "Source: " + g.source + ". The owner can edit each mode's label, summary and working rules in Rules → Rigor."));
+  }
+  const showRigorGuide = (modes, defaults) => UI.dialog({ title: "Rigor modes", body: rigorGuide(modes, defaults), className: "dialog-wide rigor-dialog",
+    buttons: [{ label: "Close", value: null, primary: true }] });
+
+  /** Activity is separate from workflow state. A recent status's leading #ID is
+   *  the agent's reported focus, not every task mentioned in its prose. */
+  function activeWork(tasks, agents, usage = {}, now = Date.now()) {
+    const fresh = (ts, ms) => { const age = now - time(ts); return time(ts) > 0 && age >= -60000 && age <= ms; };
+    return agents.flatMap((agent) => {
+      if ((agent.lifecycle && agent.lifecycle !== "active") || ["waiting", "doorbell"].includes(agent.presence)) return [];
+      const u = usage[agent.name] || {};
+      const session = u.match === "session" && (!agent.session_id || u.session_id === agent.session_id) && fresh(u.last_activity, 120000);
+      const busy = session && u.live_status === "busy";
+      const recent = session && !u.live_status;
+      const seen = agent.presence === "active" && fresh(agent.last_seen, 120000);
+      if (!busy && !recent && !seen) return [];
+      const assigned = tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((c) => c.agent === agent.name));
+      const ref = /^\s*(?:task\s+)?#([1-9]\d*)\b/i.exec(agent.status || "");
+      let task = null, source = "No current task identified";
+      if (ref) {
+        if (fresh(agent.status_at, 2 * 3600000)) task = assigned.find((t) => t.id === Number(ref[1]));
+        source = task ? "Task named in the agent's latest status" : "Latest status does not identify a current open assignment";
+      } else {
+        const doing = assigned.filter((t) => t.status === "in_progress");
+        if (doing.length === 1 && fresh(doing[0].updated_at, 2 * 3600000)) {
+          task = doing[0]; source = "Agent's only in-progress assignment";
+        }
+      }
+      return [{ agent: agent.name, taskId: task?.id || null, status: agent.status || "No status reported", statusAt: agent.status_at,
+        label: busy ? "Working now" : "Recently active", source, ts: busy || recent ? u.last_activity : agent.last_seen }];
+    }).sort((a, b) => a.agent.localeCompare(b.agent));
+  }
+
+  // Per-browser presentation only; unknown or malformed saves fall back safely.
+  function taskColumns(tree, head, getSort, setSort) {
+    const columns = [["name", "Name", "title", "Name"], ["state", "State", "smart", "State"],
+      ["rigor", "Rigor", "rigor", "Rigor"], ["assign", "Assigned", "assignee", "Who"], ["updated", "Updated", "recent", "Age"]];
+    const key = "locus.tasks.columns", saved = UI.store.get(key, {});
+    const widths = {}, hidden = {};
+    for (const [id] of columns) {
+      const value = saved?.widths?.[id];
+      if (typeof value === "number" && Number.isFinite(value) && value >= 30 && value <= 1000) widths[id] = value;
+      if (id !== "name" && saved?.hidden?.[id] === true) hidden[id] = true;
+    }
+    const persist = () => UI.store.set(key, { widths, hidden });
+    function apply() {
+      const style = tree.style?.setProperty ? tree.style : null; // As applySizes: skip widths where custom properties are unavailable.
+      for (const [id] of columns) {
+        if (style && widths[id]) style.setProperty("--task-col-" + id, widths[id] + "px");
+        else if (style) style.removeProperty("--task-col-" + id);
+        tree.classList.toggle("task-hide-" + id, !!hidden[id]);
+      }
+    }
+    function showMenu(anchor) {
+      UI.popmenu(anchor, [
+        ...columns.map(([id, label]) => ({ label, checked: !hidden[id], disabled: id === "name",
+          action: () => { hidden[id] = !hidden[id]; apply(); persist(); } })),
+        { separator: true }, { label: "Reset columns", action: () => {
+          for (const [id] of columns) { delete widths[id]; delete hidden[id]; }
+          apply(); persist();
+        } },
+      ]);
+    }
+    head.addEventListener("contextmenu", (event) => { event.preventDefault(); showMenu(event.target.closest(".task-col") || head); });
+    head.addEventListener("keydown", (event) => {
+      if (event.key === "ContextMenu" || (event.shiftKey && event.key === "F10")) {
+        event.preventDefault(); showMenu(event.target.closest(".task-col") || head);
+      }
+    });
+    apply();
+    return function draw() {
+      head.replaceChildren(...columns.map(([id, label, sort, short]) => {
+        const button = el("button", { class: "task-col task-col-" + id, type: "button", "aria-pressed": String(getSort() === sort),
+          "aria-label": "Sort by " + label.toLowerCase(), title: "Sort by " + label.toLowerCase(), onclick: () => setSort(sort) },
+          el("span", { class: "task-pill-full", "aria-hidden": "true" }, label), el("span", { class: "task-pill-short", "aria-hidden": "true" }, id === "rigor" ? rigorMeter("long") : short),
+          getSort() === sort ? el("span", { class: "task-col-sorted", "aria-hidden": "true" }, "▾") : null);
+        const handle = el("span", { class: "task-col-resize", "aria-label": "Resize " + label + " column", title: "Drag to resize · double-click to reset" });
+        const cell = el("div", { class: "task-col-wrap task-col-wrap-" + id }, button, handle);
+        for (const type of ["pointerdown", "click", "dblclick"]) handle.addEventListener(type, (event) => event.stopPropagation());
+        UI.splitter(handle, { side: "left", min: id === "name" ? 60 : 30, max: () => 1000,
+          get: () => cell.getBoundingClientRect().width,
+          set: (value, save) => { widths[id] = value; apply(); if (save) persist(); },
+          reset: () => { delete widths[id]; apply(); persist(); } });
+        return cell;
+      }));
+    };
+  }
+
+  /** The Tasks filter's nine choices (rooms.md RD-23), in menu order. */
+  const CHOICES = [["open", "Open"], ["not_started", "Not started"], ["in_progress", "In progress"], ["blocked", "Blocked"],
+    ["done", "Done"], ["all", "All"], ["active", "Active"], ["stale", "Stale"], ["unassigned", "Unassigned"]];
+  const CHOICE_IDS = CHOICES.map(([id]) => id);
+  /** Search words: project:, agent:, rigor: (RD-23) plus is:overdue and by:owner (PD-4); the rest is free text. */
+  function searchTerms(text) {
+    const terms = { text: "", project: null, agent: null, rigor: null, overdue: false, owner: false }, free = [];
+    for (const part of String(text || "").match(/[^\s:]+:"[^"]*"|\S+/g) || []) {
+      const m = /^(project|agent|rigor|is|by):(.*)$/i.exec(part), key = m?.[1].toLowerCase();
+      const value = m ? m[2].replace(/^"(.*)"$/, "$1").trim().toLowerCase() : "";
+      if (!m) free.push(part);
+      else if (!value) continue; // A word still being typed ("project:") filters nothing yet.
+      else if (key === "is" && value === "overdue") terms.overdue = true;
+      else if (key === "by" && value === "owner") terms.owner = true;
+      else if (key === "project" || key === "agent" || key === "rigor") terms[key] = value;
+      else free.push(part);
+    }
+    terms.text = free.join(" ").toLowerCase();
+    return terms;
+  }
+  const quoteWord = (value) => /\s/.test(value) ? '"' + value.replace(/"/g, "") + '"' : value;
+  /** Saves before v3 kept project, coordinator, rigor and flag filters in Filter ▾; they become search words or the choice. */
+  function upgradePrefs(saved) {
+    const out = saved && typeof saved === "object" ? { ...saved } : {};
     // Phase 12 makes projects the tree's folders; earlier saves carried the old status default.
-    if (saved.v !== 2 && (saved.group === undefined || saved.group === "status")) saved.group = "project";
-    const prefs = Object.assign({}, defaults, saved, { v: 2 });
+    if ((out.v || 0) < 2 && (out.group === undefined || out.group === "status")) out.group = "project";
+    if ((out.v || 0) < 3) {
+      const words = [];
+      if (out.project) words.push("project:" + (out.project === NONE ? "none" : quoteWord(out.project)));
+      if (out.agent === "~owner") words.push("by:owner");
+      else if (out.agent === NONE) out.flag = out.flag || "unassigned";
+      else if (out.agent) words.push("agent:" + out.agent);
+      if (out.rigor) words.push("rigor:" + out.rigor);
+      if (out.flag === "overdue") words.push("is:overdue");
+      else if (out.flag === "stale" || out.flag === "unassigned") out.status = out.flag;
+      if (words.length) out.text = [String(out.text || "").trim(), ...words].filter(Boolean).join(" ");
+      for (const key of ["project", "agent", "rigor", "flag"]) delete out[key];
+    }
+    if (!CHOICE_IDS.includes(out.status)) out.status = "open";
+    return out;
+  }
+
+  function mount(root, opts) {
+    const defaults = { status: "open", group: "project", sort: "smart", text: "", archived: false, empty: false, layout: "auto", v: 3 };
+    // Done is a flat list of completed tasks, newest first; every other choice draws the owner's grouping.
+    const grouping = () => prefs.status === "done" ? "none" : prefs.group;
+    const prefs = Object.assign({}, defaults, upgradePrefs(UI.store.get("locus.tasks.view", {})), { v: 3 });
     let data = { tasks: [], projects: [], tasks_rev: -1, done_visible_days: 3 }, profiles = [], loading = null, rerun = false, conflicted = false;
+    const rigorIds = ["sprint", "streamlined", "standard", "long"];
+    const modeLabel = (id) => data.rigor_modes?.[id]?.label || ({ sprint: "Sprint", streamlined: "Streamlined", standard: "Standard", long: "Long" }[id] || id);
+    const taskRigor = (task) => task.rigor_effective || "streamlined";
+    const inheritedRigor = (project) => {
+      const projects = data.rigor_defaults?.projects || {};
+      return (Object.hasOwn(projects, project) ? projects[project] : null) || data.rigor_defaults?.default || "streamlined";
+    };
+    const rigorSource = (task) => task.rigor_source === "task" ? "set on this task" : task.rigor_source === "project" ? "from project " + task.project : "from the hub default";
+    const showGuide = () => showRigorGuide(data.rigor_modes, data.rigor_defaults);
+    /** A task's effective mode: meter and label; for the owner, a native dropdown laid over them. */
+    function rigorPick(task, where) {
+      const id = rigorId(taskRigor(task)), own = task.rigor_source === "task", canEdit = opts.canEdit();
+      const summary = data.rigor_modes?.[id]?.summary;
+      const pick = el("span", { class: "task-rigor-pick rigor-" + id + (own ? "" : " rigor-inherited") + (canEdit ? " rigor-editable" : ""),
+        title: "Rigor: " + (task.rigor_mode?.label || modeLabel(id)) + " · " + rigorSource(task) + (summary ? "\n" + summary : "") +
+          (canEdit ? "\nChoose a mode, or Inherit to follow the project or hub default" : "\nConnect as owner to change it") },
+        rigorMeter(id), el("span", { class: "rigor-name" }, task.rigor_mode?.label || modeLabel(id)));
+      if (!canEdit) return pick;
+      // Rows keep the tree's single Tab stop; keyboard users reach row modes through the row menu or the detail pane.
+      const choice = el("select", { class: "rigor-select", draggable: "false", tabindex: where === "row" ? "-1" : null, "aria-label": "Rigor for task #" + task.id },
+        el("option", { value: "inherit" }, "Inherit · " + modeLabel(inheritedRigor(task.project || ""))), ...rigorIds.map((m) => el("option", { value: m }, modeLabel(m))));
+      const stored = own ? id : "inherit";
+      choice.value = stored;
+      // The tree selects, focuses and drags rows; the dropdown keeps its own clicks and keys.
+      for (const type of ["click", "dblclick", "mousedown", "pointerdown", "dragstart"]) choice.addEventListener(type, (event) => event.stopPropagation());
+      // A pick from the list saves at once. Arrow keys on a closed dropdown change it a
+      // step at a time, so a keyboard change waits for Enter or for focus to leave.
+      let keyed = false, pending = false;
+      const commit = (refocus) => { pending = keyed = false; return setRigor(task, choice.value, where, refocus); };
+      choice.addEventListener("keydown", (event) => {
+        event.stopPropagation();
+        if (event.key === "Enter") { if (pending) { event.preventDefault(); commit(true); } }
+        else if (event.key === "Escape") { if (pending) { event.preventDefault(); choice.value = stored; pending = keyed = false; } }
+        else if (!["Tab", "Shift", "Control", "Alt", "Meta"].includes(event.key)) keyed = true;
+      });
+      choice.addEventListener("change", () => { if (keyed) pending = true; else commit(true); });
+      choice.addEventListener("blur", () => { if (pending) commit(false); keyed = false; });
+      pick.append(el("span", { class: "rigor-caret", "aria-hidden": "true" }, "▾"), choice);
+      return pick;
+    }
+    function rigorItems(task) {
+      const stored = task.rigor_source === "task" ? taskRigor(task) : "inherit";
+      return [["inherit", "Inherit · " + modeLabel(inheritedRigor(task.project || ""))], ...rigorIds.map((m) => [m, modeLabel(m)])]
+        .map(([value, label]) => ({ label: "Rigor: " + label, radio: true, checked: value === stored, action: () => setRigor(task, value, "menu", false) }));
+    }
+    async function setRigor(task, value, where, refocus = true) {
+      // Returning focus to the row ends the edit, so the deferred tree redraw can run.
+      if (refocus) { if (where === "row") choose("t:" + task.id, { focus: true }); else if (where === "detail") detail.focus?.(); }
+      if (value === (task.rigor || "inherit")) return null;
+      const result = await mutate("/update", { id: task.id, expect_rev: task.rev, rigor: value });
+      if (!result) render(true); // A refusal leaves the saved mode; redraw the dropdown to match.
+      return result;
+    }
+    /** A project folder shows the mode its tasks inherit; the tooltip counts tasks by mode. */
+    function folderRigor(group) {
+      if (grouping() !== "project" || group.kind === "folder") return el("span", { class: "task-cell task-cell-rigor" });
+      const project = group.key === NONE ? "" : group.project || group.key, id = rigorId(inheritedRigor(project));
+      const set = Object.hasOwn(data.rigor_defaults?.projects || {}, project);
+      const counts = rigorIds.map((m) => [m, group.all.filter((t) => taskRigor(t) === m).length]).filter(([, n]) => n);
+      return el("span", { class: "task-cell task-cell-rigor", title: "Project mode: " + modeLabel(id) + (set ? " (Rules → Rigor)" : " (hub default)") +
+          "; its tasks inherit it unless set" + (counts.length ? "\n" + counts.map(([m, n]) => n + " " + modeLabel(m)).join(" · ") : "") },
+        el("span", { class: "task-rigor-pick task-rigor-project rigor-inherited rigor-" + id }, rigorMeter(id), el("span", { class: "rigor-name" }, modeLabel(id))));
+    }
+    let activity = [], activityKey = "", activityByTask = new Map();
+    const workers = (task) => activityByTask.get(task.id) || [];
+    const activityTitle = (task) => workers(task).map((a) => a.agent + " · " + a.label + "\n" + a.status + "\n" + a.source).join("\n\n");
     // pinned keeps the selected task in the list after it stops matching the filters, until the owner changes them.
     let selected = UI.store.get("locus.tasks.selected", ""), pinned = null, reveal = null, rows = [], groupsShown = [], dragging = null, shownKey = null, history = null;
     // Every project, folder and status group drawn, by its selection key; and each group's row.
@@ -3478,29 +4064,42 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     /** Folders arrived with the server (a hub that predates them sends no folders list). */
     const hasFolders = () => Array.isArray(data.folders);
     const folders = UI.store.get("locus.tasks.folders", {});
+    const savedOrder = UI.store.get("locus.tasks.order", {});
+    let folderOrder = Object.fromEntries(Object.entries(savedOrder && typeof savedOrder === "object" ? savedOrder : {})
+      .filter(([, ids]) => Array.isArray(ids)));
     const sizes = Object.assign({ w: 0, h: 0 }, UI.store.get("locus.tasks.split", {}));
     const count = el("p", { class: "muted small task-count", hidden: true });
-    const search = el("input", { type: "search", value: prefs.text, placeholder: "Search tasks…", "aria-label": "Search tasks" });
-    const states = el("div", { class: "task-state-filters", role: "group", "aria-label": "Task status" });
-    const filter = button("Filter ▾", (event) => filterMenu(event.currentTarget));
+    const search = el("input", { type: "search", value: prefs.text, placeholder: "Search · project: agent: rigor:", "aria-label": "Search tasks",
+      title: "Search words: project:NAME, agent:NAME, rigor:MODE, is:overdue, by:owner (project:none and agent:none for neither)" });
+    const choice = button("Open ▾", (event) => choiceMenu(event.currentTarget), "Show tasks");
+    choice.classList.add("task-choice"); choice.setAttribute("aria-haspopup", "menu");
     const menu = button("⋯", (event) => UI.popmenu(event.currentTarget, [
+      { label: "Show archived", checked: prefs.archived, action: () => change("archived", !prefs.archived) },
+      { label: "View options…", action: () => viewMenu(menu) },
+      ...(opts.canEdit() && data.archive_policy ? [{ label: "Tidy…", action: tidy }, { label: "Archive completed tasks…", action: () => policyMenu(menu) }] : []),
+      { separator: true },
       { label: "Collapse all", action: () => foldAll(true) },
       { label: "Expand all", action: () => foldAll(false) },
+      { label: "Reset folder order", action: () => { folderOrder = {}; UI.store.set("locus.tasks.order", folderOrder); render(true); } },
       { separator: true },
       ...[["auto", "Details: fit to width"], ["side", "Details beside the list"], ["stack", "Details below the list"]]
         .map(([value, label]) => ({ label, radio: true, checked: prefs.layout === value, action: () => setLayout(value) })),
+      { separator: true }, { label: "About rigor modes", action: showGuide },
       { separator: true }, { label: "Export CSV", action: () => opts.export("csv") },
       { label: "Export JSON", action: () => opts.export("json") }, { label: "Refresh", action: load }]), "Task actions");
     const add = button("+ Task", () => edit(), "Add a task"); add.classList.add("primary");
     const head = el("div", { class: "task-tree-head" });
     const body = el("div", { class: "task-tree-body", role: "tree", "aria-label": "Tasks" });
     const tree = el("div", { class: "task-tree" }, head, body);
+    const drawColumns = taskColumns(tree, head, () => prefs.sort, (sort) => change("sort", sort));
     const split = el("div", { class: "task-split", title: "Drag to resize · double-click to reset" });
     const detail = el("div", { class: "task-detail", role: "region", "aria-label": "Task details", tabindex: "-1" });
     const workspace = el("div", { class: "task-workspace", dataset: { layout: "stack" } }, tree, split, detail);
-    root.replaceChildren(el("div", { class: "task-tools task-tools-compact" }, el("div", { class: "task-tool-row" }, search, filter, menu, add), states), count, workspace);
+    root.replaceChildren(el("div", { class: "task-tools task-tools-compact" }, el("div", { class: "task-tool-row" }, search, choice, menu, add)), count, workspace);
     search.addEventListener("input", () => change("text", search.value));
     body.addEventListener("keydown", keydown);
+    body.addEventListener("dragover", clearDrop); // A row with a valid destination stops propagation.
+    body.addEventListener("dragleave", (event) => { if (!body.contains(event.relatedTarget)) clearDrop(); });
     const side = () => workspace.dataset.layout === "side";
     UI.splitter(split, {
       axis: () => side() ? "x" : "y", side: "left",
@@ -3513,7 +4112,10 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     applySizes();
     if (window.ResizeObserver) new window.ResizeObserver(() => layout()).observe(workspace);
     else window.addEventListener?.("resize", () => layout());
-    window.setInterval?.(() => { for (const n of root.querySelectorAll(".task-ago")) n.textContent = (n.dataset.prefix || "") + ago(n.dataset.ts, n.dataset.long === "1"); }, 30000);
+    window.setInterval?.(() => {
+      render(); // Expire activity even when the hub is quiet or disconnected.
+      for (const n of root.querySelectorAll(".task-ago")) n.textContent = (n.dataset.prefix || "") + ago(n.dataset.ts, n.dataset.long === "1");
+    }, 30000);
     function button(text, fn, title = text) {
       return el("button", { class: "btn small", type: "button", title, onclick: (event) => {
         event.stopPropagation();
@@ -3554,36 +4156,145 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (layout() === "stack" && value === "side" && !opts.widen?.(660 - workspace.clientWidth)) UI.toast("Widen the Tasks pane to show details beside the list.");
       layout();
     }
-    function filterMenu(anchor) {
-      const form = el("div", { class: "task-filter-form" });
-      const fields = [
-        ["project", "Project", [["", "All projects"], [NONE, "No project"], ...data.projects.map((p) => [p, p])]],
-        ["agent", "Coordinator", [["", "Anyone"], ["~none", "Unassigned"], ["~owner", "Owner-created"], ...profiles.map((p) => [p.name, p.name])]],
-        ["group", "Group by", [["project", "Project"], ["status", "Status"], ["none", "None"]]],
-        ["sort", "Sort", [["smart", "Smart order"], ["recent", "Recent activity"], ["title", "Name"], ["assignee", "Assignee"], ["priority", "Priority"], ["due", "Due date"], ["newest", "Newest"]]]
-      ];
-      for (const [key, title, values] of fields) {
-        const input = key === "group" ? segment(values, prefs[key], title) : select(values, prefs[key], title);
-        if (key === "group") input.addEventListener("click", () => change(key, input.value));
-        else input.addEventListener("change", () => change(key, input.value));
-        form.append(el("label", {}, title, input));
+    /** Tasks shown by a choice. Archived tasks that are not done stay behind Show archived; Done lists the completed ones (RD-22). */
+    function inChoice(t, id) {
+      const done = t.status === "done", base = !t.archived_at || prefs.archived;
+      if (id === "done") return done;
+      if (id === "all") return base || done;
+      if (!base) return false;
+      if (id === "open") return !done;
+      if (id === "active") return workers(t).length > 0;
+      if (id === "stale" || id === "unassigned") return !!t.flags[id];
+      return t.status === id;
+    }
+    const choiceCount = (id) => data.tasks.reduce((n, t) => n + (inChoice(t, id) ? 1 : 0), 0);
+    const choiceLabel = (id) => (CHOICES.find(([c]) => c === id) || CHOICES[0])[1];
+    function choiceMenu(anchor) {
+      UI.popmenu(anchor, CHOICES.map(([id, label]) => ({ label: label + " · " + choiceCount(id), radio: true, checked: prefs.status === id,
+        action: () => change("status", id) })));
+    }
+    /** View options only (PD-4): nothing here filters rows; the choice and the search words do. */
+    function viewMenu(anchor) {
+      const sorts = [["smart", "Smart order"], ["recent", "Recent activity"], ["title", "Name"], ["assignee", "Assignee"], ["priority", "Priority"], ["rigor", "Rigor"], ["due", "Due date"], ["newest", "Newest"]];
+      UI.popmenu(anchor, [
+        ...[["project", "Project"], ["status", "Status"], ["none", "None"]].map(([value, label]) =>
+          ({ label: "Group by: " + label, radio: true, checked: prefs.group === value, disabled: prefs.status === "done", action: () => change("group", value) })),
+        { separator: true },
+        ...sorts.map(([value, label]) => ({ label: "Sort: " + label, radio: true, checked: prefs.sort === value, action: () => change("sort", value) })),
+        { separator: true },
+        { label: "Show empty projects", checked: prefs.empty, action: () => change("empty", !prefs.empty) },
+        { label: "Reset view", action: () => { Object.assign(prefs, defaults, { layout: prefs.layout }); pinned = null; search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); } }]);
+    }
+    /** rooms.md RD-22: 0 archives at completion, n days after, -1 never. */
+    function policyMenu(anchor) {
+      const current = data.archive_policy?.closed_after_days ?? 0;
+      const choices = [[0, "At completion"], [1, "After 1 day"], [7, "After 7 days"], [14, "After 14 days"], [30, "After 30 days"], [-1, "Never"]];
+      if (!choices.some(([d]) => d === current)) choices.splice(-1, 0, [current, "After " + current + " days"]);
+      UI.popmenu(anchor, choices.map(([days, label]) => ({ label: "Archive completed tasks: " + label, radio: true, checked: current === days, action: async () => {
+        try { await opts.api("/api/tasks/archive-policy", { body: { agent: "owner", closed_after_days: days }, owner: true }); await load(); }
+        catch (error) { UI.toast(error.message, { kind: "error" }); }
+      } })));
+    }
+    const folderRecord = (group) => (data.folders || []).find((f) => f.project === (group.project || "") && f.path === group.path);
+    /** Owner: archive a folder and its tasks; open tasks need a second confirm (rooms.md 7, FOLDER_HAS_OPEN). */
+    async function archiveFolder(group, withOpen = false) {
+      const where = (group.project || "No project") + " / " + group.path;
+      try {
+        const result = await opts.api("/api/tasks/archive", { body: { agent: "owner", project: group.project || "", folder: group.path, with_open: withOpen }, owner: true });
+        UI.toast("Archived " + where + (result.archived ? " and " + result.archived + " task" + (result.archived === 1 ? "" : "s") : "") + ". Restore it from the folder's menu with Show archived on.");
+        await load(); return result;
+      } catch (error) {
+        if (error.data?.code !== "FOLDER_HAS_OPEN") { UI.toast(error.message, { kind: "error" }); return null; }
+        const open = error.data.detail?.open || [];
+        const body = el("div", {}, el("p", {}, where + " still has " + open.length + " open task" + (open.length === 1 ? "" : "s") + ". Archive " + (open.length === 1 ? "it" : "them") + " too?"),
+          el("ul", { class: "task-tidy-list" }, open.map((t) => el("li", {}, "#" + t.id + " " + t.title + " · " + (labels[t.status] || t.status)))));
+        const again = await UI.dialog({ title: "Archive " + where, body, buttons: [{ label: "Cancel", value: false }, { label: "Archive with open tasks", value: true, danger: true }] });
+        return again ? archiveFolder(group, true) : null;
       }
-      const archived = el("input", { type: "checkbox", checked: prefs.archived, onchange: (e) => change("archived", e.target.checked) });
-      const empty = el("input", { type: "checkbox", checked: prefs.empty, onchange: (e) => change("empty", e.target.checked) });
-      form.append(el("label", { class: "task-check" }, archived, " Include archived"),
-        el("label", { class: "task-check", title: "List watched repositories that have no matching tasks" }, empty, " Show empty projects"),
-        button("Reset filters", () => { Object.assign(prefs, defaults, { layout: prefs.layout }); pinned = null; search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); }));
-      UI.popmenu(anchor, [{ node: form }]);
+    }
+    async function restoreFolder(group) {
+      try {
+        const result = await opts.api("/api/tasks/unarchive", { body: { agent: "owner", project: group.project || "", folder: group.path }, owner: true });
+        UI.toast("Restored " + (group.project || "No project") + " / " + group.path + (result.restored ? " and the " + result.restored + " task" + (result.restored === 1 ? "" : "s") + " its archive archived" : "") + ".");
+        await load(); return result;
+      } catch (error) { UI.toast(error.message, { kind: "error" }); return null; }
+    }
+    /** rooms.md 8: candidates with a checkbox each; nothing is archived without the owner's click. */
+    async function tidy() {
+      let found;
+      try { found = await opts.api("/api/tasks/tidy", { owner: true }); }
+      catch (error) { UI.toast(error.status === 404 ? "Restart the hub to use Tidy; the running server predates it." : error.message, { kind: "error" }); return; }
+      const picks = [];
+      const row = (target, title, detail, extra = null) => {
+        const box = el("input", { type: "checkbox", "aria-label": "Archive " + title });
+        picks.push({ box, target, item: extra });
+        return el("li", { class: "task-tidy-item" }, el("label", {}, box, el("span", { class: "task-tidy-title" }, title)), el("span", { class: "task-tidy-why muted small" }, detail), extra);
+      };
+      const since = (ts) => ts ? " · last activity " + ago(ts, true) : "";
+      const section = (heading, items) => items.length ? [el("h4", { class: "task-tidy-head" }, heading + " · " + items.length), el("ul", { class: "task-tidy-list" }, items)] : [];
+      const where = (project, path) => (project || "No project") + (path ? " / " + path : "");
+      const suggestions = () => found.suggestions.map((sg) => {
+        const target = sg.target_kind === "task" ? { kind: "task", id: sg.task.id } : sg.target_kind === "folder" ? { kind: "folder", project: sg.folder.project, path: sg.folder.path } : { kind: "room", uid: sg.room.uid };
+        const title = sg.target_kind === "task" ? "#" + sg.task.id + " " + sg.task.title : sg.target_kind === "folder" ? where(sg.folder.project, sg.folder.path) : sg.room.name;
+        const dismiss = el("button", { class: "btn small", type: "button", title: "Dismiss this suggestion", onclick: async (event) => {
+          const button = event.currentTarget;
+          try {
+            await opts.api("/api/tasks/suggest-archive/dismiss", { body: { agent: "owner", id: sg.id }, owner: true });
+            const pick = picks.find((p) => p.item === button); if (pick) { pick.dismissed = true; pick.box.checked = false; pick.box.disabled = true; }
+            button.textContent = "Dismissed"; button.disabled = true;
+          }
+          catch (error) { UI.toast(error.message, { kind: "error" }); }
+        } }, "Dismiss");
+        return row(target, title, sg.agent + " suggests: " + sg.reason, dismiss);
+      });
+      const parts = [
+        ...section("Open tasks with no update for " + found.idle_days + " days", found.tasks.map((t) => row({ kind: "task", id: t.id }, "#" + t.id + " " + t.title, where(t.project, t.folder) + " · " + t.reason))),
+        ...section("Folders whose tasks are all closed or archived", found.folders.map((f) => row({ kind: "folder", project: f.project, path: f.path }, where(f.project, f.path), f.reason + since(f.last_activity)))),
+        ...section("Rooms with no message for " + found.idle_days + " days", (found.rooms || []).map((r) => row({ kind: "room", uid: r.uid }, r.name, r.reason))),
+        ...section("Suggested by agents", suggestions())];
+      const body = el("div", { class: "task-tidy" }, parts.length ? parts : el("p", { class: "muted" }, "Nothing to tidy: no idle open tasks, closed folders, quiet rooms or suggestions."));
+      const go = await UI.dialog({ title: "Tidy", body, className: "dialog-wide", buttons: parts.length ? [{ label: "Close", value: false }, { label: "Archive selected", value: true, primary: true }] : undefined });
+      const chosen = picks.filter((p) => p.box.checked && !p.dismissed).map((p) => p.target);
+      if (!go || !chosen.length) return;
+      let done = 0; const refused = [];
+      for (const target of chosen) {
+        const body = target.kind === "task" ? { agent: "owner", id: target.id, archived: true } : target.kind === "folder" ? { agent: "owner", project: target.project, folder: target.path } : null;
+        try {
+          if (target.kind === "room") await opts.api("/api/rooms/" + encodeURIComponent(target.uid) + "/archive", { body: { agent: "owner" }, owner: true });
+          else await opts.api("/api/tasks/archive", { body, owner: true });
+          done++;
+        } catch (error) { refused.push(error.data?.code === "FOLDER_HAS_OPEN" ? where(target.project, target.path) + " has open tasks (archive it from its menu)" : error.message); }
+      }
+      await load();
+      UI.toast("Archived " + done + " item" + (done === 1 ? "" : "s") + (refused.length ? "; " + refused.join("; ") : "") + ".", { kind: refused.length ? "error" : undefined });
+    }
+    async function restore(task) {
+      const result = await mutate("/archive", { id: task.id, archived: false });
+      if (result) UI.toast("Restored #" + task.id + ". It stays done; reopen it to work on it again.");
     }
     // --------------------------------------------------------------- data
     async function load() {
       if (loading) { rerun = true; return loading; }
       loading = (async () => {
+        let ok = false;
         try {
-          const result = await Promise.all([opts.api("/api/tasks?archived=1"), opts.api("/api/profiles").catch(() => ({ profiles: opts.agents() }))]);
-          data = result[0]; profiles = result[1].profiles || []; render(); opts.changed?.(data);
-        } catch (error) { count.hidden = false; count.textContent = "Tasks unavailable: " + error.message; }
-        finally { loading = null; if (rerun) { rerun = false; load(); } }
+          do {
+            rerun = false;
+            try {
+              const result = await Promise.all([opts.api("/api/tasks"), opts.api("/api/tasks?archived=only"), opts.api("/api/profiles").catch(() => ({ profiles: opts.agents() }))]);
+              let [current, archived] = result;
+              // A hub that predates archived=only answers with its active list; ask it for everything at once instead.
+              if (!current.archive_policy) { current = await opts.api("/api/tasks?archived=1"); archived = { tasks: [] }; }
+              const seen = new Set(current.tasks.map((t) => t.id));
+              data = { ...current, tasks: [...current.tasks, ...(archived.tasks || []).filter((t) => !seen.has(t.id))] };
+              profiles = result[2].profiles || []; render(); opts.changed?.(data); ok = true;
+            } catch (error) {
+              count.hidden = false; count.textContent = "Tasks unavailable: " + error.message;
+              opts.activityChanged?.(activity, { ...data, error: error.message }); ok = false;
+            }
+          } while (rerun);
+          return ok;
+        } finally { loading = null; }
       })();
       return loading;
     }
@@ -3706,12 +4417,16 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         return folderAction({ action: "delete", project: node.project, path: node.path });
       }
     }
+    function searchedProject() {
+      const scope = searchTerms(prefs.text).project;
+      return scope && scope !== "none" ? data.projects.find((p) => p.toLowerCase() === scope) || "" : "";
+    }
     async function edit(task, agentsOnly = false) {
       if (!opts.canEdit()) return;
       // A new task lands in the project or folder selected in the tree.
-      const here = !task && prefs.group === "project" ? nodes.get(selected) || (selected.startsWith("t:") ? taskNode(Number(selected.slice(2))) : null) : null;
+      const here = !task && grouping() === "project" ? nodes.get(selected) || (selected.startsWith("t:") ? taskNode(Number(selected.slice(2))) : null) : null;
       const values = task || { title: "", summary: "", notes: "", plan_ref: "", priority: "normal", tags: [], coordinators: [],
-        project: here ? here.project : prefs.project === NONE ? "" : prefs.project, folder: here ? here.path : "" };
+        project: here ? here.project : searchedProject(), folder: here ? here.path : "" };
       const form = el("div", { class: "task-editor" }), fields = {};
       const field = (key, label, node) => { fields[key] = node; node.setAttribute("aria-label", label); node.id = "task-edit-" + key; form.append(el("label", { for: node.id }, label, node)); };
       if (!agentsOnly) {
@@ -3741,6 +4456,10 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         field("priority", "Priority", segment(priorities.map((p) => [p, p]), values.priority, "Task priority"));
         const place = placeFields(values.project, values.folder);
         field("project", "Project", place.projectInput);
+        const rigor = segment([["inherit", "Inherit"], ...rigorIds.map((id) => [id, modeLabel(id)])], values.rigor || "inherit", "Task rigor");
+        const updateInherited = () => { rigor.children[0].textContent = "Inherit · " + modeLabel(inheritedRigor(place.projectInput.value.trim())); };
+        updateInherited(); place.projectInput.addEventListener("input", updateInherited); place.projectInput.addEventListener("change", updateInherited);
+        field("rigor", "Rigor", rigor);
         if (hasFolders()) field("folder", "Folder", place.folderInput);
         form.append(...place.nodes);
         const more = el("details", { class: "task-editor-more" }, el("summary", {}, "More"));
@@ -3774,33 +4493,80 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
     // ---------------------------------------------------------- filtering
     function filtered() {
-      const smart = (a, b) => order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at);
+      const smart = (a, b) => Number(!!workers(b).length) - Number(!!workers(a).length) || order.indexOf(a.status) - order.indexOf(b.status) || priorities.indexOf(a.priority) - priorities.indexOf(b.priority) || b.updated_at.localeCompare(a.updated_at);
+      const terms = searchTerms(prefs.text), doneFirst = prefs.status === "done" && prefs.sort === "smart";
       return data.tasks.filter((t) => {
         if (t.id === pinned) return true;
-        if (!prefs.archived && t.archived_at) return false;
-        if (prefs.status !== "all" && (prefs.status === "open" ? t.status === "done" : t.status !== prefs.status)) return false;
-        if (prefs.project && t.project !== (prefs.project === NONE ? "" : prefs.project)) return false;
-        if (prefs.agent === "~owner" && t.created_by !== "owner") return false;
-        if (prefs.agent === "~none" && t.coordinators.length) return false;
-        if (prefs.agent && !prefs.agent.startsWith("~") && !t.coordinators.some((a) => a.agent === prefs.agent)) return false;
-        if (prefs.flag && !t.flags[prefs.flag]) return false;
-        return !prefs.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.folder || "", t.tags.join(" "), ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(prefs.text.toLowerCase());
-      }).sort((a, b) => prefs.sort === "recent" ? time(lastActivity(b).ts) - time(lastActivity(a).ts) : prefs.sort === "newest" ? b.id - a.id :
+        if (!inChoice(t, prefs.status)) return false;
+        if (terms.project !== null && (terms.project === "none" ? t.project !== "" : (t.project || "").toLowerCase() !== terms.project)) return false;
+        if (terms.agent !== null && (terms.agent === "none" ? t.coordinators.length : !t.coordinators.some((a) => a.agent.toLowerCase() === terms.agent))) return false;
+        if (terms.rigor !== null && taskRigor(t) !== terms.rigor && modeLabel(taskRigor(t)).toLowerCase() !== terms.rigor) return false;
+        if (terms.overdue && !t.flags.overdue) return false;
+        if (terms.owner && t.created_by !== "owner") return false;
+        return !terms.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.folder || "", t.tags.join(" "), t.status_note || "", ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(terms.text);
+      }).sort((a, b) => doneFirst ? (b.done_at || b.updated_at).localeCompare(a.done_at || a.updated_at) || b.id - a.id : prefs.sort === "recent" ? time(lastActivity(b).ts) - time(lastActivity(a).ts) : prefs.sort === "newest" ? b.id - a.id :
         prefs.sort === "title" ? a.title.localeCompare(b.title, undefined, { sensitivity: "base", numeric: true }) :
         prefs.sort === "assignee" ? (leadOf(a) || "~").localeCompare(leadOf(b) || "~") || smart(a, b) :
+        prefs.sort === "rigor" ? rigorIds.indexOf(taskRigor(b)) - rigorIds.indexOf(taskRigor(a)) || smart(a, b) :
         prefs.sort === "due" ? (a.due || "9999").localeCompare(b.due || "9999") : prefs.sort === "priority" ? priorities.indexOf(a.priority) - priorities.indexOf(b.priority) : smart(a, b));
     }
     const matches = (task) => { const keep = pinned; pinned = null; try { return filtered().includes(task); } finally { pinned = keep; } };
-    const groupKey = (task) => prefs.group === "status" ? task.status : prefs.group === "project" ? task.project || NONE : "";
-    const folderKey = (group) => "g:" + prefs.group + ":" + group.key;
-    const isClosed = (group) => prefs.group !== "none" && !!folders[prefs.group + ":" + group.key];
+    const groupKey = (task) => grouping() === "status" ? task.status : grouping() === "project" ? task.project || NONE : "";
+    const folderKey = (group) => "g:" + grouping() + ":" + group.key;
+    const isClosed = (group) => grouping() !== "none" && !!folders[grouping() + ":" + group.key];
     const byName = (a, b) => a.label.localeCompare(b.label, undefined, { sensitivity: "base", numeric: true });
-    /** The tree: status groups, or projects holding folders (sub-folders first, by name) and their tasks.
+    const orderKey = (parent) => parent ? "children:" + parent.key : "projects";
+    const sameParent = (a, b) => a.kind === b.kind && (a.parent?.key || null) === (b.parent?.key || null);
+    const siblingGroups = (group) => groupsShown.filter((g) => sameParent(g, group));
+    function orderedFolderKeys(keys, parent) {
+      const saved = folderOrder[orderKey(parent)] || [], known = new Set(keys);
+      const first = saved.filter((key, i) => known.has(key) && saved.indexOf(key) === i);
+      return [...first, ...keys.filter((key) => !first.includes(key))];
+    }
+    function sortFolders(list, parent = null) {
+      const byKey = new Map(list.map((g) => [g.key, g]));
+      return orderedFolderKeys(list.map((g) => g.key), parent).map((key) => byKey.get(key));
+    }
+    /** Include filtered-out siblings so a local move never erases their saved positions. */
+    function siblingKeys(group) {
+      const keys = new Set(siblingGroups(group).map((g) => g.key));
+      if (!group.parent) {
+        for (const p of data.projects) keys.add(p || NONE);
+        for (const item of [...data.tasks, ...(data.folders || [])]) keys.add(item.project || NONE);
+      } else {
+        const parent = group.parent.path, prefix = parent ? parent + "/" : "";
+        for (const item of [...data.tasks.map((t) => ({ project: t.project, path: t.folder })), ...(data.folders || [])]) {
+          if ((item.project || "") !== group.project || !item.path?.startsWith(prefix)) continue;
+          const name = item.path.slice(prefix.length).split("/")[0];
+          if (name) keys.add((group.project || NONE) + "/" + prefix + name);
+        }
+      }
+      const defaults = [...keys].sort((a, b) => (!group.parent ? (a === NONE) - (b === NONE) : 0) || a.localeCompare(b, undefined, { sensitivity: "base", numeric: true }));
+      return orderedFolderKeys(defaults, group.parent);
+    }
+    function reorderFolder(group, target, after) {
+      if (grouping() !== "project" || group.key === target.key || !sameParent(group, target)) return;
+      const before = siblingKeys(group), next = before.filter((key) => key !== group.key);
+      const at = next.indexOf(target.key);
+      if (at < 0 || !before.includes(group.key)) return;
+      next.splice(at + (after ? 1 : 0), 0, group.key);
+      if (next.every((key, i) => key === before[i])) return;
+      folderOrder[orderKey(group.parent)] = next;
+      UI.store.set("locus.tasks.order", folderOrder); render(true);
+      const moved = rows.find((r) => r.key === folderKey(group));
+      moved?.node.scrollIntoView?.({ block: "nearest" });
+      if (moved?.key === selected) moved.node.focus();
+    }
+    function nudgeFolder(group, direction) {
+      const siblings = siblingGroups(group), at = siblings.findIndex((g) => g.key === group.key), target = siblings[at + direction];
+      if (target) reorderFolder(group, target, direction > 0);
+    }
+    /** The tree: status groups, or projects holding folders (sub-folders first, in saved order) and their tasks.
      *  Each node: { kind, key, label, project, path, tasks (its own), children, all (everything below), depth, parent }. */
     function groups(tasks) {
       nodes = new Map();
-      if (prefs.group === "none") return [{ kind: "flat", key: "", label: "", project: "", path: "", tasks, children: [], all: tasks, depth: 0 }];
-      const byStatus = prefs.group === "status", tops = new Map();
+      if (grouping() === "none") return [{ kind: "flat", key: "", label: "", project: "", path: "", tasks, children: [], all: tasks, depth: 0 }];
+      const byStatus = grouping() === "status", tops = new Map();
       const node = (kind, key, label, project, path, parent) => {
         const made = { kind, key, label, project, path, tasks: [], children: [], all: [], depth: parent ? parent.depth + 1 : 0, parent };
         if (parent) parent.children.push(made);
@@ -3821,7 +4587,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         }
         return at;
       };
-      if (!byStatus && prefs.empty) for (const p of data.projects) if (!prefs.project || prefs.project === p) top(p);
+      const scope = searchTerms(prefs.text).project, inScope = (project) => scope === null || (scope === "none" ? !project : (project || "").toLowerCase() === scope);
+      if (!byStatus && prefs.empty) for (const p of data.projects) if (inScope(p)) top(p);
       for (const task of tasks) {
         const home = byStatus ? top(task.status) : folderOf(task.project, task.folder);
         home.tasks.push(task);
@@ -3829,14 +4596,16 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       }
       // Folders with no task at all (made ahead, or emptied) stay visible so they can be filled.
       if (!byStatus && hasFolders()) for (const f of data.folders) {
-        if (prefs.project && (f.project || NONE) !== prefs.project) continue;
+        if (!inScope(f.project)) continue;
+        if (f.archived_at && !prefs.archived) continue;
         const known = tops.has(f.project || NONE);
         if (known && (prefs.empty || !holding({ project: f.project, path: f.path }).length)) folderOf(f.project, f.path);
         else if (!known && !holding({ project: f.project, path: f.path }).length && f.explicit) folderOf(f.project, f.path);
       }
-      const sortTree = (n) => { n.children.sort(byName); n.children.forEach(sortTree); };
-      const list = [...tops.values()].sort((a, b) => byStatus ? order.indexOf(a.key) - order.indexOf(b.key)
+      const sortTree = (n) => { n.children = sortFolders(n.children.sort(byName), n); n.children.forEach(sortTree); };
+      let list = [...tops.values()].sort((a, b) => byStatus ? order.indexOf(a.key) - order.indexOf(b.key)
         : (a.key === NONE) - (b.key === NONE) || a.key.localeCompare(b.key, undefined, { sensitivity: "base", numeric: true }));
+      if (!byStatus) list = sortFolders(list);
       list.forEach(sortTree);
       return list;
     }
@@ -3858,22 +4627,20 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
     // --------------------------------------------------------------- render
     function render(force = false) {
+      return UI.perf("tasks.render", () => renderView(force));
+    }
+    function renderView(force = false) {
+      if (dragging) return; // Live updates must not detach the native drag source.
+      activity = activeWork(data.tasks, opts.agents(), opts.usage?.() || {});
+      // Presence timestamps alone need not rebuild the tree; age nodes tick separately.
+      activityKey = UI.signature(activity.map(({ ts, ...a }) => a));
+      activityByTask = new Map();
+      for (const a of activity) if (a.taskId) activityByTask.set(a.taskId, [...(activityByTask.get(a.taskId) || []), a]);
+      opts.activityChanged?.(activity, data);
       UI.setDisabled(add, opts.canEdit() ? null : "Connect as owner to add tasks");
-      const active = data.tasks.filter((t) => prefs.archived || !t.archived_at);
-      const counts = (s) => active.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
-      const filterCount = ["project", "agent", "group", "sort", "archived", "flag", "empty"].filter((k) => prefs[k] !== defaults[k]).length;
-      filter.textContent = "Filter ▾" + (filterCount ? " " + filterCount : "");
-      UI.update(states, UI.signature([prefs.status, prefs.flag, active.map((t) => [t.status, t.flags])]), () => states.replaceChildren(
-        ...[["open", "Open"], ...Object.entries(labels), ["all", "All"]].map(([s, label]) => {
-          const full = (s === "done" ? "Done" : label) + (counts(s) ? " " + counts(s) : ""), short = ({ in_progress: "Doing", not_started: "To do", blocked: "Block", done: "Done" }[s] || label) + (counts(s) ? " " + counts(s) : "");
-          return el("button", { type: "button", class: "task-filter task-" + s + (counts(s) ? "" : " task-zero"), title: full, "aria-label": full,
-            "aria-pressed": String(prefs.status === s), onclick: () => change("status", s) }, el("span", { class: "task-label-full", "aria-hidden": "true" }, full), el("span", { class: "task-label-short", "aria-hidden": "true" }, short));
-        }),
-        ...["overdue", "stale", "unassigned"].filter((flag) => active.some((t) => t.flags[flag])).map((flag) => {
-          const n = active.filter((t) => t.flags[flag]).length, full = flag + " " + n;
-          return el("button", { type: "button", class: "task-filter task-" + flag, title: full, "aria-label": full,
-            "aria-pressed": String(prefs.flag === flag), onclick: () => change("flag", prefs.flag === flag ? "" : flag) }, el("span", { class: "task-label-full", "aria-hidden": "true" }, full), el("span", { class: "task-label-short", "aria-hidden": "true" }, { overdue: "!", stale: "◷", unassigned: "○" }[flag] + " " + n));
-        })));
+      const active = data.tasks.filter((t) => inChoice(t, "all"));
+      const shownLabel = choiceLabel(prefs.status) + " · " + choiceCount(prefs.status);
+      if (choice.textContent !== shownLabel + " ▾") { choice.textContent = shownLabel + " ▾"; choice.title = "Show tasks: " + shownLabel; }
       if (!opts.visible()) return;
       layout();
       resolve();
@@ -3881,7 +4648,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       groupsShown = allNodes(list);
       count.hidden = tasks.length === active.length; count.textContent = tasks.length + " of " + active.length + " shown";
       const selection = opts.filters();
-      UI.update(body, UI.signature([groupsShown.map((g) => [g.key, g.tasks]), prefs.group, data.projects, data.folders || null, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), [selection.thread, selection.agent], pinned, data.tasks_rev < 0]),
+      UI.update(body, UI.signature([groupsShown.map((g) => [g.key, g.tasks]), activityKey, grouping(), data.projects, data.folders || null, data.rigor_modes, data.rigor_defaults || null, opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), [selection.thread, selection.agent], pinned, data.tasks_rev < 0, prefs.status === "done"]),
         () => drawTree(list), { force, editRoot: root });
       if (reveal !== null) showRow(reveal);
       if (!rows.some((r) => r.key === selected)) selected = rows.find((r) => r.task)?.key || rows[0]?.key || "";
@@ -3895,18 +4662,12 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (task && pinned === null && matches(task)) pinned = task.id;
       if (!task && pinned !== null && !data.tasks.some((t) => t.id === pinned)) pinned = null;
     }
-    function drawHead() {
-      head.replaceChildren(...[["name", "Name", "title", "Name"], ["state", "State", "smart", "State"], ["assign", "Assigned", "assignee", "Who"], ["updated", "Updated", "recent", "Age"]]
-        .map(([id, label, sort, short]) => el("button", { class: "task-col task-col-" + id, type: "button", "aria-pressed": String(prefs.sort === sort),
-          "aria-label": "Sort by " + label.toLowerCase(), title: "Sort by " + label.toLowerCase(), onclick: () => change("sort", sort) },
-          el("span", { class: "task-pill-full", "aria-hidden": "true" }, label), el("span", { class: "task-pill-short", "aria-hidden": "true" }, short),
-          prefs.sort === sort ? el("span", { class: "task-col-sorted", "aria-hidden": "true" }, "▾") : null)));
-    }
+    function drawHead() { drawColumns(); }
     function drawTree(list) {
       rows = []; groupRows = new Map(); body.replaceChildren();
       const visit = (group, ancestors) => {
         let folder = null;
-        if (prefs.group !== "none") {
+        if (grouping() !== "none") {
           folder = folderRow(group); folder.hidden = ancestors.some(isClosed); body.append(folder);
           groupRows.set(group, folder);
           rows.push({ key: folder.dataset.key, node: folder, group, ancestors });
@@ -3928,50 +4689,81 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       if (!rows.length) body.append(el("p", { class: "muted task-tree-empty" }, data.tasks_rev < 0 ? "Loading tasks…" : data.tasks.length ? "No tasks match these filters." : "No tasks yet."));
     }
     function folderRow(group) {
-      const key = folderKey(group), closed = isClosed(group), byProject = prefs.group === "project", sub = group.kind === "folder";
+      const key = folderKey(group), closed = isClosed(group), byProject = grouping() === "project", sub = group.kind === "folder";
       const known = byProject && data.projects.includes(group.project);
       const counts = order.map((s) => [s, group.all.filter((t) => t.status === s).length]).filter(([, n]) => n);
       const people = [...new Set(group.all.flatMap((t) => t.coordinators.map((a) => a.agent)))];
+      const liveCount = group.all.filter((t) => workers(t).length).length;
       const latest = group.all.map(lastActivity).sort((a, b) => time(b.ts) - time(a.ts))[0];
       const glyph = el("span", { class: "task-folder-glyph " + (byProject ? (group.key === NONE ? "task-folder-none" : projectClass(group.project || group.key)) : "task-" + group.key), "aria-hidden": "true" });
       const row = el("div", { class: "task-row task-folder" + (sub ? " task-subfolder" : "") + (byProject && !sub && group.key !== NONE && !known ? " task-folder-unknown" : ""), role: "treeitem",
         "aria-level": String(group.depth + 1), "aria-expanded": String(!closed), tabindex: "-1",
-        "aria-label": group.label + ", " + group.all.length + (group.all.length === 1 ? " task" : " tasks") + (sub ? ", folder in " + where(group.project, group.path.split("/").slice(0, -1).join("/")) : ""),
-        title: sub ? where(group.project, group.path) + " · folder" : byProject ? (group.key === NONE ? "Tasks without a project" : known ? group.key + " · watched repository" : group.key + " · not a watched repository") : labels[group.key] + " tasks",
-        draggable: sub && opts.canEdit() && hasFolders() ? "true" : null, dataset: { key, stateKey: key, depth: String(group.depth + 1) } },
+        "aria-label": group.label + ", " + group.all.length + (group.all.length === 1 ? " task" : " tasks") + (liveCount ? ", " + liveCount + " active now" : "") + (sub ? ", folder in " + where(group.project, group.path.split("/").slice(0, -1).join("/")) : ""),
+        title: (sub ? where(group.project, group.path) + " · folder" : byProject ? (group.key === NONE ? "Tasks without a project" : known ? group.key + " · watched repository" : group.key + " · not a watched repository") : labels[group.key] + " tasks") +
+          (byProject ? "\nDrag above or below a sibling to reorder · Ctrl+Shift+↑/↓" : ""),
+        draggable: byProject ? "true" : null, "aria-keyshortcuts": byProject ? "Control+Shift+ArrowUp Control+Shift+ArrowDown" : null,
+        dataset: { key, stateKey: key, depth: String(group.depth + 1) } },
         el("span", { class: "task-cell task-cell-name" },
           el("span", { class: "task-twisty", "aria-hidden": "true", onclick: (event) => { event.stopPropagation(); toggle(group); } }, closed ? "▸" : "▾"),
-          glyph, el("span", { class: "task-row-title" }, group.label), el("span", { class: "task-row-count" }, String(group.all.length))),
+          glyph, el("span", { class: "task-row-title" }, group.label), el("span", { class: "task-row-count" }, String(group.all.length)),
+          liveCount ? badge(liveCount + " active", "task-activity-badge") : null,
+          sub && folderRecord(group)?.archived_at ? el("span", { class: "task-mark task-archived-mark", title: "Archived folder · restore it from its menu" }, "archived") : null),
         el("span", { class: "task-cell task-cell-state", title: counts.map(([s, n]) => n + " " + labels[s].toLowerCase()).join(" · ") },
           counts.map(([s, n]) => el("span", { class: "task-count-pill task-" + s }, String(n)))),
+        folderRigor(group),
         el("span", { class: "task-cell task-cell-assign", title: people.join("\n") }, people.slice(0, 3).map(avatar), people.length > 3 ? el("span", { class: "task-more" }, "+" + (people.length - 3)) : null),
         el("span", { class: "task-cell task-cell-updated", title: latest ? "Latest activity " + opts.stamp(latest.ts) : "" }, latest ? agoNode(latest.ts) : null));
       wire(row, { key, group });
       return row;
     }
+    /** Who completed a task: the actor of its latest change to done, else its last editor. */
+    function closer(task) {
+      const event = (task.events || []).find((e) => e.action === "status" && e.detail?.status?.new === "done");
+      return event?.actor || task.updated_by || "";
+    }
+    function doneMeta(task) {
+      // closed_by and closed_note come from the hub (the latest change to done); older hubs fall back to the row's events and note.
+      const where = [task.project || "No project", task.folder].filter(Boolean).join(" / "), who = task.closed_by || closer(task);
+      const text = [where, who ? "closed by " + who : "", task.closed_note ?? task.status_note ?? ""].filter(Boolean).join(" · ");
+      return el("span", { class: "task-done-meta", title: text + (task.done_at ? "\nCompleted " + opts.stamp(task.done_at) : "") }, text);
+    }
     function taskRow(task, group, level) {
-      const key = "t:" + task.id, lead = leadOf(task), act = lastActivity(task), people = task.coordinators;
+      const doneView = prefs.status === "done";
+      const key = "t:" + task.id, act = lastActivity(task), people = task.coordinators, working = workers(task);
       const mark = (text, cls, title) => el("span", { class: "task-mark " + cls, title }, text);
       const row = el("div", { class: "task-row task-leaf task-" + task.status + " priority-" + task.priority + (linked(task) ? " task-linked" : "") +
-          (task.archived_at ? " task-archived" : "") + (task.id === pinned && !matches(task) ? " task-unmatched" : ""),
-        role: "treeitem", "aria-level": String(level), tabindex: "-1", draggable: prefs.group === "project" && opts.canEdit() ? "true" : null,
-        "aria-label": "#" + task.id + " " + task.title + ", " + labels[task.status] + ", " + (lead ? "assigned to " + lead : "unassigned"),
-        title: task.title + (summaryText(task) ? "\n" + summaryText(task) : "") + (prefs.group !== "project" || task.folder ? "\n" + crumb(task) : ""),
+          (working.length ? " task-active-now" : "") + (task.archived_at ? " task-archived" : "") + (task.id === pinned && !matches(task) ? " task-unmatched" : ""),
+        role: "treeitem", "aria-level": String(level), tabindex: "-1", draggable: grouping() === "project" && opts.canEdit() ? "true" : null,
+        "aria-label": "#" + task.id + " " + task.title + ", " + labels[task.status] + ", rigor " + (task.rigor_mode?.label || modeLabel(taskRigor(task))) + ", " +
+          (people.length ? "assigned to " + people.map((a) => a.agent).join(", ") : "unassigned") + (working.length ? ", active now: " + working.map((a) => a.agent).join(", ") : ""),
+        title: task.title + (summaryText(task) ? "\n" + summaryText(task) : "") + (grouping() !== "project" || task.folder ? "\n" + crumb(task) : ""),
         dataset: { key, stateKey: key, taskId: String(task.id), depth: String(level) } },
         el("span", { class: "task-cell task-cell-name" }, el("span", { class: "task-twisty", "aria-hidden": "true" }), el("span", { class: "task-dot", "aria-hidden": "true" }),
           el("span", { class: "task-row-id" }, "#" + task.id), el("span", { class: "task-row-title" }, task.title),
+          working.length ? mark("Active", "task-activity-badge", activityTitle(task)) : null,
           task.priority !== "normal" ? mark({ urgent: "!!", high: "!", low: "↓" }[task.priority], "task-priority priority-" + task.priority, task.priority + " priority") : null,
           task.flags.overdue ? mark("overdue", "task-overdue", "Overdue · due " + task.due) : task.flags.due_today ? mark("today", "task-due_today", "Due today") : null,
           task.flags.stale ? mark("◷", "task-stale", "Stale · no update for a while") : null,
           task.progress ? mark(task.progress.done + "/" + task.progress.total, "task-step-mark", task.progress.done + " of " + task.progress.total + " Plan steps complete") : null,
-          task.archived_at ? mark("archived", "task-archived-mark", "Archived") : null),
-        el("span", { class: "task-cell task-cell-state" }, el("span", { class: "task-state-pill task-" + task.status, title: labels[task.status] },
+          task.archived_at && !(doneView && task.status === "done") ? mark("archived", "task-archived-mark", "Archived") : null,
+          doneView ? doneMeta(task) : null),
+        el("span", { class: "task-cell task-cell-state" }, doneView && task.archived_at && opts.canEdit()
+          ? el("button", { class: "btn small task-restore", type: "button", title: "Restore #" + task.id + " to the task list (it stays done)", "aria-label": "Restore task #" + task.id,
+              onclick: (event) => { event.stopPropagation(); restore(task).catch((e) => UI.toast(e.message, { kind: "error" })); } }, "Restore")
+          : el("span", { class: "task-state-pill task-" + task.status, title: labels[task.status] },
           el("span", { class: "task-pill-full" }, labels[task.status]), el("span", { class: "task-pill-short" }, shortLabels[task.status]))),
+        el("span", { class: "task-cell task-cell-rigor" }, rigorPick(task, "row")),
         el("span", { class: "task-cell task-cell-assign" + (people.length ? "" : " task-nobody"),
-          title: people.length ? people.map((a) => a.agent + " · " + a.role + " · " + presence(a.agent)).join("\n") : "Nobody is assigned" },
-          people.length ? [avatar(lead), el("span", { class: "task-assign-name" }, lead), people.length > 1 ? el("span", { class: "task-more" }, "+" + (people.length - 1)) : null]
+          title: people.length ? "" : "Nobody is assigned" },
+          people.length ? people.map((a) => {
+            const portrait = avatar(a.agent);
+            portrait.removeAttribute("title"); // Let the whole icon use the assignee tooltip.
+            return el("span", { class: "task-assignee-icon", role: "img", "aria-label": a.agent,
+              title: a.agent + " · " + a.role + " · " + presence(a.agent) }, portrait);
+          })
             : el("span", { class: "task-assign-name" }, "Unassigned")),
-        el("span", { class: "task-cell task-cell-updated", title: "Last activity " + opts.stamp(act.ts) + (act.by ? " · " + act.by : "") + " · " + act.what }, agoNode(act.ts)));
+        doneView && task.done_at ? el("span", { class: "task-cell task-cell-updated", title: "Completed " + opts.stamp(task.done_at) }, agoNode(task.done_at))
+          : el("span", { class: "task-cell task-cell-updated", title: "Last activity " + opts.stamp(act.ts) + (act.by ? " · " + act.by : "") + " · " + act.what }, agoNode(act.ts)));
       wire(row, { key, group, task });
       return row;
     }
@@ -3979,35 +4771,62 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       row.addEventListener("click", () => choose(info.key, { focus: true }));
       if (!info.task) row.addEventListener("dblclick", () => toggle(info.group));
       row.addEventListener("contextmenu", (event) => { event.preventDefault(); choose(info.key, { focus: true }); rowMenu(row, info); });
-      if (prefs.group !== "project" || !opts.canEdit()) return;
+      if (grouping() !== "project") return;
       // Drop targets are projects and folders; a task row stands for the folder it is in.
       const place = info.group, project = place.project, path = place.path;
-      const clear = () => { for (const r of rows) r.node.classList.remove("task-drop"); };
       const drag = (item) => (event) => {
+        if (item.task && !opts.canEdit()) { event.preventDefault(); return; }
         dragging = item; row.classList.add("task-dragging");
-        if (event.dataTransfer) { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", item.task ? "#" + item.task.id + " " + item.task.title : where(item.folder.project, item.folder.path)); }
+        if (event.dataTransfer) { event.dataTransfer.effectAllowed = "move"; event.dataTransfer.setData("text/plain", item.task ? "#" + item.task.id + " " + item.task.title : item.folder.label); }
       };
       if (info.task) row.addEventListener("dragstart", drag({ task: info.task }));
-      else if (place.kind === "folder" && hasFolders()) row.addEventListener("dragstart", drag({ folder: place }));
-      row.addEventListener("dragend", () => { dragging = null; row.classList.remove("task-dragging"); clear(); });
+      else row.addEventListener("dragstart", drag({ folder: place }));
+      row.addEventListener("dragend", () => { dragging = null; row.classList.remove("task-dragging"); clearDrop(); render(); });
+      const destination = (event) => {
+        const source = dragging?.folder;
+        if (!source) return null;
+        // A project/folder travels with all descendants. Hits inside a sibling's
+        // subtree mean after that whole sibling, not inside one of its tasks.
+        let target = place;
+        while (target && !sameParent(source, target)) target = target.parent;
+        if (!target || target.key === source.key) return null;
+        const header = groupRows.get(target), rect = header?.getBoundingClientRect?.();
+        const after = info.task || target !== place || !rect || !Number.isFinite(event.clientY) || event.clientY >= rect.top + rect.height / 2;
+        return { source, target, after };
+      };
       const accepts = () => {
-        if (!dragging) return false;
+        if (!dragging || !opts.canEdit()) return false;
         if (dragging.task) return (dragging.task.project || "") !== project || (hasFolders() && (dragging.task.folder || "") !== path);
         const f = dragging.folder, parent = f.path.split("/").slice(0, -1).join("/");
+        if (f.kind !== "folder" || !hasFolders()) return false;
         if (f.project === project && (path === f.path || path.startsWith(f.path + "/"))) return false;  // not into itself
         return !(f.project === project && parent === path);
       };
       row.addEventListener("dragover", (event) => {
+        clearDrop();
+        const dest = destination(event);
+        if (dest) {
+          event.preventDefault(); event.stopPropagation(); if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+          const subtree = rows.filter((r) => !r.node.hidden && (r.group === dest.target || r.ancestors?.includes(dest.target)));
+          const marker = dest.after ? subtree.at(-1)?.node : groupRows.get(dest.target);
+          marker?.classList.add(dest.after ? "task-drop-after" : "task-drop-before"); return;
+        }
         if (!accepts()) return;
-        event.preventDefault(); if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
-        clear(); groupRows.get(place)?.classList.add("task-drop");
+        event.preventDefault(); event.stopPropagation(); if (event.dataTransfer) event.dataTransfer.dropEffect = "move";
+        groupRows.get(place)?.classList.add("task-drop");
       });
       row.addEventListener("drop", (event) => {
+        const dest = destination(event);
+        if (dest) {
+          event.preventDefault(); event.stopPropagation(); dragging = null; row.classList.remove("task-dragging"); clearDrop();
+          reorderFolder(dest.source, dest.target, dest.after); return;
+        }
         if (!accepts()) return;
-        event.preventDefault(); const item = dragging; dragging = null; clear();
+        event.preventDefault(); event.stopPropagation(); const item = dragging; dragging = null; clearDrop();
         return item.task ? moveTask(item.task, project, path) : moveFolder(item.folder, project, path);
       });
     }
+    function clearDrop() { for (const r of rows) r.node.classList.remove("task-drop", "task-drop-before", "task-drop-after"); }
     // ------------------------------------------------------- tree behaviour
     function syncSelection() {
       let focusable = null;
@@ -4029,8 +4848,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       drawDetail();
     }
     function toggle(group, closed = !isClosed(group)) {
-      if (prefs.group === "none") return;
-      const id = prefs.group + ":" + group.key;
+      if (grouping() === "none") return;
+      const id = grouping() + ":" + group.key;
       if (closed) folders[id] = true; else delete folders[id];
       UI.store.set("locus.tasks.folders", folders);
       for (const r of rows) {
@@ -4059,10 +4878,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       row?.node.scrollIntoView?.({ block: "nearest" });
     }
     function keydown(event) {
+      if (event.key === "Escape" && dragging) { dragging = null; clearDrop(); for (const r of rows) r.node.classList.remove("task-dragging"); render(); return; }
       const visible = rows.filter((r) => !r.empty && !r.node.hidden);
       let at = visible.findIndex((r) => r.node === event.target);
       if (at < 0) at = visible.findIndex((r) => r.key === selected);
       const current = visible[at];
+      if (event.ctrlKey && event.shiftKey && ["ArrowUp", "ArrowDown"].includes(event.key) && current && !current.task && grouping() === "project") {
+        event.preventDefault(); nudgeFolder(current.group, event.key === "ArrowUp" ? -1 : 1); return;
+      }
       const go = (r) => { event.preventDefault(); if (r) choose(r.key, { focus: true }); };
       if (event.key === "ArrowDown") go(visible[at + 1]);
       else if (event.key === "ArrowUp") go(visible[at - 1]);
@@ -4099,7 +4922,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     function rowMenu(anchor, info) {
       const canEdit = opts.canEdit();
       if (info.task) {
-        const items = [...(canEdit ? [...statusItems(info.task), { separator: true }, { label: "Edit…", action: () => edit(info.task) }, ...taskActions(info.task)] : [])];
+        const items = [...(canEdit ? [...statusItems(info.task), { separator: true }, ...rigorItems(info.task), { separator: true },
+          { label: "Edit…", action: () => edit(info.task) }, ...taskActions(info.task)] : [])];
         if (info.task.thread_id) items.push(...(items.length ? [{ separator: true }] : []), { label: "Open thread #" + info.task.thread_id, action: () => opts.openThread?.(info.task.thread_id) });
         if (items.length) UI.popmenu(anchor, items);
         return;
@@ -4108,14 +4932,22 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }
     /** Expand or collapse, and (by project, for the owner) new task, new folder, rename or move, delete. */
     function groupActions(group, detailPane = false) {
-      const closed = isClosed(group), canEdit = opts.canEdit() && prefs.group === "project", folder = group.kind === "folder";
+      const closed = isClosed(group), canEdit = opts.canEdit() && grouping() === "project", folder = group.kind === "folder";
       const full = folder && holding(group).length;
+      const siblings = siblingGroups(group), index = siblings.findIndex((g) => g.key === group.key);
       return [
         ...(detailPane ? [] : [{ label: closed ? "Expand" : "Collapse", action: () => toggle(group, !closed) }]),
+        ...(!detailPane && grouping() === "project" ? [
+          { label: "Move up", disabled: index <= 0, action: () => nudgeFolder(group, -1) },
+          { label: "Move down", disabled: index < 0 || index >= siblings.length - 1, action: () => nudgeFolder(group, 1) },
+        ] : []),
         ...(canEdit ? [{ label: "New task in " + group.label + "…", action: () => { choose(folderKey(group)); return edit(); } }] : []),
         ...(canEdit && hasFolders() && group.depth < 4 ? [{ label: "New folder…", action: () => folderDialog(group, "create") }] : []),
         ...(canEdit && hasFolders() && folder ? [{ label: "Rename or move…", action: () => folderDialog(group, "rename") },
           { label: full ? "Delete folder (holds " + full + " task" + (full === 1 ? ")" : "s)") : "Delete folder…", disabled: !!full, action: () => deleteFolder(group) }] : []),
+        ...(canEdit && folder && data.archive_policy ? [folderRecord(group)?.archived_at
+          ? { label: "Restore folder", action: () => restoreFolder(group) }
+          : { label: "Archive folder…", action: () => archiveFolder(group) }] : []),
       ];
     }
     // ----------------------------------------------------------- detail pane
@@ -4124,7 +4956,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const task = id ? data.tasks.find((t) => t.id === id) : null;
       const group = !task && selected.startsWith("g:") ? nodes.get(selected) || null : null;
       const changed = shownKey !== selected;
-      UI.update(detail, UI.signature([selected, task, group && [group.key, group.all, group.children.map((c) => c.key)], task && !matches(task), opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), history, data.projects, data.folders || null, data.tasks_rev < 0]),
+      UI.update(detail, UI.signature([selected, task, activityKey, group && [group.key, group.all, group.children.map((c) => c.key)], task && !matches(task), opts.canEdit(), agentSignature(opts.agents()), opts.timeKey?.(), history, data.projects, data.folders || null, data.rigor_modes, data.rigor_defaults || null, data.tasks_rev < 0]),
         () => detail.replaceChildren(el("div", { class: "task-detail-inner" }, ...(task ? taskDetail(task) : group ? groupDetail(group) : emptyDetail()))),
         { force: force || changed, editRoot: root });
       if (changed) { detail.scrollTop = 0; shownKey = selected; }
@@ -4161,6 +4993,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         task.project ? badge(task.folder ? crumb(task) : task.project, projectClass(task.project) + (task.project_known ? "" : " task-project-unknown")) : badge(task.folder ? crumb(task) : "No project", "task-unassigned"),
         progress(task), task.archived_at ? badge("Archived") : null));
       out.push(el("h3", { class: "task-detail-title" }, task.title));
+      if (workers(task).length) out.push(el("div", { class: "task-activity-detail" },
+        el("b", {}, "Active now"), ...workers(task).map((a) => el("div", {},
+          el("p", {}, a.agent + " · " + a.label), el("p", {}, a.status),
+          el("p", { class: "muted small" }, a.source, a.statusAt ? [" · status updated ", agoNode(a.statusAt, true)] : null))),
+        el("p", { class: "muted small" }, "Agent activity is separate from the saved task state: " + labels[task.status] + ".")));
       if (task.id === pinned && !matches(task)) out.push(el("p", { class: "task-hidden-note" }, "Kept in view while selected; it no longer matches the current filters. ",
         button("Clear filters", () => { Object.assign(prefs, defaults, { layout: prefs.layout }); search.value = ""; UI.store.set("locus.tasks.view", prefs); render(true); })));
       if (summaryText(task)) out.push(el("p", { class: "task-summary-line task-detail-summary" }, summaryText(task)));
@@ -4173,6 +5010,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         fact("Last activity", [agoNode(act.ts, true), sub([act.by, act.what].filter(Boolean).join(" · "))], "", opts.stamp(act.ts)),
         fact(task.folder ? "Project › folder" : "Project", [task.folder ? crumb(task) : task.project || "No project", sub(task.project && !task.project_known ? "not a watched repository" : "")]),
         fact("Priority", task.priority, task.priority === "urgent" || task.priority === "high" ? "task-fact-warn" : ""),
+        fact("Rigor", [rigorPick(task, "detail"), sub(rigorSource(task))], "task-fact-rigor"),
         fact("Due", task.due ? [task.due, sub(task.flags.overdue ? "overdue" : task.flags.due_today ? "today" : "")] : "—", task.flags.overdue ? "task-fact-warn" : ""),
         task.progress ? fact("Plan", task.progress.done + " of " + task.progress.total + " steps") : null,
         fact("Created", [opts.stamp(task.created_at), sub("by " + task.created_by)]),
@@ -4184,6 +5022,11 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         actions.append(button("Edit", () => edit(task)), button("⋯", (event) => UI.popmenu(event.currentTarget, taskActions(task)), "More task actions"));
         out.push(actions);
       }
+      if (task.rigor_mode?.rules) out.push(el("details", { class: "task-rigor-rules", dataset: { stateKey: "rigor-rules" } },
+        el("summary", {}, "Rigor rules · " + (task.rigor_mode.label || modeLabel(taskRigor(task)))), el("p", {}, task.rigor_mode.rules),
+        el("p", { class: "task-rigor-floor-head" }, "Floor, in every mode:"), el("ul", { class: "task-rigor-floor" }, RIGOR_GUIDE.floor.map((item) => el("li", {}, item))),
+        el("p", {}, "Ask the lead first, in every mode: " + RIGOR_GUIDE.floor_categories.charAt(0).toLowerCase() + RIGOR_GUIDE.floor_categories.slice(1)),
+        button("About rigor modes", showGuide)));
       const plan = checklist(task, task.notes, true); plan.classList.add("task-plan", "task-plan-full");
       if (task.notes.trim()) out.push(el("h4", {}, "Plan"), plan);
       else out.push(el("div", { class: "muted small task-empty-plan" }, "No plan yet. ", canEdit ? button("Add plan", () => edit(task)) : null));
@@ -4209,7 +5052,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       return out;
     }
     function groupDetail(group) {
-      const byProject = prefs.group === "project", folder = group.kind === "folder", known = byProject && data.projects.includes(group.project);
+      const byProject = grouping() === "project", folder = group.kind === "folder", known = byProject && data.projects.includes(group.project);
       const tasks = group.all;
       const people = [...new Set(tasks.flatMap((t) => t.coordinators.map((a) => a.agent)))];
       const latest = tasks.map((t) => ({ task: t, ...lastActivity(t) })).sort((a, b) => time(b.ts) - time(a.ts))[0];
@@ -4220,6 +5063,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       out.push(el("h3", { class: "task-detail-title" }, group.label));
       out.push(el("dl", { class: "task-facts" },
         ...order.map((s) => fact(labels[s], el("span", { class: "task-count-pill task-" + s }, String(tasks.filter((t) => t.status === s).length)))),
+        ...rigorIds.map((id) => fact(modeLabel(id), el("span", { class: "task-rigor-count rigor-" + id }, rigorMeter(id), String(tasks.filter((t) => taskRigor(t) === id).length)))),
         fact("Last activity", latest ? [agoNode(latest.ts, true), sub("#" + latest.task.id + " · " + [latest.by, latest.what].filter(Boolean).join(" · "))] : "—", "", latest ? opts.stamp(latest.ts) : ""),
         group.children.length ? fact("Folders", group.children.map((c) => c.label).join(", "), "task-fact-wide") : null,
         fact("People", people.length ? people.map((name) => person({ agent: name, role: tasks.some((t) => t.coordinators.some((a) => a.agent === name && a.role === "lead")) ? "lead" : "helper" })) : "Nobody assigned", people.length ? "task-fact-wide" : "")));
@@ -4246,15 +5090,16 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         data.tasks.length || !opts.canEdit() ? null : button("+ Task", () => edit(), "Add a task"))];
     }
     function open(id, coordinator) {
-      if (coordinator) { prefs.agent = coordinator; prefs.status = "open"; pinned = null; }
+      if (coordinator) { prefs.text = "agent:" + coordinator; search.value = prefs.text; prefs.status = "open"; pinned = null; }
       if (id) show(id);
       UI.store.set("locus.tasks.view", prefs); render(true);
     }
-    return { load, render, open, focus: () => edit(), revision: () => data.tasks_rev,
+    return { load, render, open, focus: () => edit(), revision: () => data.tasks_rev, showGuide,
       tasks: () => data.tasks.filter((t) => !t.archived_at),
       agentTasks: (name) => data.tasks.filter((t) => !t.archived_at && t.status !== "done" && t.coordinators.some((a) => a.agent === name)) };
   }
-  window.LocusTasks = { mount, labels, shortLabels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText, ago, describe, lastActivity, ageDays, where };
+  window.LocusTasks = { mount, CHOICES, searchTerms, upgradePrefs, labels, shortLabels, order, projectClass, classes, stateChip, markdown, agentSignature, progress, summaryText, ago, describe, lastActivity, ageDays, where, activeWork,
+    RIGOR_GUIDE, rigorMeter, rigorBadge, rigorGuide, showRigorGuide };
 })();
 </script>
 <script>/* ---- taskcards.js ---- */
@@ -4262,17 +5107,54 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
 "use strict";
 (function () {
   const { el } = UI, T = window.LocusTasks;
+  const rigorLabel = (task) => task.rigor_mode?.label || task.rigor_effective || "";
+  const rigorBadge = (task) => rigorLabel(task) ? (T.rigorBadge ? T.rigorBadge(task) : el("span", { class: "task-badge task-rigor" }, rigorLabel(task))) : null;
   const icon = (name) => name === "hidden agent" ? null : window.PixelIcon?.img(name, { size: 16 });
   function mount(root, opts = {}) {
-    let tasks = [], projects = [], status = UI.store.get(opts.key + ".status", "open"),
-      project = UI.store.get(opts.key + ".project", "");
-    const filters = el("div", { class: "task-state-filters" }), select = el("select", { "aria-label": "Task project" }),
-      controls = el("div", { class: "task-tools" }, filters, select), list = el("div", { class: "task-list" });
+    // One filter of nine choices and the desktop's search words (rooms.md RD-23; plans/stick-parity.md L6).
+    const CHOICES = T.CHOICES || [["open", "Open"], ["not_started", "Not started"], ["in_progress", "In progress"], ["blocked", "Blocked"],
+      ["done", "Done"], ["all", "All"], ["active", "Active"], ["stale", "Stale"], ["unassigned", "Unassigned"]];
+    const ids = CHOICES.map(([id]) => id);
+    let tasks = [], projects = [], status = UI.store.get(opts.key + ".status", "open"), text = UI.store.get(opts.key + ".text", "");
+    const oldProject = UI.store.get(opts.key + ".project", "");
+    if (oldProject) {  // The project select became the project: search word.
+      text = [text, "project:" + (oldProject === "~none" ? "none" : /\s/.test(oldProject) ? '"' + oldProject + '"' : oldProject)].filter(Boolean).join(" ");
+      UI.store.set(opts.key + ".text", text); UI.store.set(opts.key + ".project", "");
+    }
+    if (!ids.includes(status)) status = "open";
+    const search = el("input", { type: "search", value: text, placeholder: "Search · project: agent: rigor:", "aria-label": "Search tasks" });
+    const select = el("select", { class: "task-choice", "aria-label": "Show tasks" });
+    const controls = el("div", { class: "task-tools task-tools-phone" }, search, select), list = el("div", { class: "task-list" });
+    search.addEventListener("input", () => { text = search.value; UI.store.set(opts.key + ".text", text); render(); });
+    select.addEventListener("change", () => { status = select.value; UI.store.set(opts.key + ".status", status); render(); });
     const add = el("button", { class: "btn primary", type: "button", onclick: () => opts.onNew?.() }, "New task");
     if (opts.onNew) controls.append(add);
     const reason = el("p", { class: "phone-hint" });
     root.replaceChildren(controls, reason, list);
-    select.addEventListener("change", () => { project = select.value; UI.store.set(opts.key + ".project", project); render(); });
+    const busy = (task) => task.status === "in_progress" && task.coordinators.some((a) => (opts.agents?.() || []).some(
+      (p) => p.name === a.agent && ["active", "working", "waiting", "doorbell"].includes(p.presence)));
+    /** Archived tasks that are not done stay off the phones; Done lists the completed ones (RD-22). */
+    function inChoice(t, id) {
+      const done = t.status === "done";
+      if (id === "done") return done;
+      if (t.archived_at && !done) return false;
+      if (id === "all") return true;
+      if (id === "open") return !done;
+      if (id === "active") return busy(t);
+      if (id === "stale" || id === "unassigned") return !!t.flags?.[id];
+      return t.status === id;
+    }
+    function matches(t, terms) {
+      if (terms.project !== null && (terms.project === "none" ? t.project : (t.project || "").toLowerCase() !== terms.project)) return false;
+      if (terms.agent !== null && (terms.agent === "none" ? t.coordinators.length : !t.coordinators.some((a) => a.agent.toLowerCase() === terms.agent))) return false;
+      if (terms.rigor !== null && ![t.rigor_effective, rigorLabel(t)].some((v) => (v || "").toLowerCase() === terms.rigor)) return false;
+      if (terms.overdue && !t.flags?.overdue) return false;
+      if (terms.owner && t.created_by !== "owner") return false;
+      return !terms.text || ["#" + t.id, t.title, t.summary, t.notes, t.project, t.folder || "", (t.tags || []).join(" "), t.status_note || "", t.closed_note || "",
+        ...t.coordinators.map((a) => a.agent)].join(" ").toLowerCase().includes(terms.text);
+    }
+    const closedLine = (task) => task.status === "done" && (task.closed_by || task.closed_note || task.status_note)
+      ? el("p", { class: "task-status-note task-closed-note" }, [task.closed_by ? "Closed by " + task.closed_by : "", task.closed_note ?? task.status_note ?? ""].filter(Boolean).join(" · ")) : null;
     const coords = (task) => {
       const people = opts.agents?.() || [];
       const members = task.coordinators.map((a) => people.find((p) => p.name === a.agent));
@@ -4291,8 +5173,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     };
     async function detail(task) {
       const body = el("div", { class: T.classes(task) }, T.stateChip(task),
+        rigorBadge(task),
         task.project || task.folder ? el("span", { class: "task-badge " + T.projectClass(task.project) }, T.where(task.project, task.folder)) : null,
-        coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+        coords(task), closedLine(task) || (task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null),
         task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
         T.markdown(task.notes), el("p", { class: "muted small" }, "Updated " + new Date(task.updated_at).toLocaleString()),
         ...(task.events || []).slice(0, 10).map((e) => el("p", { class: "muted small" }, e.actor + " · " + e.action +
@@ -4300,43 +5183,38 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       const buttons = [{ label: "Close", value: null }];
       if (task.thread_id) buttons.push({ label: "Thread #" + task.thread_id, value: "thread" });
       if (opts.onStatus && opts.canAct()) for (const [value, label] of
-        [["in_progress", "Start"], ["blocked", "Block"], ["done", "Complete"], ["not_started", "Reopen"]])
+        task.status === "done" ? [["not_started", "Reopen"]] : [["in_progress", "Start"], ["blocked", "Block"], ["done", "Complete"], ["not_started", "Reopen"]])
         if (task.status !== value) buttons.push({ label, value });
       const action = await UI.dialog({ title: "#" + task.id + " " + task.title, body, buttons });
       if (action === "thread") opts.onThread?.(task.thread_id);
       else if (action) opts.onStatus?.(task, action);
     }
     function render() {
-      const counts = (s) => tasks.filter((t) => s === "all" || (s === "open" ? t.status !== "done" : t.status === s)).length;
-      UI.update(filters, UI.signature([tasks.map((t) => t.status), status]), () => filters.replaceChildren(
-        ...[["open", "Open"], ...Object.entries(T.labels), ["all", "All"]].map(([value, label]) => el("button", {
-          class: "task-filter task-" + value, type: "button", "aria-pressed": String(status === value),
-          onclick: () => { status = value; UI.store.set(opts.key + ".status", value); render(); },
-        }, label + " " + counts(value)))));
-      const names = [...new Set([...projects, ...tasks.map((t) => t.project).filter(Boolean)])].sort();
-      UI.update(select, UI.signature(names), () => select.replaceChildren(
-        el("option", { value: "" }, "All projects"), el("option", { value: "~none" }, "No project"),
-        ...names.map((p) => el("option", { value: p }, p))));
-      select.value = project;
+      const counts = Object.fromEntries(ids.map((id) => [id, tasks.filter((t) => inChoice(t, id)).length]));
+      UI.update(select, UI.signature([counts, status]), () => {
+        select.replaceChildren(...CHOICES.map(([id, label]) => el("option", { value: id }, label + " · " + counts[id])));
+        select.value = status;
+      });
       if (opts.onNew) { add.disabled = !opts.canAct(); reason.textContent = opts.reason?.() || ""; }
-      const shown = tasks.filter((t) => (status === "all" || (status === "open" ? t.status !== "done" : t.status === status))
-        && (!project || t.project === (project === "~none" ? "" : project)));
+      const terms = T.searchTerms ? T.searchTerms(text) : { text: text.toLowerCase(), project: null, agent: null, rigor: null, overdue: false, owner: false };
+      const shown = tasks.filter((t) => inChoice(t, status) && matches(t, terms));
+      if (status === "done") shown.sort((a, b) => (b.done_at || b.updated_at).localeCompare(a.done_at || a.updated_at) || b.id - a.id);
       const icons = shown.map((t) => [t.created_by === "owner" ? window.PixelIcon?.gridFor("owner").grid : null,
         ...t.coordinators.filter((a) => a.agent !== "hidden agent").map((a) => window.PixelIcon?.gridFor(a.agent).grid)]);
-      UI.update(list, UI.signature([shown, status, project, icons, T.agentSignature(opts.agents?.() || [])]), () => list.replaceChildren(...(shown.length
+      UI.update(list, UI.signature([shown, status, text, icons, T.agentSignature(opts.agents?.() || [])]), () => list.replaceChildren(...(shown.length
         ? shown.map((task) => {
           const title = el("button", { class: "task-title linkbtn", type: "button", onclick: () => detail(task) }, "#" + task.id + " " + task.title);
-          const active = task.status === "in_progress" && task.coordinators.some((a) => (opts.agents?.() || []).some(
-            (p) => p.name === a.agent && ["active","working","waiting","doorbell"].includes(p.presence)));
+          const active = busy(task);
           return el("article", { class: T.classes(task) }, el("div", { class: "task-head" },
             active ? el("span", {class:"task-live-dot task-pulse",title:"A coordinator is active"}) : null, T.stateChip(task),
             task.created_by === "owner" ? icon("owner") : null, title,
+            rigorBadge(task),
             task.priority !== "normal" ? el("span", { class: "task-badge task-priority priority-" + task.priority }, {urgent:"!!",high:"!",low:"↓"}[task.priority]) : null,
             task.project ? el("span", { class: "task-badge " + T.projectClass(task.project) + (task.project_known ? "" : " task-project-unknown"), title: T.where(task.project, task.folder) }, task.folder ? T.where(task.project, task.folder) : task.project) : null,
             task.due && !task.flags?.overdue && !task.flags?.due_today ? el("span",{class:"task-badge"},"due "+task.due) : null,
             ...Object.entries(task.flags || {}).filter(([, v]) => v).map(([k]) => el("span", { class: "task-badge task-" + k }, k.replace(/_/g, " ")))),
             task.summary ? el("p", { class: "task-summary-line" }, task.summary) : null, T.progress(task),
-            coords(task), task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null,
+            coords(task), closedLine(task) || (task.status_note ? el("p", { class: "task-status-note" }, task.status_note) : null),
             el("button", { class: "btn small", type: "button", onclick: () => detail(task) }, "Details"));
         }) : [el("p", { class: "muted" }, "No tasks match these filters.")])));
     }
@@ -5394,7 +6272,9 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (!Number.isInteger(issue) || issue <= 0) throw new PhoneError("INPUT", "the Inbox is not open on the hub");
     const isTask = m.kind === "task";
     if (isTask) taskMessage(m.task, code);
-    if (!isTask && (!m.to || typeof m.to !== "string")) throw new PhoneError("INPUT", "choose who the message is for");
+    const room = typeof m.room === "string" ? m.room.trim() : "";
+    if (room && (room.length > 64 || !/^[A-Za-z0-9][A-Za-z0-9 ._:-]*$/.test(room))) throw new PhoneError("INPUT", "choose a room from the list");
+    if (!isTask && !room && (!m.to || typeof m.to !== "string")) throw new PhoneError("INPUT", "choose who the message is for");
     if (!isTask && !String(m.body || "").trim()) throw new PhoneError("INPUT", "the message is empty");
     if (!/^\d{6}$/.test(code)) throw new PhoneError("INPUT", "enter the 6-digit code from your authenticator app");
     if (m.reply_to !== undefined && m.reply_to !== null && !(Number.isInteger(m.reply_to) && m.reply_to > 0)) {
@@ -5406,6 +6286,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
       reply_to: Number.isInteger(m.reply_to) ? m.reply_to : null };
     if (m.kind === "request" && typeof m.tool === "string") inner.tool = m.tool;  // which tool should take it ("" = any)
     if (isTask) inner.task = m.task;
+    if (room && !isTask) inner.room = room;  // LD-2: a room for the message; without "to" it is room-wide (an older hub ignores it)
     const env = await seal(inner, keys, "inbox");
     const r = await gh(token, "POST", "/repos/" + repo + "/issues/" + issue + "/comments", { body: { body: commentText(env) } });
     const c = await r.res.json();
@@ -5607,6 +6488,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const unread = snapshot.owner && snapshot.owner.unread || 0;
     UI.update($("phoneOverview"), UI.signature([viewEnabled("agents"), viewEnabled("timeline"), snapshot.agents.length, snapshot.messages.length, unread]), () => $("phoneOverview").replaceChildren(...[viewEnabled("agents") ? el("span", {}, snapshot.agents.length + " agents") : null, viewEnabled("timeline") ? el("span", {}, snapshot.messages.length + " msgs") : null, viewEnabled("timeline") ? el("button", { type: "button", title: unread + " unread messages to you; show all messages to you", onclick: () => scopeToYou(true) }, unread + " to you") : null].filter(Boolean)));
     choose("filterAgent", [...new Set([...snapshot.agents.map((a) => a.name), ...snapshot.messages.flatMap((m) => [m.from, m.to]).filter((name) => name && !name.startsWith("#"))])].sort(), "Any agent");
+    renderRooms();
     const threads = new Map();
     state.threadCounts = new Map();
     for (const m of snapshot.messages) if (m.thread_id) {
@@ -5668,6 +6550,25 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     }));
     if (!agents.length) $("phoneAgents").append(empty("No agents registered yet."));
   }
+  // Rooms (plans/stick-parity.md L6): from the snapshot; an older snapshot has none and the page stays as before.
+  const roomOf = (m) => list(state.snapshot?.rooms).find((r) => r.uid === m.room) || null;
+  function roomChip(m) {
+    const room = roomOf(m);
+    return room ? el("span", { class: "phone-room", title: room.name }, UI.roomSymbol(room.symbol, room.colour), " ", room.name, " · ") : null;
+  }
+  function renderRooms() {
+    const rooms = list(state.snapshot?.rooms).filter((r) => r && typeof r.uid === "string" && typeof r.name === "string");
+    $("filterRoomWrap").hidden = !rooms.length; $("composeRoomWrap").hidden = !rooms.length;
+    const signature = UI.signature(rooms.map((r) => [r.uid, r.key, r.name]));
+    for (const [id, first] of [["filterRoom", "All rooms"], ["composeRoom", "No room (as before)"]]) {
+      // Refreshed directly (not UI.update): the compose view may be hidden when a snapshot arrives.
+      const node = $(id), keep = node.value;
+      if (node.dataset.rooms === signature) continue;
+      node.dataset.rooms = signature;
+      node.replaceChildren(el("option", { value: "" }, first), ...rooms.map((r) => el("option", { value: id === "composeRoom" ? r.key : r.uid }, r.name)));
+      if ([...node.options].some((o) => o.value === keep)) node.value = keep;
+    }
+  }
   function renderMessage(m) {
     const authority = ["owner-web", "owner-remote", "hub", "peer", "peer-owner"].includes(m.authority) ? m.authority : "agent-claimed";
     const content = el("div", { class: "md phone-body", id: "phone-body-" + m.id });
@@ -5693,7 +6594,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const threadCount = state.threadCounts.get(m.thread_id) || 1;
     const canReply = state.snapshot.agents.some((a) => a.name === m.from) || list(state.snapshot.channels).includes(m.from) && !["#all", "owner", "hub"].includes(m.from);
     const node = el("article", { class: "phone-card phone-message auth-" + authority + (m.to === "owner" ? " to-owner" : ""), dataset: { messageId: String(m.id) }, title: "#" + m.id + " · " + authority + " · via " + (m.via || "hub") },
-      el("div", { class: "phone-route" }, icon(m.from), el("b", {}, m.from), " → ", icon(m.to), el("b", {}, m.to), " · " + m.kind + " · ", el("time", { datetime: m.ts, title: fmtTime(m.ts) }, Number.isFinite(Date.parse(m.ts)) ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Unknown time")),
+      el("div", { class: "phone-route" }, roomChip(m), icon(m.from), el("b", {}, m.from), " → ", icon(m.to), el("b", {}, m.to), " · " + m.kind + " · ", el("time", { datetime: m.ts, title: fmtTime(m.ts) }, Number.isFinite(Date.parse(m.ts)) ? new Date(m.ts).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Unknown time")),
       authority !== "agent-claimed" ? pill(authority) : null,
       m.subject ? el("h3", {}, m.subject) : null,
       body,
@@ -5721,13 +6622,14 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
   }
   function renderTimeline(force = false) {
     if (!state.snapshot) return;
-    return UI.update($("phoneTimeline"), UI.signature([state.snapshot.messages, state.snapshot.agents, state.snapshot.channels, state.snapshot.icons, state.snapshot.icon_config, state.limit, state.toYou, ["filterAgent", "filterThread", "filterKind", "filterText"].map((id) => $(id).value), [...state.expanded]]), drawTimeline, { force: force === true });
+    return UI.update($("phoneTimeline"), UI.signature([state.snapshot.messages, state.snapshot.agents, state.snapshot.channels, state.snapshot.icons, state.snapshot.icon_config, state.limit, state.toYou, ["filterAgent", "filterRoom", "filterThread", "filterKind", "filterText"].map((id) => $(id).value), list(state.snapshot.rooms), [...state.expanded]]), drawTimeline, { force: force === true });
   }
   function drawTimeline() {
     if (!state.snapshot) return;
     const agent = $("filterAgent").value, thread = $("filterThread").value, kind = $("filterKind").value, text = $("filterText").value.toLowerCase().trim();
+    const room = $("filterRoom").value;
     const cutoff = Date.now() - 7 * 86400000;
-    const messages = state.snapshot.messages.filter((m) => Date.parse(m.ts) >= cutoff && (!state.toYou || m.to === "owner") && (!agent || m.from === agent || m.to === agent) && (!thread || String(m.thread_id) === thread) && (!kind || m.kind === kind) && (!text || [m.subject, m.body, m.from, m.to].join(" ").toLowerCase().includes(text))).sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts) || b.id - a.id);
+    const messages = state.snapshot.messages.filter((m) => Date.parse(m.ts) >= cutoff && (!state.toYou || m.to === "owner") && (!agent || m.from === agent || m.to === agent) && (!room || (m.room || "main") === room) && (!thread || String(m.thread_id) === thread) && (!kind || m.kind === kind) && (!text || [m.subject, m.body, m.from, m.to].join(" ").toLowerCase().includes(text))).sort((a, b) => Date.parse(b.ts) - Date.parse(a.ts) || b.id - a.id);
     $("filterAll").setAttribute("aria-pressed", String(!state.toYou && !agent));
     $("filterToYou").setAttribute("aria-pressed", String(state.toYou));
     const advanced = Number(!!thread) + Number(!!kind);
@@ -5910,6 +6812,7 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     const s = state.snapshot;
     const blocked = new Set(["owner", "hub", "#all"]);
     choose("composeTo", [...new Set([...s.agents.map((a) => a.name), ...list(s.channels)])].filter((v) => v && !blocked.has(v)).sort());
+    if (list(s.rooms).length) $("composeTo").append(el("option", { value: "~room" }, "Everyone in the room"));  // LD-2: room-wide, with a room chosen
     choose("composeKind", list((s.inbox || {}).kinds).filter((kind) => kind !== "task"));
     // A request to a project channel starts a conversation there; it asks which tool should take it.
     const isRequest = $("composeKind").value === "request";
@@ -6062,7 +6965,8 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
     if (!body.trim() || !/^[0-9]{6}$/.test(code)) { notice("phoneSendError", "Enter a message and the current 6-digit authenticator code.", "error"); return; }
     if (new TextEncoder().encode(body).length > max) { notice("phoneSendError", "The message is too long. The limit is " + max.toLocaleString() + " bytes.", "error"); return; }
     const session = state.session, epoch = state.epoch;
-    const message = { to: $("composeTo").value, kind: $("composeKind").value, subject: $("composeSubject").value.trim(), body, code, reply_to: state.replyTo ? state.replyTo.id : null };
+    if ($("composeTo").value === "~room" && !$("composeRoom").value) { UI.toast("Choose a room for a message to everyone in it.", { kind: "error" }); return; }
+    const message = { to: $("composeTo").value === "~room" ? "" : $("composeTo").value, room: $("composeRoom").value || undefined, kind: $("composeKind").value, subject: $("composeSubject").value.trim(), body, code, reply_to: state.replyTo ? state.replyTo.id : null };
     if (message.kind === "request") {
       if (!message.to.startsWith("#") || !list(state.snapshot.projects).some((pr) => pr.channel === message.to)) { notice("phoneSendError", "A new conversation goes to a project channel (#project).", "error"); return; }
       if (!message.subject) { notice("phoneSendError", "Give the new conversation a subject (its title).", "error"); return; }
@@ -6124,13 +7028,13 @@ body.phone-page { height: 100vh; height: 100dvh; min-height: 0; display: flex; f
         if (target !== null) { event.preventDefault(); showView(visible[target].dataset.view, true); }
       });
     });
-    for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(true); $("phoneMain").scrollTop = 0; });
+    for (const id of ["filterAgent", "filterRoom", "filterThread", "filterKind", "filterText"]) $(id).addEventListener(id === "filterText" ? "input" : "change", () => { if (id === "filterAgent") state.toYou = false; state.limit = 50; renderTimeline(true); $("phoneMain").scrollTop = 0; });
     $("filterAll").addEventListener("click", () => scopeToYou(false));
     $("filterToYou").addEventListener("click", () => scopeToYou(true));
     $("phoneCancelReply").addEventListener("click", () => { state.replyTo = null; renderCompose(); });
     $("composeTo").addEventListener("change", () => { state.replyTo = null; renderCompose(); });
     $("composeKind").addEventListener("change", () => renderCompose());
-    $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
+    $("phoneClearFilters").addEventListener("click", () => { for (const id of ["filterAgent", "filterRoom", "filterThread", "filterKind", "filterText"]) $(id).value = ""; state.toYou = false; state.limit = 50; renderTimeline(); $("phoneMain").scrollTop = 0; });
     $("phoneMore").addEventListener("click", () => { state.limit += 50; renderTimeline(); });
     $("phoneFoldMessages").addEventListener("click", () => { UI.collapseAll($("phoneTimeline").querySelectorAll(".phone-message")); updateMessageFold(); });
     $("phoneMapWindow").addEventListener("change", renderMap);
